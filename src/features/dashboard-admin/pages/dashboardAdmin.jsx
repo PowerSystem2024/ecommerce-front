@@ -2,7 +2,7 @@ import React from 'react';
 
 import { AdminLayout } from '../../shared/components/navigations';
 import { DashboardContent } from '../components'; 
-import GlobalBackground from '../../dashboard-user/components/global-background';
+import GlobalBackground from '../../global-background/global-background';
 
 
 export default function DashboardAdmin() {

@@ -25,7 +25,7 @@ export const AdminLayout = ({ children, noScroll }) => {
   };
 
   return (
-    <div className="min-h-screen transition-colors duration-300 bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen bg-gray-50">
       {/* Navbar fijo en la parte superior */}
       <div className="fixed top-0 left-0 right-0 z-50">
         <NavbarAdmin 
@@ -34,10 +34,10 @@ export const AdminLayout = ({ children, noScroll }) => {
       </div>
 
       {/* Contenedor principal con padding-top para el navbar */}
-      <div className="flex min-h-screen pt-16 transition-colors duration-300 bg-gray-50 dark:bg-gray-900">
+      <div className="flex min-h-screen pt-16 bg-gray-50">
         {/* Contenido principal */}
         <main className={`
-          flex-1 transition-all duration-300 ${noScroll ? 'overflow-y-hidden' : 'overflow-y-auto'} transition-colors bg-gray-50 dark:bg-gray-900
+          flex-1 ${noScroll ? 'overflow-y-hidden' : 'overflow-y-auto'} bg-gray-50
           ${isSidebarOpen ? 'lg:ml-0' : 'lg:ml-0'}
         `}>
           <div className="w-full h-full min-h-screen">

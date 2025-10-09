@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { NavbarUser } from './NavbarUser';
 
-export const UserLayout = ({ children }) => {
+export const ShopLayout = ({ children }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   // Detectar si es móvil
@@ -25,7 +25,19 @@ export const UserLayout = ({ children }) => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+    <div className="min-h-screen">
+      {/* Background fijo que ocupa toda la pantalla */}
+      <div 
+        className="fixed top-0 left-0 right-0 bottom-0 z-0"
+        style={{
+          backgroundImage: `url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80' width='40' height='40' fill='none'%3E%3Ccircle fill='%233b82f6' id='pattern-circle' cx='20' cy='20' r='2.5'%3E%3C/circle%3E%3C/svg%3E")`,
+          backgroundSize: '40px 40px',
+          backgroundRepeat: 'repeat',
+          backgroundPosition: 'center',
+          backgroundColor: 'white'
+        }}
+      />
+      
       {/* Navbar fijo en la parte superior */}
       <div className="fixed top-0 left-0 right-0 z-50">
         <NavbarUser 
@@ -34,10 +46,10 @@ export const UserLayout = ({ children }) => {
       </div>
 
       {/* Contenedor principal con padding-top para el navbar */}
-      <div className="flex h-screen pt-16">
+      <div className="flex h-screen pt-16 relative z-10">
         {/* Contenido principal */}
         <main className={`
-          flex-1 transition-all duration-300 overflow-y-auto
+          flex-1 overflow-y-auto
           ${isSidebarOpen ? 'lg:ml-0' : 'lg:ml-0'}
         `}>
           <div className="w-full h-full">
