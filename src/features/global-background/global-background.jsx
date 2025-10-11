@@ -6,7 +6,8 @@ import { useLocation } from "react-router-dom";
 export default function GlobalBackground({ 
   children, 
   className = "", 
-  fullHeight = true 
+  fullHeight = true,
+  style = {}
 }) {
   const location = useLocation();
   
@@ -17,8 +18,10 @@ export default function GlobalBackground({
     return <>{children}</>;
   }
 
+  const heightClass = fullHeight ? 'min-h-screen' : 'h-full';
+
   return (
-    <div className={`w-full h-full ${className}`}>
+    <div className={`w-full ${heightClass} ${className}`} style={style}>
       {children}
     </div>
   );
