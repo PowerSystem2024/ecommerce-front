@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
+import { CartProvider } from '../features/cart/context/CartContext';
 
 // Aquí puedes agregar más providers según necesites:
 // - AuthProvider (para autenticación)
@@ -10,7 +11,7 @@ import { BrowserRouter } from 'react-router-dom';
 export function AppProviders({ children }) {
   return (
     <BrowserRouter>
-      {children}
+      <CartProvider>{children}</CartProvider>
     </BrowserRouter>
   );
 }
