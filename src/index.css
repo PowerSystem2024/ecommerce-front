@@ -1,8 +1,9 @@
 @import "tailwindcss";
 
-/* Estilos base para el proyecto */
-body {
+html, body, #root {
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
   margin: 0;
-  min-width: 320px;
-  min-height: 100vh;
+  padding: 0;
 }
