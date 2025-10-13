@@ -6,6 +6,7 @@ import LandingPage from '../features/landing/page/LandingPage';
 import { ShopLayout } from '../features/shared/components/navigations';
 import OrdersPage from '../features/orders/pages/OrdersPage';
 import DashboardAdmin from '../features/dashboard-admin/pages/dashboardAdmin';
+import CartPage from '../features/cart/pages/cartpage';
 
 // Página 404
 const NotFoundPage = () => (
@@ -25,6 +26,7 @@ export default function AppRoutes() {
       
       {/* Rutas del shop/e-commerce */}
       <Route path="/shop" element={<ShopLayout />} />
+  <Route path="/cart" element={<CartPage />} />
       <Route path="/orders" element={<OrdersPage />} />
       
       {/* Rutas del dashboard de admin */}
