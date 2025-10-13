@@ -1,14 +1,19 @@
 import React from 'react'
 import Hero from '../components/Hero'
-import Cami from '../components/cami'
+import Navbar from '../components/Navbar'
+import About from '../components/About'
+import Footer from '../components/Footer'
 
 function LandingPage() {
   return (
-    <div>
+    <div className="w-full overflow-x-hidden">
+      <Navbar />
       <Hero />
-      <Cami />
+      <About />
+      <Footer />
     </div>
   )
 }
+
 
 export default LandingPage
