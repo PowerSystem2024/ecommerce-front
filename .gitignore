@@ -13,6 +13,9 @@ dist-ssr
 *.local
 #variables de entorno
 .env
+.env.*
+*.env
+!.env.example
 #variables de entorno locales
 .env.local
 .env.development.local
