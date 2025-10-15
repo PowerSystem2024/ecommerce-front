@@ -172,6 +172,18 @@ export const NavbarUser = ({ onMenuToggle }) => {
 
                 {/* Menú */}
                 <div className="px-2 py-2">
+                    <button
+                      onClick={() => {
+                        setIsDropdownOpen(false);
+                        navigate('/change-password');
+                      }}
+                      className="flex items-center space-x-3 w-full px-3 py-2.5 text-sm text-gray-700 hover:bg-gray-50 rounded-lg transition-all"
+                    >
+                      <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 11c1.657 0 3-1.343 3-3S13.657 5 12 5 9 6.343 9 8s1.343 3 3 3zM5.5 21a6.5 6.5 0 1113 0h-13z" />
+                      </svg>
+                      <span className="font-medium">Cambiar contraseña</span>
+                    </button>
                   <button
                     onClick={handleProfileClick}
                     className="flex items-center space-x-3 w-full px-3 py-2.5 text-sm text-gray-700 hover:bg-gray-50 rounded-lg transition-all"

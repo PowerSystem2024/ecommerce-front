@@ -6,17 +6,28 @@ class AuthService {
   async makeRequest(endpoint, options = {}) {
     const url = `${API_BASE_URL}${endpoint}`;
     
+    const token = this.getToken();
     const config = {
       headers: {
         'Content-Type': 'application/json',
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
         ...options.headers,
       },
+      // Si el backend usa cookies httpOnly, habilitar credenciales
+      ...(options.credentials ? { credentials: options.credentials } : {}),
       ...options,
     };
 
     try {
       const response = await fetch(url, config);
-      const data = await response.json();
+      const text = await response.text();
+      let data;
+      try {
+        data = text ? JSON.parse(text) : {};
+      } catch (_e) {
+        // Respuesta no-JSON (probablemente HTML)
+        throw new Error(`Unexpected response from server (status ${response.status}).`);
+      }
 
       if (!response.ok) {
         throw new Error(data.message || 'Error en la petición');
@@ -77,10 +88,18 @@ class AuthService {
   }
 
   // CAMBIAR CONTRASEÑA CON TOKEN
-  async resetPassword(token, newPassword) {
+  async resetPassword(token, password, passwordConfirm) {
     return this.makeRequest(`/auth/reset-password/${token}`, {
       method: 'PATCH',
-      body: JSON.stringify({ password: newPassword }),
+      body: JSON.stringify({ password, passwordConfirm }),
+    });
+  }
+
+  // CAMBIO DE CONTRASEÑA AUTENTICADO
+  async changePassword(currentPassword, newPassword, passwordConfirm) {
+    return this.makeRequest('/auth/change-password', {
+      method: 'PATCH',
+      body: JSON.stringify({ currentPassword, newPassword, passwordConfirm })
     });
   }
 

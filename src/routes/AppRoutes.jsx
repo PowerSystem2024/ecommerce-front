@@ -12,6 +12,9 @@ import CartPage from '../features/cart/pages/cartpage';
 import LoginPage from '../features/auth/pages/LoginPage';
 import RegisterPage from '../features/auth/pages/RegisterPage';
 import VerifyEmailPage from '../features/auth/pages/VerifyEmailPage';
+import ForgotPasswordPage from '../features/auth/pages/ForgotPasswordPage';
+import ResetPasswordPage from '../features/auth/pages/ResetPasswordPage';
+import ChangePasswordPage from '../features/auth/pages/ChangePasswordPage';
 
 // Página 404
 const NotFoundPage = () => (
@@ -41,6 +44,9 @@ export default function AppRoutes() {
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
       <Route path="/verify-email/:token" element={<VerifyEmailPage />} />
+      <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+      <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
+      <Route path="/change-password" element={<ChangePasswordPage />} />
       
       {/* Ruta de prueba para verificar que las rutas funcionan */}
       <Route path="/test-verify" element={<div>Ruta de prueba funcionando</div>} />
