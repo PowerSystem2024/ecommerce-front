@@ -1,6 +1,33 @@
 import React, { useState, useEffect } from "react";
+import { AuthNavbar } from "../../shared/components/navigations";
 
 export default function Navbar() {
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  useEffect(() => {
+    function onEsc(e) {
+      if (e.key === "Escape") setMenuOpen(false);
+    }
+    document.addEventListener("keydown", onEsc);
+    return () => document.removeEventListener("keydown", onEsc);
+  }, []);
+
+  // 👇 función para hacer scroll suave a una sección
+  const handleScroll = (id) => {
+    const section = document.querySelector(id);
+    if (section) {
+      section.scrollIntoView({ behavior: "smooth" });
+      setMenuOpen(false);
+    }
+  };
+
+  return (
+    <AuthNavbar />
+  );
+}
+
+// Mantener el componente original como fallback
+export function OriginalNavbar() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {

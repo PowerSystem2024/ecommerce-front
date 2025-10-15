@@ -1,8 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../../auth/context/AuthContext';
 
 export const NavbarUser = ({ onMenuToggle }) => {
   const navigate = useNavigate();
+  const { user, logout, isAuthenticated } = useAuth();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -10,7 +12,8 @@ export const NavbarUser = ({ onMenuToggle }) => {
   const dropdownRef = useRef(null);
   const searchRef = useRef(null);
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    await logout();
     navigate('/');
   };
 
@@ -158,10 +161,10 @@ export const NavbarUser = ({ onMenuToggle }) => {
                     </div>
                     <div>
                       <div className="text-sm font-semibold text-gray-900">
-                        Usuario
+                        {user?.name || 'Usuario'}
                       </div>
                       <div className="text-xs text-gray-500">
-                        usuario@email.com
+                        {user?.email || 'usuario@email.com'}
                       </div>
                     </div>
                   </div>

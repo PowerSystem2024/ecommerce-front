@@ -8,6 +8,11 @@ import OrdersPage from '../features/orders/pages/OrdersPage';
 import DashboardAdmin from '../features/dashboard-admin/pages/dashboardAdmin';
 import CartPage from '../features/cart/pages/cartpage';
 
+// Importar páginas de autenticación
+import LoginPage from '../features/auth/pages/LoginPage';
+import RegisterPage from '../features/auth/pages/RegisterPage';
+import VerifyEmailPage from '../features/auth/pages/VerifyEmailPage';
+
 // Página 404
 const NotFoundPage = () => (
   <div className="flex items-center justify-center min-h-screen">
@@ -31,6 +36,14 @@ export default function AppRoutes() {
       
       {/* Rutas del dashboard de admin */}
       <Route path="/admin" element={<DashboardAdmin />} />
+      
+      {/* Rutas de autenticación */}
+      <Route path="/login" element={<LoginPage />} />
+      <Route path="/register" element={<RegisterPage />} />
+      <Route path="/verify-email/:token" element={<VerifyEmailPage />} />
+      
+      {/* Ruta de prueba para verificar que las rutas funcionan */}
+      <Route path="/test-verify" element={<div>Ruta de prueba funcionando</div>} />
       
       {/* Ruta 404 - debe ir al final */}
       <Route path="*" element={<NotFoundPage />} />
