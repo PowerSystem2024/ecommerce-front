@@ -100,9 +100,14 @@ export default function LoginPage() {
         </form>
 
         <div className="text-sm text-center">
-          <Link to="/register" className="font-medium text-blue-600 hover:text-blue-500">
-            Crear cuenta
-          </Link>
+          <div className="flex items-center justify-between">
+            <Link to="/register" className="font-medium text-blue-600 hover:text-blue-500">
+              Crear cuenta
+            </Link>
+            <Link to="/forgot-password" className="font-medium text-blue-600 hover:text-blue-500">
+              ¿Olvidaste tu contraseña?
+            </Link>
+          </div>
         </div>
       </div>
     </div>
