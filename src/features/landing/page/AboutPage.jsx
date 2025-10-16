@@ -1,7 +1,7 @@
 import React from 'react'
 import { motion } from 'framer-motion'
 import Footer from '../components/home/Footer'
-import AboutHero from '../components/About/AboutHero'
+import AboutHero from '../components/about/AboutHero'
 import AboutStats from '../components/About/AboutStats'
 import ExponsorAbout from '../components/About/ExponsorAbout'
 import TeamSection from '../components/home/TeamSection'
