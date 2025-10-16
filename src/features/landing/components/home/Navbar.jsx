@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { AuthNavbar } from "../../shared/components/navigations";
+import { AuthNavbar } from "../../../shared/components/navigations";
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);

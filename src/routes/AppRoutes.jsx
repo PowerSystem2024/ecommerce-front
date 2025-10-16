@@ -15,6 +15,8 @@ import VerifyEmailPage from '../features/auth/pages/VerifyEmailPage';
 import ForgotPasswordPage from '../features/auth/pages/ForgotPasswordPage';
 import ResetPasswordPage from '../features/auth/pages/ResetPasswordPage';
 import ChangePasswordPage from '../features/auth/pages/ChangePasswordPage';
+import AboutPage from '../features/landing/page/AboutPage';
+import ContactPage from '../features/landing/page/ContactPage';
 
 // Página 404
 const NotFoundPage = () => (
@@ -31,6 +33,8 @@ export default function AppRoutes() {
     <Routes>
       {/* Ruta principal */}
       <Route path="/" element={<LandingPage />} />
+      <Route path="/about" element={<AboutPage />} />
+      <Route path="/contact" element={<ContactPage />} />
       
       {/* Rutas del shop/e-commerce */}
       <Route path="/shop" element={<ShopLayout />} />

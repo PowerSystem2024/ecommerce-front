@@ -1,10 +1,10 @@
 import React from 'react'
 import { motion } from 'framer-motion'
-import Navbar from '../components/home/Navbar'
 import Footer from '../components/home/Footer'
-import PromoSection from '../components/home/PromoSection'
-import HeroSection from '../components/home/HeroSection'
-import Incentives from '../components/home/Incentives'
+import AboutHero from '../components/About/AboutHero'
+import AboutStats from '../components/About/AboutStats'
+import ExponsorAbout from '../components/About/ExponsorAbout'
+import TeamSection from '../components/home/TeamSection'
 
 const pageVariants = {
   initial: { opacity: 0 },
@@ -18,7 +18,7 @@ const pageTransition = {
   duration: 0.4
 }
 
-function LandingPage() {
+function AboutPage() {
   return (
     <motion.div
       initial="initial"
@@ -29,11 +29,11 @@ function LandingPage() {
       className="w-full overflow-x-hidden"
     >
       <motion.div
-        initial={{ opacity: 0, y: -20 }}
+        initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
       >
-        <Navbar />
+        <AboutHero/>
       </motion.div>
       
       <motion.div
@@ -41,7 +41,7 @@ function LandingPage() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.2 }}
       >
-        <HeroSection/>
+        <AboutStats/>
       </motion.div>
       
       <motion.div
@@ -49,7 +49,7 @@ function LandingPage() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.4 }}
       >
-        <PromoSection/>
+        <ExponsorAbout/>
       </motion.div>
       
       <motion.div
@@ -57,7 +57,7 @@ function LandingPage() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.6 }}
       >
-        <Incentives/>
+        <TeamSection/>
       </motion.div>
       
       <motion.div
@@ -65,10 +65,10 @@ function LandingPage() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.8 }}
       >
-        <Footer />
+        <Footer/>
       </motion.div>
     </motion.div>
   )
 }
 
-export default LandingPage
+export default AboutPage

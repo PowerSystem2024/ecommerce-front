@@ -1,10 +1,8 @@
 import React from 'react'
 import { motion } from 'framer-motion'
-import Navbar from '../components/home/Navbar'
+import Contact from '../components/Contact/Contact'
 import Footer from '../components/home/Footer'
-import PromoSection from '../components/home/PromoSection'
-import HeroSection from '../components/home/HeroSection'
-import Incentives from '../components/home/Incentives'
+import Navbar from '../components/home/Navbar'
 
 const pageVariants = {
   initial: { opacity: 0 },
@@ -18,7 +16,7 @@ const pageTransition = {
   duration: 0.4
 }
 
-function LandingPage() {
+function ContactPage() {
   return (
     <motion.div
       initial="initial"
@@ -33,7 +31,7 @@ function LandingPage() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
       >
-        <Navbar />
+        <Navbar/>
       </motion.div>
       
       <motion.div
@@ -41,7 +39,7 @@ function LandingPage() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.2 }}
       >
-        <HeroSection/>
+        <Contact/>
       </motion.div>
       
       <motion.div
@@ -49,26 +47,10 @@ function LandingPage() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.4 }}
       >
-        <PromoSection/>
-      </motion.div>
-      
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.6 }}
-      >
-        <Incentives/>
-      </motion.div>
-      
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.8 }}
-      >
-        <Footer />
+        <Footer/>
       </motion.div>
     </motion.div>
   )
 }
 
-export default LandingPage
+export default ContactPage
