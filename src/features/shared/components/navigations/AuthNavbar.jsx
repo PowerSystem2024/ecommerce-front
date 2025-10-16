@@ -1,10 +1,19 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../auth/context/AuthContext';
 
 export default function AuthNavbar() {
   const { isAuthenticated, user, logout } = useAuth();
   const navigate = useNavigate();
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  useEffect(() => {
+    function onEsc(e) {
+      if (e.key === "Escape") setMenuOpen(false);
+    }
+    document.addEventListener("keydown", onEsc);
+    return () => document.removeEventListener("keydown", onEsc);
+  }, []);
 
   const handleLogout = async () => {
     await logout();
@@ -26,28 +35,18 @@ export default function AuthNavbar() {
 
         {/* LINKS DESKTOP */}
         <div className="hidden md:flex items-center gap-8">
-          <button
-            onClick={() => {
-              const section = document.querySelector("#about");
-              if (section) {
-                section.scrollIntoView({ behavior: "smooth" });
-              }
-            }}
+          <Link
+            to="/about"
             className="text-gray-700 hover:text-gray-900 transition font-medium"
           >
             SOBRE NOSOTROS
-          </button>
-          <button
-            onClick={() => {
-              const section = document.querySelector("#contact");
-              if (section) {
-                section.scrollIntoView({ behavior: "smooth" });
-              }
-            }}
+          </Link>
+          <Link
+            to="/contact"
             className="text-gray-700 hover:text-gray-900 transition font-medium"
           >
             CONTACTO
-          </button>
+          </Link>
           
           {isAuthenticated ? (
             <div className="flex items-center gap-4">
@@ -79,14 +78,70 @@ export default function AuthNavbar() {
 
         {/* BOTÓN HAMBURGUESA */}
         <button
+          onClick={() => setMenuOpen(!menuOpen)}
           className="md:hidden text-gray-700 hover:text-gray-900 p-2 rounded-md"
           aria-label="Abrir menú"
         >
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
-          </svg>
+          {menuOpen ? (
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          ) : (
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          )}
         </button>
       </nav>
+
+      {/* MENÚ MÓVIL */}
+      {menuOpen && (
+        <div className="md:hidden bg-white border-t border-gray-200 px-6 py-4 space-y-3 shadow-lg">
+          <Link
+            to="/about"
+            className="block w-full text-left text-gray-700 hover:text-gray-900 transition"
+            onClick={() => setMenuOpen(false)}
+          >
+            SOBRE NOSOTROS
+          </Link>
+          <Link
+            to="/contact"
+            className="block w-full text-left text-gray-700 hover:text-gray-900 transition"
+            onClick={() => setMenuOpen(false)}
+          >
+            CONTACTO
+          </Link>
+          
+          {isAuthenticated ? (
+            <>
+              <Link
+                to="/shop"
+                className="block w-full text-left text-gray-700 hover:text-gray-900 transition"
+                onClick={() => setMenuOpen(false)}
+              >
+                TIENDA
+              </Link>
+              <button
+                onClick={() => {
+                  handleLogout();
+                  setMenuOpen(false);
+                }}
+                className="block w-full text-left text-gray-700 hover:text-gray-900 transition"
+              >
+                CERRAR SESIÓN
+              </button>
+            </>
+          ) : (
+            <Link
+              to="/login"
+              className="block text-gray-700 hover:text-gray-900 font-medium border border-gray-700 rounded-md text-center py-2 transition"
+              onClick={() => setMenuOpen(false)}
+            >
+              INICIAR SESIÓN
+            </Link>
+          )}
+        </div>
+      )}
     </header>
   );
 }
