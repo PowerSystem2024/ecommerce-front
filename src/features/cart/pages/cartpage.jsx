@@ -1,10 +1,18 @@
 import React from 'react';
 import Cart from '../components/cart';
+import { ShopLayout } from '../../shared/components/navigations';
 
 export default function CartPage() {
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <Cart />
+    <ShopLayout>
+    <div className="min-h-screen bg-[#0F0F10] text-white py-12 px-4 flex flex-col items-center">
+      <h1 className="text-4xl font-orbitron text-[#E11D74] mb-10 uppercase tracking-widest">
+        Tu Carrito
+      </h1>
+      <div className="w-full max-w-6xl">
+        <Cart />
+      </div>
     </div>
+    </ShopLayout>
   );
 }

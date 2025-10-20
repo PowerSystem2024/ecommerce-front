@@ -4,14 +4,22 @@ import CartSummary from './cartSummary';
 
 export default function Cart() {
   return (
-    <div className="max-w-5xl mx-auto p-4 grid grid-cols-1 md:grid-cols-3 gap-6">
-      <div className="md:col-span-2 bg-white rounded-lg shadow p-4">
-        <h2 className="text-xl font-semibold mb-4">Tu carrito</h2>
-        <CartList />
+    <div className="max-w-6xl mx-auto p-6 grid grid-cols-1 lg:grid-cols-3 gap-10 text-white">
+      {/* Sección izquierda: lista de productos */}
+      <div className="lg:col-span-2 bg-[#1A1A1B] rounded-2xl shadow-lg p-6 border border-[#2A2A2A]">
+        <h2 className="text-2xl font-orbitron text-[#E11D74] mb-6 uppercase tracking-widest">
+          Tu Carrito
+        </h2>
+        <div className="border-t border-[#2A2A2A] pt-4">
+          <CartList />
+        </div>
       </div>
-      <div>
+
+      {/* Sección derecha: resumen */}
+      <div className="bg-[#0F0F10] rounded-2xl shadow-lg p-6 border border-[#2A2A2A]">
         <CartSummary />
       </div>
     </div>
   );
 }
+
