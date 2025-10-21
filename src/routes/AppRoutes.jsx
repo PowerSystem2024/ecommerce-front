@@ -3,7 +3,7 @@ import { Routes, Route } from 'react-router-dom';
 
 // Importar tus páginas existentes
 import LandingPage from '../features/landing/page/LandingPage';
-import { ShopLayout } from '../features/shared/components/navigations';
+import ShopPage from '../features/shop/page/shopPage';
 import OrdersPage from '../features/orders/pages/OrdersPage';
 import DashboardAdmin from '../features/dashboard-admin/pages/dashboardAdmin';
 import CartPage from '../features/cart/pages/cartpage';
@@ -37,7 +37,7 @@ export default function AppRoutes() {
       <Route path="/contact" element={<ContactPage />} />
       
       {/* Rutas del shop/e-commerce */}
-      <Route path="/shop" element={<ShopLayout />} />
+      <Route path="/shop" element={<ShopPage />} />
   <Route path="/cart" element={<CartPage />} />
       <Route path="/orders" element={<OrdersPage />} />
       

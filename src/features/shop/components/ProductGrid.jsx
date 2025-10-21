@@ -1,0 +1,72 @@
+import React from "react";
+import { motion } from "framer-motion";
+import ProductCard from "./ProductCard";
+
+export default function ProductGrid({ products, onAddToCart, loading = false }) {
+  if (loading) {
+    return (
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+        {[...Array(8)].map((_, index) => (
+          <div key={index} className="animate-pulse">
+            <div className="bg-[#2A2A2A]/10 rounded-2xl overflow-hidden">
+              <div className="aspect-square bg-[#2A2A2A]/20" />
+              <div className="p-6 space-y-4">
+                <div className="h-4 bg-[#2A2A2A]/20 rounded" />
+                <div className="h-3 bg-[#2A2A2A]/20 rounded w-3/4" />
+                <div className="h-6 bg-[#2A2A2A]/20 rounded w-1/2" />
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  }
+
+  if (products.length === 0) {
+    return (
+      <motion.div 
+        className="text-center py-16"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        <div className="max-w-md mx-auto">
+          <div className="w-24 h-24 mx-auto mb-6 bg-[#2A2A2A]/10 rounded-full flex items-center justify-center">
+            <svg className="w-12 h-12 text-[#2A2A2A]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          </div>
+          <h3 className="text-xl font-semibold text-[#0F0F10] mb-2 font-['Quantico',_sans-serif]">
+            No se encontraron productos
+          </h3>
+          <p className="text-[#2A2A2A] font-['Rajdhani',_sans-serif]">
+            Intenta ajustar los filtros o buscar con otros términos
+          </p>
+        </div>
+      </motion.div>
+    );
+  }
+
+  return (
+    <motion.div 
+      className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+    >
+      {products.map((product, index) => (
+        <motion.div
+          key={product.id}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: index * 0.1, duration: 0.5 }}
+        >
+          <ProductCard 
+            product={product} 
+            onAddToCart={onAddToCart}
+          />
+        </motion.div>
+      ))}
+    </motion.div>
+  );
+}

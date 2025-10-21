@@ -6,12 +6,9 @@ export const NavbarUser = ({ onMenuToggle }) => {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
   const [cartItemsCount] = useState(3); // Mock temporal
   const dropdownRef = useRef(null);
-  const searchRef = useRef(null);
   const mobileMenuRef = useRef(null);
 
   const handleLogout = async () => {
@@ -24,22 +21,11 @@ export const NavbarUser = ({ onMenuToggle }) => {
     navigate('/dashboard');
   };
 
-  const handleSearch = (e) => {
-    e.preventDefault();
-    if (searchQuery.trim()) {
-      navigate(`/products?search=${encodeURIComponent(searchQuery)}`);
-      setSearchQuery('');
-      setIsSearchOpen(false);
-    }
-  };
 
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setIsDropdownOpen(false);
-      }
-      if (searchRef.current && !searchRef.current.contains(event.target)) {
-        setIsSearchOpen(false);
       }
       if (mobileMenuRef.current && !mobileMenuRef.current.contains(event.target)) {
         setIsMobileMenuOpen(false);
@@ -145,38 +131,6 @@ export const NavbarUser = ({ onMenuToggle }) => {
 
       {/* Acciones lado derecho */}
       <div className="flex items-center space-x-3">
-        {/* Búsqueda desktop */}
-        <div className="hidden lg:flex max-w-md" ref={searchRef}>
-          <form onSubmit={handleSearch}>
-              <div className="relative">
-                <input
-                  type="text"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Buscar productos..."
-                className="w-72 px-4 py-2 pl-10 text-sm border border-[#2A2A2A] rounded-lg bg-[#2A2A2A] text-[#FFFFFF] placeholder-[#CFCFCF] focus:ring-2 focus:ring-[#E11D74] focus:outline-none font-['Rajdhani',_sans-serif]"
-                />
-                <svg 
-                  className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400"
-                  fill="none" 
-                  stroke="currentColor" 
-                  viewBox="0 0 24 24"
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
-              </div>
-            </form>
-        </div>
-
-        {/* Búsqueda móvil */}
-          <button
-            onClick={() => setIsSearchOpen(!isSearchOpen)}
-          className="md:hidden p-2 rounded-lg text-[#CFCFCF] hover:text-[#E11D74] hover:bg-[#2A2A2A] transition-colors"
-          >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg>
-          </button>
 
         {/* Favoritos */}
           <button
@@ -266,31 +220,6 @@ export const NavbarUser = ({ onMenuToggle }) => {
         </div>
       </div>
 
-        {/* Búsqueda móvil expandida */}
-      {isSearchOpen && (
-          <div className="absolute top-16 left-0 w-full bg-[#0F0F10]/90 border-t border-[#2A2A2A] px-4 py-3 md:hidden">
-          <form onSubmit={handleSearch}>
-            <div className="relative">
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Buscar productos..."
-                autoFocus
-                className="w-full px-4 py-2 pl-10 text-sm border border-[#2A2A2A] rounded-lg bg-[#2A2A2A] text-[#FFFFFF] placeholder-[#CFCFCF] focus:ring-2 focus:ring-[#E11D74] font-['Rajdhani',_sans-serif]"
-              />
-              <svg 
-                className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[#CFCFCF]"
-                fill="none" 
-                stroke="currentColor" 
-                viewBox="0 0 24 24"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
-            </div>
-          </form>
-        </div>
-      )}
     </nav>
   );
 };
