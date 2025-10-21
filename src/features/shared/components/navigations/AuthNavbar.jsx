@@ -50,14 +50,10 @@ export default function AuthNavbar() {
           
           {isAuthenticated ? (
             <div className="flex items-center gap-4">
-              <span className="text-gray-700">
-                ¡Hola, {user?.name || 'Usuario'}!
-              </span>
               <Link
                 to="/shop"
                 className="text-gray-700 hover:text-gray-900 transition font-medium"
               >
-                TIENDA
               </Link>
               <button
                 onClick={handleLogout}
