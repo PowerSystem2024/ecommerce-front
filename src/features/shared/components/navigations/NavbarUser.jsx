@@ -18,7 +18,7 @@ export const NavbarUser = ({ onMenuToggle }) => {
 
   const handleProfileClick = () => {
     setIsDropdownOpen(false);
-    navigate('/dashboard');
+    navigate('/profile');
   };
 
 
@@ -108,13 +108,56 @@ export const NavbarUser = ({ onMenuToggle }) => {
                 </svg>
                 <span className="font-bold text-[#FFFFFF] tracking-[0.1em] uppercase font-['Quantico',_sans-serif]">Colecciones</span>
               </button>
+
+              {/* Separador */}
+              <div className="h-px bg-gradient-to-r from-transparent via-[#2A2A2A] to-transparent my-2"></div>
+
+              {/* Enlaces de usuario */}
+              <button
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
+                  navigate('/profile');
+                }}
+                className="flex items-center space-x-3 w-full px-3 py-2.5 text-sm hover:bg-[#2A2A2A] rounded-lg transition-all"
+              >
+                <svg className="w-5 h-5 text-[#E11D74]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
+                <span className="font-bold text-[#FFFFFF] tracking-[0.1em] uppercase font-['Quantico',_sans-serif]">Mi Perfil</span>
+              </button>
+
+              <button
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
+                  navigate('/order-history');
+                }}
+                className="flex items-center space-x-3 w-full px-3 py-2.5 text-sm hover:bg-[#2A2A2A] rounded-lg transition-all"
+              >
+                <svg className="w-5 h-5 text-[#E11D74]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span className="font-bold text-[#FFFFFF] tracking-[0.1em] uppercase font-['Quantico',_sans-serif]">Historial</span>
+              </button>
+
+              <button
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
+                  navigate('/cart');
+                }}
+                className="flex items-center space-x-3 w-full px-3 py-2.5 text-sm hover:bg-[#2A2A2A] rounded-lg transition-all"
+              >
+                <svg className="w-5 h-5 text-[#E11D74]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+                <span className="font-bold text-[#FFFFFF] tracking-[0.1em] uppercase font-['Quantico',_sans-serif]">Carrito</span>
+              </button>
             </div>
           </div>
         )}
       </div>
 
        {/* Navegación principal */}
-       <div className="hidden md:flex items-center space-x-8">
+       <div className="hidden md:flex items-center space-x-6">
          <button 
            onClick={() => navigate('/shop')} 
           className="text-lg font-bold text-[#CFCFCF] hover:text-[#E11D74] transition-all duration-300 hover:scale-105 tracking-[0.1em] uppercase font-['Quantico',_sans-serif]"
@@ -126,6 +169,12 @@ export const NavbarUser = ({ onMenuToggle }) => {
           className="text-lg font-bold text-[#CFCFCF] hover:text-[#E11D74] transition-all duration-300 hover:scale-105 tracking-[0.1em] uppercase font-['Quantico',_sans-serif]"
          >
            Colecciones
+         </button>
+         <button 
+           onClick={() => navigate('/order-history')} 
+          className="text-lg font-bold text-[#CFCFCF] hover:text-[#E11D74] transition-all duration-300 hover:scale-105 tracking-[0.1em] uppercase font-['Quantico',_sans-serif]"
+         >
+           Mis Pedidos
          </button>
        </div>
 
@@ -193,8 +242,15 @@ export const NavbarUser = ({ onMenuToggle }) => {
                 </div>
 
               <div className="px-2 py-2 space-y-1">
-                <DropdownItem icon="user" label="Mi Cuenta" onClick={() => navigate('/dashboard')} />
+                {/* Sección principal */}
+                <DropdownItem icon="user" label="Mi Perfil" onClick={() => navigate('/profile')} />
                 <DropdownItem icon="bag" label="Mis Pedidos" onClick={() => navigate('/orders')} />
+                <DropdownItem icon="history" label="Historial de Pedidos" onClick={() => navigate('/order-history')} />
+                
+                {/* Separador */}
+                <div className="h-px bg-gradient-to-r from-transparent via-[#2A2A2A] to-transparent my-2"></div>
+                
+                {/* Sección secundaria */}
                 <DropdownItem icon="heart" label="Favoritos" onClick={() => navigate('/favorites')} />
                 <DropdownItem icon="map" label="Direcciones" onClick={() => navigate('/addresses')} />
                 <DropdownItem icon="lock" label="Cambiar contraseña" onClick={() => navigate('/change-password')} />
@@ -245,17 +301,20 @@ const DropdownItem = ({ icon, label, onClick }) => {
     lock: (
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 11c1.657 0 3-1.343 3-3S13.657 5 12 5 9 6.343 9 8s1.343 3 3 3zM5.5 21a6.5 6.5 0 1113 0h-13z" />
     ),
+    history: (
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+    ),
   };
 
   return (
     <button
       onClick={onClick}
-      className="flex items-center space-x-3 w-full px-3 py-2.5 text-sm hover:bg-[#2A2A2A] rounded-lg transition-all font-['Rajdhani',_sans-serif]"
+      className="flex items-center space-x-3 w-full px-3 py-2.5 text-sm hover:bg-[#2A2A2A] hover:scale-[1.02] rounded-lg transition-all duration-200 font-['Rajdhani',_sans-serif] group"
     >
-      <svg className="w-5 h-5 text-[#E11D74]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg className="w-5 h-5 text-[#E11D74] group-hover:text-[#FFFFFF] transition-colors duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         {icons[icon]}
       </svg>
-      <span className="font-medium text-[#FFFFFF]">{label}</span>
+      <span className="font-medium text-[#FFFFFF] group-hover:text-[#E11D74] transition-colors duration-200">{label}</span>
     </button>
   );
 };
