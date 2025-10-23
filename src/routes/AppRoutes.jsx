@@ -8,6 +8,10 @@ import OrdersPage from '../features/orders/pages/OrdersPage';
 import DashboardAdmin from '../features/dashboard-admin/pages/dashboardAdmin';
 import CartPage from '../features/cart/pages/cartpage';
 
+// Importar nuevas páginas
+import UserProfilePage from '../features/user-profile/pages/UserProfilePage';
+import OrderHistoryPage from '../features/order-history/pages/OrderHistoryPage';
+
 // Importar páginas de autenticación
 import LoginPage from '../features/auth/pages/LoginPage';
 import RegisterPage from '../features/auth/pages/RegisterPage';
@@ -38,8 +42,12 @@ export default function AppRoutes() {
       
       {/* Rutas del shop/e-commerce */}
       <Route path="/shop" element={<ShopPage />} />
-  <Route path="/cart" element={<CartPage />} />
+      <Route path="/cart" element={<CartPage />} />
       <Route path="/orders" element={<OrdersPage />} />
+      
+      {/* Rutas de perfil de usuario */}
+      <Route path="/profile" element={<UserProfilePage />} />
+      <Route path="/order-history" element={<OrderHistoryPage />} />
       
       {/* Rutas del dashboard de admin */}
       <Route path="/admin" element={<DashboardAdmin />} />

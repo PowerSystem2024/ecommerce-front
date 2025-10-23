@@ -1,13 +1,18 @@
 // Servicio para comunicación con la API de autenticación
-const API_BASE_URL = import.meta.env.VITE_API_URL;
+import { config, buildApiUrl, devLog } from '../../../config/appConfig';
+
+const API_BASE_URL = config.API_BASE_URL;
 
 class AuthService {
   // Método privado para hacer requests
   async makeRequest(endpoint, options = {}) {
     const url = `${API_BASE_URL}${endpoint}`;
     
+    // Debug: mostrar la URL que se está llamando
+    devLog('AuthService - URL:', url);
+    
     const token = this.getToken();
-    const config = {
+    const requestConfig = {
       headers: {
         'Content-Type': 'application/json',
         ...(token ? { Authorization: `Bearer ${token}` } : {}),
@@ -19,23 +24,35 @@ class AuthService {
     };
 
     try {
-      const response = await fetch(url, config);
+      devLog('AuthService - Enviando request:', { url, method: requestConfig.method || 'GET' });
+      
+      const response = await fetch(url, requestConfig);
       const text = await response.text();
+      
+      devLog('AuthService - Respuesta recibida:', { 
+        status: response.status, 
+        statusText: response.statusText,
+        hasBody: !!text 
+      });
+      
       let data;
       try {
         data = text ? JSON.parse(text) : {};
       } catch (_e) {
         // Respuesta no-JSON (probablemente HTML)
-        throw new Error(`Unexpected response from server (status ${response.status}).`);
+        devLog('AuthService - Respuesta no es JSON:', text.substring(0, 200));
+        throw new Error(`Unexpected response from server (status ${response.status}). Expected JSON but got: ${text.substring(0, 100)}...`);
       }
 
       if (!response.ok) {
-        throw new Error(data.message || 'Error en la petición');
+        devLog('AuthService - Error en respuesta:', { status: response.status, data });
+        throw new Error(data.message || `Error ${response.status}: ${response.statusText}`);
       }
 
+      devLog('AuthService - Request exitoso:', data);
       return data;
     } catch (error) {
-      console.error('Error en AuthService:', error);
+      devLog('AuthService - Error completo:', error);
       throw error;
     }
   }
