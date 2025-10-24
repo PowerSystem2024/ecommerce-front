@@ -11,6 +11,7 @@ import CartPage from '../features/cart/pages/cartpage';
 // Importar nuevas páginas
 import UserProfilePage from '../features/user-profile/pages/UserProfilePage';
 import OrderHistoryPage from '../features/order-history/pages/OrderHistoryPage';
+import OrderDetailPage from '../features/order-history/pages/OrderDetailPage';
 
 // Importar páginas de autenticación
 import LoginPage from '../features/auth/pages/LoginPage';
@@ -48,6 +49,7 @@ export default function AppRoutes() {
       {/* Rutas de perfil de usuario */}
       <Route path="/profile" element={<UserProfilePage />} />
       <Route path="/order-history" element={<OrderHistoryPage />} />
+      <Route path="/orders/:orderId" element={<OrderDetailPage />} />
       
       {/* Rutas del dashboard de admin */}
       <Route path="/admin" element={<DashboardAdmin />} />

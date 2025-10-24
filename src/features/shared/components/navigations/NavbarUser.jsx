@@ -253,7 +253,6 @@ export const NavbarUser = ({ onMenuToggle }) => {
                 {/* Sección secundaria */}
                 <DropdownItem icon="heart" label="Favoritos" onClick={() => navigate('/favorites')} />
                 <DropdownItem icon="map" label="Direcciones" onClick={() => navigate('/addresses')} />
-                <DropdownItem icon="lock" label="Cambiar contraseña" onClick={() => navigate('/change-password')} />
                 </div>
 
                 <div className="px-4 py-2">
@@ -297,9 +296,6 @@ const DropdownItem = ({ icon, label, onClick }) => {
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a2 2 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
       </>
-    ),
-    lock: (
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 11c1.657 0 3-1.343 3-3S13.657 5 12 5 9 6.343 9 8s1.343 3 3 3zM5.5 21a6.5 6.5 0 1113 0h-13z" />
     ),
     history: (
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
