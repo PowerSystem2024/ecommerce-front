@@ -2,118 +2,93 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../auth/context/AuthContext';
+import { orderService } from '../services/orderService';
 
 const OrderHistoryContent = () => {
   const navigate = useNavigate();
   const { user, isAuthenticated } = useAuth();
+  
+  // Error boundary simple
+  const [hasError, setHasError] = useState(false);
+  
+  // Capturar errores de renderizado
+  if (hasError) {
+    return (
+      <div className="max-w-7xl mx-auto p-6">
+        <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
+          <h2 className="text-xl font-bold text-red-800 mb-2">Error en el componente</h2>
+          <p className="text-red-600 mb-4">Algo salió mal al cargar el historial de pedidos.</p>
+          <button 
+            onClick={() => {
+              setHasError(false);
+              window.location.reload();
+            }}
+            className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+          >
+            Reintentar
+          </button>
+        </div>
+      </div>
+    );
+  }
   const [activeTab, setActiveTab] = useState('all');
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingOrders, setIsLoadingOrders] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState('date');
   const [sortOrder, setSortOrder] = useState('desc');
+  const [error, setError] = useState(null);
 
-  // Mock data más completo - luego conectar con API
-  const [orders, setOrders] = useState([
-    {
-      id: 'ORD-001',
-      date: '2025-01-15',
-      status: 'En camino',
-      total: 125.99,
-      items: [
-        { id: 1, name: 'Laptop Gaming Pro', quantity: 1, price: 89.99, image: '/api/placeholder/80/80' },
-        { id: 2, name: 'Mouse Inalámbrico', quantity: 2, price: 18.00, image: '/api/placeholder/80/80' }
-      ],
-      tracking: 'TRK123456789',
-      estimatedDelivery: '2025-01-18',
-      shippingAddress: {
-        street: 'Av. Reforma 123',
-        city: 'Ciudad de México',
-        state: 'CDMX',
-        zipCode: '01000'
-      },
-      paymentMethod: 'Tarjeta terminada en 1234'
-    },
-    {
-      id: 'ORD-002', 
-      date: '2025-01-10',
-      status: 'Entregado',
-      total: 89.50,
-      items: [
-        { id: 3, name: 'Teclado Mecánico', quantity: 1, price: 65.50, image: '/api/placeholder/80/80' },
-        { id: 4, name: 'Auriculares Bluetooth', quantity: 1, price: 24.00, image: '/api/placeholder/80/80' }
-      ],
-      tracking: 'TRK987654321',
-      estimatedDelivery: '2025-01-13',
-      deliveredDate: '2025-01-12',
-      shippingAddress: {
-        street: 'Calle Principal 456',
-        city: 'Guadalajara',
-        state: 'Jalisco',
-        zipCode: '44100'
-      },
-      paymentMethod: 'PayPal'
-    },
-    {
-      id: 'ORD-003',
-      date: '2025-01-05',
-      status: 'Procesando',
-      total: 256.00,
-      items: [
-        { id: 5, name: 'Monitor 4K', quantity: 1, price: 199.99, image: '/api/placeholder/80/80' },
-        { id: 6, name: 'Cable HDMI', quantity: 2, price: 15.00, image: '/api/placeholder/80/80' },
-        { id: 7, name: 'Soporte Monitor', quantity: 1, price: 26.01, image: '/api/placeholder/80/80' }
-      ],
-      tracking: null,
-      estimatedDelivery: '2025-01-12',
-      shippingAddress: {
-        street: 'Plaza Central 789',
-        city: 'Monterrey',
-        state: 'Nuevo León',
-        zipCode: '64000'
-      },
-      paymentMethod: 'Transferencia bancaria'
-    },
-    {
-      id: 'ORD-004',
-      date: '2024-12-28',
-      status: 'Cancelado',
-      total: 67.25,
-      items: [
-        { id: 8, name: 'Webcam HD', quantity: 1, price: 67.25, image: '/api/placeholder/80/80' }
-      ],
-      tracking: null,
-      estimatedDelivery: null,
-      cancelledDate: '2024-12-29',
-      cancellationReason: 'Producto agotado',
-      shippingAddress: {
-        street: 'Av. Insurgentes 321',
-        city: 'Puebla',
-        state: 'Puebla',
-        zipCode: '72000'
-      },
-      paymentMethod: 'Tarjeta terminada en 5678'
-    },
-    {
-      id: 'ORD-005',
-      date: '2024-12-20',
-      status: 'Entregado',
-      total: 145.75,
-      items: [
-        { id: 9, name: 'Tablet Pro', quantity: 1, price: 129.99, image: '/api/placeholder/80/80' },
-        { id: 10, name: 'Funda Protectora', quantity: 1, price: 15.76, image: '/api/placeholder/80/80' }
-      ],
-      tracking: 'TRK555666777',
-      estimatedDelivery: '2024-12-23',
-      deliveredDate: '2024-12-22',
-      shippingAddress: {
-        street: 'Calle del Sol 654',
-        city: 'Tijuana',
-        state: 'Baja California',
-        zipCode: '22000'
-      },
-      paymentMethod: 'Efectivo contra entrega'
-    }
-  ]);
+  // Estado para los pedidos reales
+  const [orders, setOrders] = useState([]);
+
+  // Cargar pedidos del usuario
+  useEffect(() => {
+    const loadOrders = async () => {
+      if (!isAuthenticated) {
+        setIsLoadingOrders(false);
+        return;
+      }
+
+      try {
+        setIsLoadingOrders(true);
+        setError(null);
+        
+        console.log('🔍 Cargando pedidos del usuario...');
+        const ordersData = await orderService.getUserOrders();
+        console.log('📦 Datos recibidos:', ordersData);
+        
+        // Manejar diferentes formatos de respuesta
+        let ordersList = [];
+        if (Array.isArray(ordersData)) {
+          ordersList = ordersData;
+        } else if (ordersData && ordersData.orders) {
+          ordersList = ordersData.orders;
+        } else if (ordersData && ordersData.data) {
+          ordersList = ordersData.data;
+        } else {
+          console.warn('⚠️ Formato de respuesta inesperado:', ordersData);
+          ordersList = [];
+        }
+        
+        console.log('📋 Pedidos procesados:', ordersList);
+        setOrders(ordersList);
+        
+      } catch (error) {
+        console.error('❌ Error cargando pedidos:', error);
+        console.error('❌ Detalles del error:', {
+          message: error.message,
+          stack: error.stack,
+          name: error.name
+        });
+        setError(error.message || 'Error al cargar los pedidos');
+      } finally {
+        setIsLoadingOrders(false);
+      }
+    };
+
+    loadOrders();
+  }, [isAuthenticated]);
 
   const getStatusColor = (status) => {
     switch (status) {
@@ -162,9 +137,12 @@ const OrderHistoryContent = () => {
   };
 
   const filteredOrders = orders.filter(order => {
+    // Verificar que el pedido existe y tiene las propiedades necesarias
+    if (!order || typeof order !== 'object') return false;
+    
     // Filtro por tab activo
     if (activeTab !== 'all') {
-      const statusMatch = order.status.toLowerCase().replace(' ', '') === activeTab;
+      const statusMatch = order.status && order.status.toLowerCase().replace(' ', '') === activeTab;
       if (!statusMatch) return false;
     }
 
@@ -172,9 +150,12 @@ const OrderHistoryContent = () => {
     if (searchTerm) {
       const searchLower = searchTerm.toLowerCase();
       return (
-        order.id.toLowerCase().includes(searchLower) ||
-        order.items.some(item => item.name.toLowerCase().includes(searchLower)) ||
-        order.shippingAddress.city.toLowerCase().includes(searchLower)
+        (order.id && order.id.toLowerCase().includes(searchLower)) ||
+        (order.items && Array.isArray(order.items) && order.items.some(item => 
+          item && item.name && item.name.toLowerCase().includes(searchLower)
+        )) ||
+        (order.shippingAddress && order.shippingAddress.city && 
+         order.shippingAddress.city.toLowerCase().includes(searchLower))
       );
     }
 
@@ -183,24 +164,27 @@ const OrderHistoryContent = () => {
 
   // Ordenar órdenes
   const sortedOrders = [...filteredOrders].sort((a, b) => {
+    // Verificar que ambos pedidos existen
+    if (!a || !b) return 0;
+    
     let aValue, bValue;
     
     switch (sortBy) {
       case 'date':
-        aValue = new Date(a.date);
-        bValue = new Date(b.date);
+        aValue = a.date ? new Date(a.date) : new Date(0);
+        bValue = b.date ? new Date(b.date) : new Date(0);
         break;
       case 'total':
-        aValue = a.total;
-        bValue = b.total;
+        aValue = a.total || 0;
+        bValue = b.total || 0;
         break;
       case 'status':
-        aValue = a.status;
-        bValue = b.status;
+        aValue = a.status || '';
+        bValue = b.status || '';
         break;
       default:
-        aValue = new Date(a.date);
-        bValue = new Date(b.date);
+        aValue = a.date ? new Date(a.date) : new Date(0);
+        bValue = b.date ? new Date(b.date) : new Date(0);
     }
 
     if (sortOrder === 'asc') {
@@ -212,22 +196,51 @@ const OrderHistoryContent = () => {
 
   const tabs = [
     { id: 'all', label: 'Todos', count: orders.length },
-    { id: 'procesando', label: 'Procesando', count: orders.filter(o => o.status === 'Procesando').length },
-    { id: 'encamino', label: 'En camino', count: orders.filter(o => o.status === 'En camino').length },
-    { id: 'entregado', label: 'Entregado', count: orders.filter(o => o.status === 'Entregado').length },
-    { id: 'cancelado', label: 'Cancelado', count: orders.filter(o => o.status === 'Cancelado').length }
+    { id: 'procesando', label: 'Procesando', count: orders.filter(o => o && o.status === 'Procesando').length },
+    { id: 'encamino', label: 'En camino', count: orders.filter(o => o && o.status === 'En camino').length },
+    { id: 'entregado', label: 'Entregado', count: orders.filter(o => o && o.status === 'Entregado').length },
+    { id: 'cancelado', label: 'Cancelado', count: orders.filter(o => o && o.status === 'Cancelado').length }
   ];
 
-  const handleReorder = (order) => {
-    // Simular reordenar productos
-    console.log('Reordenando:', order);
-    navigate('/cart', { state: { reorderItems: order.items } });
+  const handleReorder = async (order) => {
+    try {
+      setIsLoading(true);
+      
+      // Usar el servicio real para reordenar
+      const result = await orderService.reorderOrder(order.id);
+      
+      if (result.success) {
+        // Si el servicio devuelve los items, navegar al carrito
+        navigate('/cart', { state: { reorderItems: result.items || order.items } });
+      } else {
+        // Fallback: navegar con los items del pedido actual
+        navigate('/cart', { state: { reorderItems: order.items } });
+      }
+    } catch (error) {
+      console.error('Error reordenando:', error);
+      // Fallback: navegar con los items del pedido actual
+      navigate('/cart', { state: { reorderItems: order.items } });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const handleDownloadInvoice = (orderId) => {
-    // Simular descarga de factura
-    console.log('Descargando factura para:', orderId);
-    // Aquí iría la lógica para generar y descargar la factura
+  const handleDownloadInvoice = async (orderId) => {
+    try {
+      setIsLoading(true);
+      
+      const result = await orderService.downloadInvoice(orderId);
+      
+      if (result.success) {
+        // La descarga se maneja automáticamente en el servicio
+        console.log('Factura descargada exitosamente');
+      }
+    } catch (error) {
+      console.error('Error descargando factura:', error);
+      alert('Error al descargar la factura. Inténtalo de nuevo.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   if (!isAuthenticated) {
@@ -270,7 +283,82 @@ const OrderHistoryContent = () => {
     );
   }
 
-  return (
+  if (isLoadingOrders) {
+    return (
+      <div className="max-w-7xl mx-auto p-6">
+        <motion.div 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg border border-gray-200/50 p-12 text-center"
+        >
+          <div className="animate-spin w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full mx-auto mb-4"></div>
+          <p className="text-gray-600 text-lg">Cargando historial de pedidos...</p>
+        </motion.div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="max-w-7xl mx-auto p-6">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl border border-red-200/50 p-12 text-center"
+        >
+          <motion.div 
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ delay: 0.2, duration: 0.5 }}
+            className="w-20 h-20 bg-gradient-to-br from-red-500 to-pink-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg"
+          >
+            <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+            </svg>
+          </motion.div>
+          <motion.h3 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.4 }}
+            className="text-2xl font-bold text-gray-900 mb-3 font-orbitron"
+          >
+            Error al cargar pedidos
+          </motion.h3>
+          <motion.p 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.6 }}
+            className="text-gray-600 mb-6 text-lg"
+          >
+            {error}
+          </motion.p>
+          <motion.button
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.8 }}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => window.location.reload()}
+            className="px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all duration-300 shadow-lg hover:shadow-xl font-medium"
+          >
+            🔄 Reintentar
+          </motion.button>
+        </motion.div>
+      </div>
+    );
+  }
+
+  // Debug: mostrar estado actual
+  console.log('🔍 Estado actual:', {
+    isAuthenticated,
+    isLoadingOrders,
+    error,
+    ordersCount: orders.length,
+    orders: orders.slice(0, 2) // Solo los primeros 2 para debug
+  });
+
+  try {
+    return (
     <div className="max-w-7xl mx-auto p-6">
       {/* Header */}
       <motion.div 
@@ -451,9 +539,13 @@ const OrderHistoryContent = () => {
             )}
           </motion.div>
         ) : (
-          sortedOrders.map((order, index) => (
+          sortedOrders.map((order, index) => {
+            // Verificar que el pedido existe y tiene las propiedades necesarias
+            if (!order || typeof order !== 'object') return null;
+            
+            return (
             <motion.div
-              key={order.id}
+              key={order.id || `order-${index}`}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.7 + index * 0.1 }}
@@ -476,7 +568,7 @@ const OrderHistoryContent = () => {
                         transition={{ delay: 0.8 + index * 0.1 }}
                         className="text-3xl font-bold text-gray-900 font-orbitron"
                       >
-                        #{order.id}
+                        #{order.id || 'N/A'}
                       </motion.h3>
                       <motion.span 
                         initial={{ opacity: 0, scale: 0.8 }}
@@ -485,7 +577,7 @@ const OrderHistoryContent = () => {
                         className={`inline-flex items-center space-x-2 px-4 py-2 rounded-full text-sm font-bold shadow-md ${getStatusColor(order.status)}`}
                       >
                         {getStatusIcon(order.status)}
-                        <span>{order.status}</span>
+                        <span>{order.status || 'Desconocido'}</span>
                       </motion.span>
                     </div>
                     <motion.p 
@@ -494,7 +586,7 @@ const OrderHistoryContent = () => {
                       transition={{ delay: 0.9 + index * 0.1 }}
                       className="text-sm text-gray-400 font-medium"
                     >
-                      {new Date(order.date).toLocaleDateString('es-ES')}
+                      {order.date ? new Date(order.date).toLocaleDateString('es-ES') : 'N/A'}
                     </motion.p>
                   </div>
 
@@ -515,7 +607,7 @@ const OrderHistoryContent = () => {
                         <div>
                           <span className="text-gray-600 font-medium text-sm">Total</span>
                           <div className="font-bold text-2xl text-gray-900">
-                            ${order.total.toFixed(2)}
+                            ${order.total ? order.total.toFixed(2) : '0.00'}
                           </div>
                         </div>
                       </div>
@@ -530,7 +622,7 @@ const OrderHistoryContent = () => {
                         <div>
                           <span className="text-gray-600 font-medium text-sm">Productos</span>
                           <div className="font-bold text-lg text-gray-900">
-                            {order.items.length} {order.items.length === 1 ? 'artículo' : 'artículos'}
+                            {order.items ? order.items.length : 0} {(order.items ? order.items.length : 0) === 1 ? 'artículo' : 'artículos'}
                           </div>
                         </div>
                       </div>
@@ -675,7 +767,7 @@ const OrderHistoryContent = () => {
                   <span>Productos</span>
                 </h4>
                 <div className="space-y-3">
-                  {order.items.map((item, itemIndex) => (
+                  {order.items && Array.isArray(order.items) ? order.items.map((item, itemIndex) => (
                     <motion.div 
                       key={item.id} 
                       initial={{ opacity: 0, x: -20 }}
@@ -703,7 +795,9 @@ const OrderHistoryContent = () => {
                         </div>
                       </div>
                     </motion.div>
-                  ))}
+                  )) : (
+                    <p className="text-gray-500 text-center py-4">No hay productos disponibles</p>
+                  )}
                 </div>
               </motion.div>
 
@@ -726,8 +820,8 @@ const OrderHistoryContent = () => {
                       <h4 className="font-bold text-gray-900 text-lg">Dirección de envío</h4>
                     </div>
                     <p className="text-gray-700 font-medium leading-relaxed">
-                      {order.shippingAddress.street}<br />
-                      {order.shippingAddress.city}, {order.shippingAddress.state} {order.shippingAddress.zipCode}
+                      {order.shippingAddress ? order.shippingAddress.street : 'N/A'}<br />
+                      {order.shippingAddress ? `${order.shippingAddress.city}, ${order.shippingAddress.state} ${order.shippingAddress.zipCode}` : 'N/A'}
                     </p>
                   </div>
                   <div className="bg-gradient-to-br from-green-50 to-green-100/50 rounded-xl p-4 border border-green-200/50">
@@ -739,16 +833,22 @@ const OrderHistoryContent = () => {
                       </div>
                       <h4 className="font-bold text-gray-900 text-lg">Método de pago</h4>
                     </div>
-                    <p className="text-gray-700 font-medium">{order.paymentMethod}</p>
+                    <p className="text-gray-700 font-medium">{order.paymentMethod || 'N/A'}</p>
                   </div>
                 </div>
               </motion.div>
             </motion.div>
-          ))
+            );
+          })
         )}
       </div>
     </div>
-  );
+    );
+  } catch (renderError) {
+    console.error('❌ Error de renderizado:', renderError);
+    setHasError(true);
+    return null;
+  }
 };
 
 export default OrderHistoryContent;
