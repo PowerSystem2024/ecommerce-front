@@ -2,13 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../auth/context/AuthContext';
+import { userService } from '../services/userService';
 
 const UserProfileContent = () => {
   const navigate = useNavigate();
   const { user, isAuthenticated } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingProfile, setIsLoadingProfile] = useState(true);
+  const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
   const [message, setMessage] = useState({ type: '', text: '' });
+  const [avatar, setAvatar] = useState(null);
 
   // Estado del formulario
   const [formData, setFormData] = useState({
@@ -32,27 +36,56 @@ const UserProfileContent = () => {
 
   // Cargar datos del usuario al montar el componente
   useEffect(() => {
-    if (user) {
-      setFormData({
-        name: user.name || '',
-        email: user.email || '',
-        phone: user.phone || '',
-        birthDate: user.birthDate || '',
-        address: {
-          street: user.address?.street || '',
-          city: user.address?.city || '',
-          state: user.address?.state || '',
-          zipCode: user.address?.zipCode || '',
-          country: user.address?.country || 'México'
-        },
-        preferences: {
-          newsletter: user.preferences?.newsletter || false,
-          notifications: user.preferences?.notifications !== false,
-          language: user.preferences?.language || 'es'
+    const loadUserProfile = async () => {
+      if (!isAuthenticated) {
+        setIsLoadingProfile(false);
+        return;
+      }
+
+      try {
+        setIsLoadingProfile(true);
+        setMessage({ type: '', text: '' });
+        
+        // Cargar perfil completo desde la API
+        const profileData = await userService.getProfile();
+        
+        setFormData({
+          name: profileData.name || '',
+          email: profileData.email || '',
+          phone: profileData.phone || '',
+          birthDate: profileData.birthDate || '',
+          address: {
+            street: profileData.address?.street || '',
+            city: profileData.address?.city || '',
+            state: profileData.address?.state || '',
+            zipCode: profileData.address?.zipCode || '',
+            country: profileData.address?.country || 'México'
+          },
+          preferences: {
+            newsletter: profileData.preferences?.newsletter || false,
+            notifications: profileData.preferences?.notifications !== false,
+            language: profileData.preferences?.language || 'es'
+          }
+        });
+
+        // Cargar avatar si existe
+        if (profileData.avatar) {
+          setAvatar(profileData.avatar);
         }
-      });
-    }
-  }, [user]);
+        
+      } catch (error) {
+        console.error('Error cargando perfil:', error);
+        setMessage({ 
+          type: 'error', 
+          text: 'Error al cargar el perfil. Inténtalo de nuevo.' 
+        });
+      } finally {
+        setIsLoadingProfile(false);
+      }
+    };
+
+    loadUserProfile();
+  }, [isAuthenticated]);
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -80,21 +113,25 @@ const UserProfileContent = () => {
     setMessage({ type: '', text: '' });
 
     try {
-      // Simular llamada a API
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Aquí iría la lógica para actualizar el perfil del usuario
-      console.log('Datos actualizados:', formData);
+      // Actualizar perfil usando la API real
+      const updatedProfile = await userService.updateProfile(formData);
       
       setMessage({ 
         type: 'success', 
         text: 'Perfil actualizado correctamente' 
       });
       setIsEditing(false);
+      
+      // Actualizar el avatar si cambió
+      if (updatedProfile.avatar) {
+        setAvatar(updatedProfile.avatar);
+      }
+      
     } catch (error) {
+      console.error('Error actualizando perfil:', error);
       setMessage({ 
         type: 'error', 
-        text: 'Error al actualizar el perfil. Inténtalo de nuevo.' 
+        text: error.message || 'Error al actualizar el perfil. Inténtalo de nuevo.' 
       });
     } finally {
       setIsLoading(false);
@@ -129,6 +166,53 @@ const UserProfileContent = () => {
 
   const handleChangePassword = () => {
     navigate('/change-password');
+  };
+
+  const handleAvatarUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    // Validar tipo de archivo
+    if (!file.type.startsWith('image/')) {
+      setMessage({ 
+        type: 'error', 
+        text: 'Por favor selecciona un archivo de imagen válido.' 
+      });
+      return;
+    }
+
+    // Validar tamaño (máximo 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      setMessage({ 
+        type: 'error', 
+        text: 'El archivo es demasiado grande. Máximo 5MB.' 
+      });
+      return;
+    }
+
+    try {
+      setIsUploadingAvatar(true);
+      setMessage({ type: '', text: '' });
+
+      const result = await userService.uploadAvatar(file);
+      
+      setAvatar(result.avatar || result.avatarUrl);
+      setMessage({ 
+        type: 'success', 
+        text: 'Avatar actualizado correctamente' 
+      });
+      
+    } catch (error) {
+      console.error('Error subiendo avatar:', error);
+      setMessage({ 
+        type: 'error', 
+        text: error.message || 'Error al subir el avatar. Inténtalo de nuevo.' 
+      });
+    } finally {
+      setIsUploadingAvatar(false);
+      // Limpiar el input para permitir subir el mismo archivo otra vez
+      e.target.value = '';
+    }
   };
 
   if (!isAuthenticated) {
@@ -171,6 +255,21 @@ const UserProfileContent = () => {
     );
   }
 
+  if (isLoadingProfile) {
+    return (
+      <div className="max-w-4xl mx-auto p-6">
+        <motion.div 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg border border-gray-200/50 p-12 text-center"
+        >
+          <div className="animate-spin w-12 h-12 border-4 border-purple-500 border-t-transparent rounded-full mx-auto mb-4"></div>
+          <p className="text-gray-600 text-lg">Cargando perfil...</p>
+        </motion.div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-purple-50/30">
       <div className="max-w-5xl mx-auto p-6">
@@ -182,24 +281,72 @@ const UserProfileContent = () => {
         className="mb-8"
       >
         <div className="flex items-center justify-between">
-          <div>
-            <motion.h1 
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.2 }}
-              className="text-4xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-3 font-orbitron"
+          <div className="flex items-center space-x-6">
+            {/* Avatar */}
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.1 }}
+              className="relative group"
             >
-              Mi Perfil
-            </motion.h1>
-            <motion.p 
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.3 }}
-              className="text-gray-600 text-lg mb-4"
-            >
-              Gestiona tu información personal y preferencias
-            </motion.p>
-            
+              <div className="w-20 h-20 rounded-full overflow-hidden border-4 border-white shadow-lg bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
+                {avatar ? (
+                  <img 
+                    src={avatar} 
+                    alt="Avatar" 
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                  </svg>
+                )}
+              </div>
+              
+              {/* Botón de subir avatar */}
+              <motion.label
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="absolute -bottom-2 -right-2 w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center cursor-pointer shadow-lg hover:shadow-xl transition-all duration-300"
+                title="Cambiar avatar"
+              >
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleAvatarUpload}
+                  className="hidden"
+                  disabled={isUploadingAvatar}
+                />
+                {isUploadingAvatar ? (
+                  <svg className="w-4 h-4 text-white animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                  </svg>
+                ) : (
+                  <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                  </svg>
+                )}
+              </motion.label>
+            </motion.div>
+
+            <div>
+              <motion.h1 
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.2 }}
+                className="text-4xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-3 font-orbitron"
+              >
+                Mi Perfil
+              </motion.h1>
+              <motion.p 
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.3 }}
+                className="text-gray-600 text-lg mb-4"
+              >
+                Gestiona tu información personal y preferencias
+              </motion.p>
+            </div>
           </div>
           {!isEditing && (
             <div className="flex space-x-3">

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../auth/context/AuthContext';
+import { orderService } from '../services/orderService';
 
 const OrderDetail = () => {
   const { orderId } = useParams();
@@ -14,104 +15,30 @@ const OrderDetail = () => {
   const [isReordering, setIsReordering] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
 
-  // Mock data - en producción vendría de la API
-  const mockOrders = [
-    {
-      id: 'ORD-001',
-      date: '2025-01-15',
-      status: 'En camino',
-      total: 125.99,
-      subtotal: 107.99,
-      shipping: 8.00,
-      tax: 10.00,
-      items: [
-        { 
-          id: 1, 
-          name: 'Laptop Gaming Pro', 
-          quantity: 1, 
-          price: 89.99, 
-          image: '/api/placeholder/120/120',
-          description: 'Laptop gaming de alto rendimiento con procesador Intel i7 y tarjeta gráfica RTX 4060',
-          category: 'Electrónicos',
-          brand: 'TechGaming'
-        },
-        { 
-          id: 2, 
-          name: 'Mouse Inalámbrico', 
-          quantity: 2, 
-          price: 18.00, 
-          image: '/api/placeholder/120/120',
-          description: 'Mouse inalámbrico ergonómico con sensor óptico de alta precisión',
-          category: 'Accesorios',
-          brand: 'PeripheralPro'
-        }
-      ],
-      tracking: 'TRK123456789',
-      estimatedDelivery: '2025-01-18',
-      shippingAddress: {
-        street: 'Av. Reforma 123',
-        city: 'Ciudad de México',
-        state: 'CDMX',
-        zipCode: '01000',
-        country: 'México',
-        recipientName: 'Juan Pérez'
-      },
-      billingAddress: {
-        street: 'Av. Reforma 123',
-        city: 'Ciudad de México',
-        state: 'CDMX',
-        zipCode: '01000',
-        country: 'México'
-      },
-      paymentMethod: {
-        type: 'Tarjeta de crédito',
-        last4: '1234',
-        brand: 'Visa'
-      },
-      orderNotes: 'Entregar en horario de oficina (9:00 AM - 6:00 PM)',
-      timeline: [
-        { status: 'Pedido realizado', date: '2025-01-15T10:30:00Z', description: 'Tu pedido ha sido confirmado' },
-        { status: 'Procesando', date: '2025-01-15T11:00:00Z', description: 'Preparando tu pedido' },
-        { status: 'Enviado', date: '2025-01-16T09:15:00Z', description: 'Tu pedido está en camino' },
-        { status: 'En camino', date: '2025-01-16T14:30:00Z', description: 'En tránsito hacia tu dirección' }
-      ]
-    }
-  ];
-
   useEffect(() => {
     if (!isAuthenticated) {
       navigate('/login');
       return;
     }
 
-    // Simular carga de datos
+    // Cargar datos del pedido desde la API
     const loadOrder = async () => {
       setIsLoading(true);
       setError(null);
       
       try {
-        // Simular delay de API
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        const orderData = await orderService.getOrderById(orderId);
+        setOrder(orderData);
+      } catch (err) {
+        console.error('Error loading order:', err);
         
-        // Simular error de red ocasional
-        if (Math.random() < 0.1) {
-          throw new Error('Error de conexión con el servidor');
-        }
-        
-        const foundOrder = mockOrders.find(o => o.id === orderId);
-        if (foundOrder) {
-          setOrder(foundOrder);
-        } else {
+        if (err.message.includes('404') || err.message.includes('not found')) {
           setError({
             type: 'not_found',
             message: 'Pedido no encontrado',
             details: `No se encontró un pedido con el ID: ${orderId}`
           });
-        }
-      } catch (err) {
-        console.error('Error loading order:', err);
-        
-        if (err.message.includes('conexión')) {
+        } else if (err.message.includes('conexión') || err.message.includes('network')) {
           setError({
             type: 'network',
             message: 'Error de conexión',
@@ -121,7 +48,7 @@ const OrderDetail = () => {
           setError({
             type: 'server',
             message: 'Error del servidor',
-            details: 'Ocurrió un error inesperado. Por favor, inténtalo de nuevo más tarde.'
+            details: err.message || 'Ocurrió un error inesperado. Por favor, inténtalo de nuevo más tarde.'
           });
         }
       } finally {
@@ -188,28 +115,20 @@ const OrderDetail = () => {
     if (confirmed) {
       setIsReordering(true);
       try {
-        // Simular delay de procesamiento
-        await new Promise(resolve => setTimeout(resolve, 1500));
+        // Usar el servicio real para reordenar
+        const result = await orderService.reorderOrder(order.id);
         
-        // Simular verificación de disponibilidad
-        const unavailableItems = order.items.filter(() => Math.random() < 0.2);
-        
-        if (unavailableItems.length > 0) {
-          const confirmedUnavailable = window.confirm(
-            `⚠️ Algunos productos no están disponibles:\n\n` +
-            `${unavailableItems.map(item => `• ${item.name}`).join('\n')}\n\n` +
-            `¿Quieres continuar solo con los productos disponibles?`
-          );
-          
-          if (!confirmedUnavailable) {
-            setIsReordering(false);
-            return;
-          }
+        if (result.success) {
+          // Si el servicio devuelve los items, navegar al carrito
+          navigate('/cart', { state: { reorderItems: result.items || order.items } });
+        } else {
+          // Fallback: navegar con los items del pedido actual
+          navigate('/cart', { state: { reorderItems: order.items } });
         }
-        
-        navigate('/cart', { state: { reorderItems: order.items } });
       } catch (error) {
-        alert('❌ Error al procesar la reorden. Inténtalo de nuevo.');
+        console.error('Error reordenando:', error);
+        // Fallback: navegar con los items del pedido actual
+        navigate('/cart', { state: { reorderItems: order.items } });
       } finally {
         setIsReordering(false);
       }
@@ -217,7 +136,7 @@ const OrderDetail = () => {
   };
 
   const handleDownloadInvoice = async () => {
-    // Simular descarga con confirmación
+    // Mostrar confirmación antes de descargar
     const confirmed = window.confirm(
       `¿Descargar la factura del pedido ${order.id}?\n\n` +
       `Total: $${order.total.toFixed(2)}\n` +
@@ -227,19 +146,16 @@ const OrderDetail = () => {
     if (confirmed) {
       setIsDownloading(true);
       try {
-        // Simular generación de factura
-        await new Promise(resolve => setTimeout(resolve, 2000));
+        // Usar el servicio real para descargar la factura
+        const result = await orderService.downloadInvoice(order.id);
         
-        // Simular descarga
-        const link = document.createElement('a');
-        link.href = '#'; // En producción sería la URL real de la factura
-        link.download = `factura-${order.id}.pdf`;
-        link.click();
-        
-        // Mostrar mensaje de confirmación
-        alert('📄 La factura se está descargando. Si no aparece, verifica la carpeta de descargas.');
+        if (result.success) {
+          // La descarga se maneja automáticamente en el servicio
+          console.log('Factura descargada exitosamente');
+        }
       } catch (error) {
-        alert('❌ Error al generar la factura. Inténtalo de nuevo.');
+        console.error('Error descargando factura:', error);
+        alert('❌ Error al descargar la factura. Inténtalo de nuevo.');
       } finally {
         setIsDownloading(false);
       }
