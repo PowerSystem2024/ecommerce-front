@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 
-export default function ProductCard({ product, onAddToCart }) {
+export default function ProductCard({ product, onAddToCart, onViewDetails }) {
   const [isHovered, setIsHovered] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
 
-  const handleAddToCart = async () => {
+  const handleAddToCart = async (e) => {
+    e.stopPropagation();
     setIsAdding(true);
     // Simular delay de agregado al carrito
     await new Promise(resolve => setTimeout(resolve, 500));
@@ -13,11 +14,18 @@ export default function ProductCard({ product, onAddToCart }) {
     setIsAdding(false);
   };
 
+  const handleCardClick = () => {
+    if (onViewDetails) {
+      onViewDetails(product);
+    }
+  };
+
   return (
     <motion.div
-      className="group bg-white rounded-2xl shadow-sm border border-[#2A2A2A]/10 overflow-hidden hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 relative"
+      className="group bg-white rounded-2xl shadow-sm border border-[#2A2A2A]/10 overflow-hidden hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 relative cursor-pointer"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
+      onClick={handleCardClick}
       whileHover={{ scale: 1.02 }}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
@@ -64,6 +72,7 @@ export default function ProductCard({ product, onAddToCart }) {
 
       {/* Contenido de la tarjeta */}
       <div className="p-6">
+       
         <div className="mb-3">
           <h3 className="font-semibold text-[#0F0F10] mb-1 group-hover:text-[#E11D74] transition-colors font-['Quantico',_sans-serif] text-lg">
             {product.name}
@@ -102,31 +111,7 @@ export default function ProductCard({ product, onAddToCart }) {
             )}
           </div>
           
-          <motion.button
-            onClick={handleAddToCart}
-            disabled={isAdding}
-            className={`relative px-4 py-2 rounded-full font-semibold transition-all duration-300 font-['Quantico',_sans-serif] text-sm ${
-              isAdding 
-                ? 'bg-[#2A2A2A] text-white cursor-not-allowed' 
-                : 'bg-[#0F0F10] hover:bg-[#E11D74] text-white hover:scale-105'
-            }`}
-            whileHover={{ scale: isAdding ? 1 : 1.05 }}
-            whileTap={{ scale: isAdding ? 1 : 0.95 }}
-          >
-            {isAdding ? (
-              <div className="flex items-center gap-2">
-                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                Agregando...
-              </div>
-            ) : (
-              <div className="flex items-center gap-2">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-                </svg>
-                Agregar
-              </div>
-            )}
-          </motion.button>
+          
         </div>
       </div>
     </motion.div>

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import ProductFilters from "./ProductFilters";
 import ProductGrid from "./ProductGrid";
+import ProductDetail from "./ProductDetail";
 
 // Datos simulados de productos
 const mockProducts = [
@@ -116,6 +117,8 @@ export default function ProductsSection({ initialSearch = "" }) {
   const [filteredProducts, setFilteredProducts] = useState(mockProducts);
   const [loading, setLoading] = useState(false);
   const [cartCount, setCartCount] = useState(0);
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [isDetailOpen, setIsDetailOpen] = useState(false);
   const [filters, setFilters] = useState({
     category: "Todos",
     size: "",
@@ -178,6 +181,18 @@ export default function ProductsSection({ initialSearch = "" }) {
     setCartCount(prev => prev + 1);
     // Aquí podrías integrar con un contexto global o estado de carrito
     console.log(`Agregado al carrito: ${product.name}`);
+  };
+
+  // Ver detalles del producto
+  const handleViewDetails = (product) => {
+    setSelectedProduct(product);
+    setIsDetailOpen(true);
+  };
+
+  // Cerrar modal de detalles
+  const handleCloseDetail = () => {
+    setIsDetailOpen(false);
+    setTimeout(() => setSelectedProduct(null), 300);
   };
 
   // Simular carga inicial
@@ -254,7 +269,15 @@ export default function ProductsSection({ initialSearch = "" }) {
         <ProductGrid 
           products={filteredProducts}
           onAddToCart={handleAddToCart}
+          onViewDetails={handleViewDetails}
           loading={loading}
+        />
+
+        {/* Modal de detalle del producto */}
+        <ProductDetail
+          product={selectedProduct}
+          open={isDetailOpen}
+          onClose={handleCloseDetail}
         />
 
         {/* Paginación (opcional) */}

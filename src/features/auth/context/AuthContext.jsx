@@ -22,14 +22,36 @@ export function AuthProvider({ children }) {
         }
 
         try {
-          const currentUser = await authService.getCurrentUser();
-          setUser(currentUser);
-          localStorage.setItem('userData', JSON.stringify(currentUser));
+          const response = await authService.getCurrentUser();
+          console.log('🔍 AuthContext - Respuesta completa del backend:', response);
+          
+          // Extraer el usuario de la respuesta (puede venir en response.data.user o response.user)
+          const userData = response?.data?.user || response?.user || response;
+          console.log('🔍 AuthContext - userData extraída:', userData);
+          
+          const normalizedUser = {
+            name: userData.name,
+            email: userData.email,
+            role: userData.role || 'user',
+            avatar: userData.avatar,
+            _id: userData._id
+          };
+          console.log('✅ AuthContext - Usuario normalizado:', normalizedUser);
+          
+          setUser(normalizedUser);
+          localStorage.setItem('userData', JSON.stringify(normalizedUser));
+          setIsAuthenticated(true);
         } catch (_e) {
+          console.error('Error al obtener usuario actual:', _e);
           const saved = localStorage.getItem('userData');
-          if (saved) setUser(JSON.parse(saved));
+          if (saved) {
+            setUser(JSON.parse(saved));
+            setIsAuthenticated(true);
+          } else {
+            authService.removeToken();
+            localStorage.removeItem('userData');
+          }
         }
-        setIsAuthenticated(true);
       } catch (_e) {
         authService.removeToken();
         localStorage.removeItem('userData');
@@ -44,11 +66,18 @@ export function AuthProvider({ children }) {
     const response = await authService.login(email, password);
     if (!response?.token) throw new Error('No token received');
     authService.saveToken(response.token);
+    
+    // Extraer el usuario de la respuesta
+    const userFromResponse = response.user || response.data?.user || {};
     const userData = {
-      name: response.user?.name || response.data?.user?.name || 'Usuario',
-      email: response.user?.email || response.data?.user?.email || email,
-      role: response.user?.role || response.data?.user?.role || 'user'
+      name: userFromResponse.name || 'Usuario',
+      email: userFromResponse.email || email,
+      role: userFromResponse.role || 'user',
+      avatar: userFromResponse.avatar,
+      _id: userFromResponse._id
     };
+    
+    console.log('Usuario logueado:', userData); // Debug
     localStorage.setItem('userData', JSON.stringify(userData));
     setUser(userData);
     setIsAuthenticated(true);

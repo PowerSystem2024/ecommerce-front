@@ -5,11 +5,22 @@ import { useAuth } from '../context/AuthContext';
 export default function LoginPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const { login } = useAuth();
+  const { login, isAuthenticated, user } = useAuth();
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
+
+  // Redirigir si ya está autenticado
+  useEffect(() => {
+    if (isAuthenticated && user) {
+      if (user.role === 'admin') {
+        navigate('/admin', { replace: true });
+      } else {
+        navigate('/shop', { replace: true });
+      }
+    }
+  }, [isAuthenticated, user, navigate]);
 
   useEffect(() => {
     if (searchParams.get('verified') === 'true') {
@@ -29,8 +40,19 @@ export default function LoginPage() {
     setLoading(true);
     setError('');
     try {
-      await login(formData.email, formData.password);
-      navigate('/shop');
+      const result = await login(formData.email, formData.password);
+      console.log('🔍 LoginPage - Resultado del login:', result);
+      console.log('🔍 LoginPage - Usuario:', result?.user);
+      console.log('🔍 LoginPage - Role:', result?.user?.role);
+      
+      // Redirigir según el rol del usuario
+      if (result?.user?.role === 'admin') {
+        console.log('✅ Usuario admin detectado, redirigiendo a /admin');
+        navigate('/admin');
+      } else {
+        console.log('✅ Usuario normal detectado, redirigiendo a /shop');
+        navigate('/shop');
+      }
     } catch (err) {
       setError(err.message || 'Error al iniciar sesión');
     } finally {

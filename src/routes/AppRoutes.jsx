@@ -20,8 +20,13 @@ import VerifyEmailPage from '../features/auth/pages/VerifyEmailPage';
 import ForgotPasswordPage from '../features/auth/pages/ForgotPasswordPage';
 import ResetPasswordPage from '../features/auth/pages/ResetPasswordPage';
 import ChangePasswordPage from '../features/auth/pages/ChangePasswordPage';
+import UnauthorizedPage from '../features/auth/pages/UnauthorizedPage';
 import AboutPage from '../features/landing/page/AboutPage';
 import ContactPage from '../features/landing/page/ContactPage';
+
+// Importar componentes de protección de rutas
+import ProtectedRoute from '../features/auth/components/ProtectedRoute';
+import AdminRoute from '../features/auth/components/AdminRoute';
 
 // Página 404
 const NotFoundPage = () => (
@@ -44,15 +49,35 @@ export default function AppRoutes() {
       {/* Rutas del shop/e-commerce */}
       <Route path="/shop" element={<ShopPage />} />
       <Route path="/cart" element={<CartPage />} />
-      <Route path="/orders" element={<OrdersPage />} />
+      <Route path="/orders" element={
+        <ProtectedRoute>
+          <OrdersPage />
+        </ProtectedRoute>
+      } />
       
-      {/* Rutas de perfil de usuario */}
-      <Route path="/profile" element={<UserProfilePage />} />
-      <Route path="/order-history" element={<OrderHistoryPage />} />
-      <Route path="/orders/:orderId" element={<OrderDetailPage />} />
+      {/* Rutas de perfil de usuario - Protegidas */}
+      <Route path="/profile" element={
+        <ProtectedRoute>
+          <UserProfilePage />
+        </ProtectedRoute>
+      } />
+      <Route path="/order-history" element={
+        <ProtectedRoute>
+          <OrderHistoryPage />
+        </ProtectedRoute>
+      } />
+      <Route path="/orders/:orderId" element={
+        <ProtectedRoute>
+          <OrderDetailPage />
+        </ProtectedRoute>
+      } />
       
-      {/* Rutas del dashboard de admin */}
-      <Route path="/admin" element={<DashboardAdmin />} />
+      {/* Rutas del dashboard de admin - Solo para administradores */}
+      <Route path="/admin" element={
+        <AdminRoute>
+          <DashboardAdmin />
+        </AdminRoute>
+      } />
       
       {/* Rutas de autenticación */}
       <Route path="/login" element={<LoginPage />} />
@@ -60,7 +85,14 @@ export default function AppRoutes() {
       <Route path="/verify-email/:token" element={<VerifyEmailPage />} />
       <Route path="/forgot-password" element={<ForgotPasswordPage />} />
       <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
-      <Route path="/change-password" element={<ChangePasswordPage />} />
+      <Route path="/change-password" element={
+        <ProtectedRoute>
+          <ChangePasswordPage />
+        </ProtectedRoute>
+      } />
+      
+      {/* Página de acceso denegado */}
+      <Route path="/unauthorized" element={<UnauthorizedPage />} />
       
       {/* Ruta de prueba para verificar que las rutas funcionan */}
       <Route path="/test-verify" element={<div>Ruta de prueba funcionando</div>} />
