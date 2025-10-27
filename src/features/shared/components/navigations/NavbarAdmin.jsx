@@ -12,7 +12,7 @@ export const NavbarAdmin = ({ onMenuToggle }) => {
 
   const handleProfileClick = () => {
     setIsDropdownOpen(false);
-    navigate('/admin');
+    navigate('/admin/profile');
   };
 
   // Cerrar dropdown al hacer clic fuera

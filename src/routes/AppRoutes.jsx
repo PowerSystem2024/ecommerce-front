@@ -6,6 +6,7 @@ import LandingPage from '../features/landing/page/LandingPage';
 import ShopPage from '../features/shop/page/shopPage';
 import OrdersPage from '../features/orders/pages/OrdersPage';
 import DashboardAdmin from '../features/dashboard-admin/pages/dashboardAdmin';
+import AdminProfilePage from '../features/dashboard-admin/pages/AdminProfilePage';
 import CartPage from '../features/cart/pages/cartpage';
 
 // Importar nuevas páginas
@@ -76,6 +77,11 @@ export default function AppRoutes() {
       <Route path="/admin" element={
         <AdminRoute>
           <DashboardAdmin />
+        </AdminRoute>
+      } />
+      <Route path="/admin/profile" element={
+        <AdminRoute>
+          <AdminProfilePage />
         </AdminRoute>
       } />
       
