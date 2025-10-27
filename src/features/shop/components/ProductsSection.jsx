@@ -3,8 +3,9 @@ import { motion } from "framer-motion";
 import ProductFilters from "./ProductFilters";
 import ProductGrid from "./ProductGrid";
 import ProductDetail from "./ProductDetail";
+import productService from "../services/productService";
 
-// Datos simulados de productos
+// Datos simulados de productos (fallback)
 const mockProducts = [
   {
     id: 1,
@@ -113,9 +114,10 @@ const mockProducts = [
 ];
 
 export default function ProductsSection({ initialSearch = "" }) {
-  const [products, setProducts] = useState(mockProducts);
-  const [filteredProducts, setFilteredProducts] = useState(mockProducts);
-  const [loading, setLoading] = useState(false);
+  const [products, setProducts] = useState([]);
+  const [filteredProducts, setFilteredProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [cartCount, setCartCount] = useState(0);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
@@ -195,13 +197,60 @@ export default function ProductsSection({ initialSearch = "" }) {
     setTimeout(() => setSelectedProduct(null), 300);
   };
 
-  // Simular carga inicial
+  // Cargar productos desde la API
   useEffect(() => {
-    setLoading(true);
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 1000);
-    return () => clearTimeout(timer);
+    const fetchProducts = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        
+        const response = await productService.getProducts({ isActive: true });
+        console.log('📦 Productos recibidos:', response);
+        
+        // La respuesta puede venir en response.data o directamente en response
+        const productsData = response?.data?.products || response?.products || response?.data || [];
+        
+        // Normalizar los productos para que coincidan con el formato esperado
+        const normalizedProducts = productsData.map(product => {
+          // Extraer el nombre real de la descripción (formato: "id - Categoría")
+          const descriptionParts = product.description?.split(' - ') || [];
+          const categoryName = descriptionParts[1] || product.category?.name || product.category || 'Sin categoría';
+          
+          return {
+            id: product._id,
+            _id: product._id,
+            name: categoryName, // Usar el nombre de la categoría como nombre del producto
+            description: product.description || `Producto de ${categoryName}`,
+            price: product.price || 0,
+            originalPrice: product.originalPrice,
+            category: categoryName,
+            image: product.images?.[0] || 'https://via.placeholder.com/400',
+            images: product.images || [],
+            rating: product.averageRating || 0,
+            stock: product.stock || 0,
+            colors: product.colors || [],
+            sizes: product.sizes || [],
+            discount: product.discount,
+            sku: product.sku,
+            tags: product.tags || []
+          };
+        });
+        
+        console.log('✅ Productos normalizados:', normalizedProducts);
+        setProducts(normalizedProducts);
+        setFilteredProducts(normalizedProducts);
+      } catch (err) {
+        console.error('❌ Error al cargar productos:', err);
+        setError(err.message || 'Error al cargar productos');
+        // Usar productos mock como fallback
+        setProducts(mockProducts);
+        setFilteredProducts(mockProducts);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
   }, []);
 
   // Manejar búsqueda inicial del Hero
@@ -232,6 +281,19 @@ export default function ProductsSection({ initialSearch = "" }) {
             Descubrí nuestra colección completa de prendas y accesorios
           </p>
         </motion.div>
+
+        {/* Mensaje de error si falla la carga */}
+        {error && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg"
+          >
+            <p className="text-yellow-800 font-['Rajdhani',_sans-serif]">
+              ⚠️ {error}. Mostrando productos de ejemplo.
+            </p>
+          </motion.div>
+        )}
 
         {/* Filtros */}
         <ProductFilters 
