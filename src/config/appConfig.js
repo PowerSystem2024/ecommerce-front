@@ -1,7 +1,7 @@
 // Configuración de la aplicación
 export const config = {
   // URL base de la API
-  API_BASE_URL: import.meta.env.VITE_API_URL || 'http://localhost:5173/api',
+  API_BASE_URL: import.meta.env.VITE_API_URL || 'http://localhost:3001/api',
   
   // Configuración de la aplicación
   APP_NAME: import.meta.env.VITE_APP_NAME || 'La Tiendita',
