@@ -94,8 +94,8 @@ const ChangePassword = ({ onSuccess, onCancel }) => {
   };
 
   const getPasswordStrengthColor = (score) => {
-    if (score <= 2) return 'text-red-500';
-    if (score <= 4) return 'text-yellow-500';
+    if (score <= 2) return 'text-[#E11D74]';
+    if (score <= 4) return 'text-[#8B5CF6]';
     return 'text-green-500';
   };
 
@@ -244,15 +244,15 @@ const ChangePassword = ({ onSuccess, onCancel }) => {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
       transition={{ duration: 0.3 }}
-      className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg border border-gray-200/50 p-8"
+      className="bg-white/90 backdrop-blur-md rounded-2xl shadow-xl border border-[#2A2A2A]/10 p-8 max-w-2xl mx-auto"
     >
       <motion.h2 
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ delay: 0.1 }}
-        className="text-2xl font-bold text-gray-900 mb-6 flex items-center space-x-3"
+        className="text-3xl font-bold text-[#0F0F10] mb-6 flex items-center space-x-3"
       >
-        <div className="w-10 h-10 bg-gradient-to-br from-red-500 to-pink-600 rounded-xl flex items-center justify-center shadow-lg">
+        <div className="w-10 h-10 bg-gradient-to-br from-[#6D28D9] to-[#8B5CF6] rounded-xl flex items-center justify-center shadow-lg">
           <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
           </svg>
@@ -264,9 +264,9 @@ const ChangePassword = ({ onSuccess, onCancel }) => {
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ delay: 0.2 }}
-        className="text-gray-600 mb-6 text-sm"
+        className="text-[#2A2A2A] mb-6 text-base"
       >
-        Por seguridad, ingresa tu contraseña actual y luego la nueva contraseña que deseas usar.
+        Ingresa tu contraseña actual y luego la nueva contraseña que deseas usar.
       </motion.p>
 
       {/* Mensaje de estado */}
@@ -278,7 +278,7 @@ const ChangePassword = ({ onSuccess, onCancel }) => {
           className={`mb-6 p-4 rounded-xl shadow-lg ${
             message.type === 'success' 
               ? 'bg-gradient-to-r from-green-50 to-emerald-50 text-green-800 border border-green-200' 
-              : 'bg-gradient-to-r from-red-50 to-rose-50 text-red-800 border border-red-200'
+              : 'bg-gradient-to-r from-rose-50 to-red-50 text-[#E11D74] border border-[#E11D74]/20'
           }`}
         >
           <div className="flex items-center space-x-2">
@@ -287,7 +287,7 @@ const ChangePassword = ({ onSuccess, onCancel }) => {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>
             ) : (
-              <svg className="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-5 h-5 text-[#E11D74]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               </svg>
             )}
@@ -304,12 +304,12 @@ const ChangePassword = ({ onSuccess, onCancel }) => {
           transition={{ delay: 0.3 }}
           className="relative group"
         >
-          <label className="block text-sm font-semibold text-gray-700 mb-2">
+          <label className="block text-sm font-semibold text-[#0F0F10] mb-2">
             Contraseña Actual
           </label>
           <div className="relative">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <svg className="w-4 h-4 text-gray-300 group-focus-within:text-red-500 transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-4 h-4 text-[#2A2A2A]/40 group-focus-within:text-[#6D28D9] transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
               </svg>
             </div>
@@ -318,14 +318,14 @@ const ChangePassword = ({ onSuccess, onCancel }) => {
               name="currentPassword"
               value={formData.currentPassword}
               onChange={handleInputChange}
-              className="w-full pl-10 pr-12 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all duration-300 hover:border-gray-300 hover:shadow-md focus:shadow-lg bg-white/90 backdrop-blur-sm"
+              className="w-full pl-10 pr-12 py-3 border border-[#2A2A2A]/20 rounded-xl focus:ring-2 focus:ring-[#6D28D9]/20 focus:border-[#6D28D9] transition-all duration-300 hover:border-[#6D28D9]/40 hover:shadow-md focus:shadow-lg bg-white/90 backdrop-blur-sm"
               placeholder="Ingresa tu contraseña actual"
               required
             />
             <button
               type="button"
               onClick={() => togglePasswordVisibility('current')}
-              className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 transition-colors duration-200"
+              className="absolute inset-y-0 right-0 pr-3 flex items-center text-[#2A2A2A]/40 hover:text-[#6D28D9] transition-colors duration-300"
             >
               {showPasswords.current ? (
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -348,12 +348,12 @@ const ChangePassword = ({ onSuccess, onCancel }) => {
           transition={{ delay: 0.4 }}
           className="relative group"
         >
-          <label className="block text-sm font-semibold text-gray-700 mb-2">
+          <label className="block text-sm font-semibold text-[#0F0F10] mb-2">
             Nueva Contraseña
           </label>
           <div className="relative">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <svg className="w-4 h-4 text-gray-300 group-focus-within:text-red-500 transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-4 h-4 text-[#2A2A2A]/40 group-focus-within:text-[#6D28D9] transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
               </svg>
             </div>
@@ -362,14 +362,14 @@ const ChangePassword = ({ onSuccess, onCancel }) => {
               name="newPassword"
               value={formData.newPassword}
               onChange={handleInputChange}
-              className="w-full pl-10 pr-12 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all duration-300 hover:border-gray-300 hover:shadow-md focus:shadow-lg bg-white/90 backdrop-blur-sm"
+              className="w-full pl-10 pr-12 py-3 border border-[#2A2A2A]/20 rounded-xl focus:ring-2 focus:ring-[#6D28D9]/20 focus:border-[#6D28D9] transition-all duration-300 hover:border-[#6D28D9]/40 hover:shadow-md focus:shadow-lg bg-white/90 backdrop-blur-sm"
               placeholder="Ingresa tu nueva contraseña"
               required
             />
             <button
               type="button"
               onClick={() => togglePasswordVisibility('new')}
-              className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 transition-colors duration-200"
+              className="absolute inset-y-0 right-0 pr-3 flex items-center text-[#2A2A2A]/40 hover:text-[#6D28D9] transition-colors duration-300"
             >
               {showPasswords.new ? (
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -387,22 +387,22 @@ const ChangePassword = ({ onSuccess, onCancel }) => {
             {formData.newPassword && (
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs text-gray-600">Fortaleza de la contraseña:</span>
+                  <span className="text-xs text-[#2A2A2A]">Fortaleza de la contraseña:</span>
                   <span className={`text-xs font-semibold ${getPasswordStrengthColor(passwordStrength.score)}`}>
                     {getPasswordStrengthText(passwordStrength.score)}
                   </span>
                 </div>
-                <div className="w-full bg-gray-200 rounded-full h-2">
+                <div className="w-full bg-[#2A2A2A]/10 rounded-full h-2">
                   <div 
                     className={`h-2 rounded-full transition-all duration-300 ${
-                      passwordStrength.score <= 2 ? 'bg-red-500' :
-                      passwordStrength.score <= 4 ? 'bg-yellow-500' : 'bg-green-500'
+                      passwordStrength.score <= 2 ? 'bg-[#E11D74]' :
+                      passwordStrength.score <= 4 ? 'bg-[#8B5CF6]' : 'bg-green-500'
                     }`}
                     style={{ width: `${(passwordStrength.score / 6) * 100}%` }}
                   ></div>
                 </div>
                 {passwordStrength.feedback.length > 0 && (
-                  <div className="text-xs text-gray-600">
+                  <div className="text-xs text-[#2A2A2A]">
                     <p className="font-medium mb-1">Para mejorar tu contraseña:</p>
                     <ul className="list-disc list-inside space-y-1">
                       {passwordStrength.feedback.slice(0, 3).map((item, index) => (
@@ -414,7 +414,7 @@ const ChangePassword = ({ onSuccess, onCancel }) => {
               </div>
             )}
             {!formData.newPassword && (
-              <p className="text-xs text-gray-500">Mínimo 8 caracteres con mayúsculas, minúsculas, números y símbolos</p>
+              <p className="text-xs text-[#2A2A2A]/60">Mínimo 8 caracteres con mayúsculas, minúsculas, números y símbolos</p>
             )}
           </div>
         </motion.div>
@@ -426,12 +426,12 @@ const ChangePassword = ({ onSuccess, onCancel }) => {
           transition={{ delay: 0.5 }}
           className="relative group"
         >
-          <label className="block text-sm font-semibold text-gray-700 mb-2">
+          <label className="block text-sm font-semibold text-[#0F0F10] mb-2">
             Confirmar Nueva Contraseña
           </label>
           <div className="relative">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <svg className="w-4 h-4 text-gray-300 group-focus-within:text-red-500 transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-4 h-4 text-[#2A2A2A]/40 group-focus-within:text-[#6D28D9] transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             </div>
@@ -440,14 +440,14 @@ const ChangePassword = ({ onSuccess, onCancel }) => {
               name="confirmPassword"
               value={formData.confirmPassword}
               onChange={handleInputChange}
-              className="w-full pl-10 pr-12 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all duration-300 hover:border-gray-300 hover:shadow-md focus:shadow-lg bg-white/90 backdrop-blur-sm"
+              className="w-full pl-10 pr-12 py-3 border border-[#2A2A2A]/20 rounded-xl focus:ring-2 focus:ring-[#6D28D9]/20 focus:border-[#6D28D9] transition-all duration-300 hover:border-[#6D28D9]/40 hover:shadow-md focus:shadow-lg bg-white/90 backdrop-blur-sm"
               placeholder="Confirma tu nueva contraseña"
               required
             />
             <button
               type="button"
               onClick={() => togglePasswordVisibility('confirm')}
-              className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 transition-colors duration-200"
+              className="absolute inset-y-0 right-0 pr-3 flex items-center text-[#2A2A2A]/40 hover:text-[#6D28D9] transition-colors duration-300"
             >
               {showPasswords.confirm ? (
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -475,7 +475,7 @@ const ChangePassword = ({ onSuccess, onCancel }) => {
             whileTap={{ scale: 0.95 }}
             type="button"
             onClick={handleCancel}
-            className="px-6 py-3 border-2 border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 hover:border-gray-400 transition-all duration-200 font-medium"
+            className="px-6 py-3 border-2 border-[#2A2A2A] text-[#2A2A2A] rounded-xl hover:bg-[#2A2A2A] hover:text-white hover:border-[#6D28D9] transition-all duration-300 font-medium"
           >
             Cancelar
           </motion.button>
@@ -484,7 +484,7 @@ const ChangePassword = ({ onSuccess, onCancel }) => {
             whileTap={{ scale: 0.95 }}
             type="submit"
             disabled={isLoading}
-            className="px-6 py-3 bg-gradient-to-r from-red-600 to-pink-600 text-white rounded-xl hover:from-red-700 hover:to-pink-700 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2 shadow-lg hover:shadow-xl font-medium"
+            className="px-6 py-3 bg-gradient-to-r from-[#6D28D9] to-[#E11D74] text-white rounded-xl hover:from-[#8B5CF6] hover:to-[#E11D74] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2 shadow-lg hover:shadow-xl font-medium"
           >
             {isLoading && (
               <svg className="w-5 h-5 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
