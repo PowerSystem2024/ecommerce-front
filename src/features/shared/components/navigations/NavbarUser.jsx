@@ -1,10 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../auth/context/AuthContext';
+import userService from '../../../user-profile/services/userService';
 
 export const NavbarUser = ({ onMenuToggle }) => {
   const navigate = useNavigate();
-  const { user, logout } = useAuth();
+  const { user, logout, updateUser } = useAuth();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [cartItemsCount] = useState(3); // Mock temporal
@@ -21,6 +22,15 @@ export const NavbarUser = ({ onMenuToggle }) => {
     navigate('/profile');
   };
 
+  const getAvatarUrl = () => {
+    const ctx = user?.avatar || user?.photoURL || user?.image || user?.picture || user?.profileImage || user?.profilePhoto || user?.profile?.avatar || user?.profile?.image || '';
+    if (ctx) return ctx;
+    try {
+      const saved = JSON.parse(localStorage.getItem('userData') || 'null');
+      return saved?.avatar || '';
+    } catch { return ''; }
+  };
+  const getInitial = () => (user?.name || user?.email || 'U').trim().charAt(0).toUpperCase();
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -34,6 +44,20 @@ export const NavbarUser = ({ onMenuToggle }) => {
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+
+  // Hidratar avatar si el contexto no lo tiene aún (navegación directa a /shop, etc.)
+  useEffect(() => {
+    const avatarNow = getAvatarUrl();
+    if (!avatarNow) {
+      userService.getProfile().then((res) => {
+        const profile = res?.data || res;
+        if (profile?.avatar) {
+          if (updateUser) updateUser({ avatar: profile.avatar });
+          try { localStorage.setItem('userData', JSON.stringify({ ...(user || {}), avatar: profile.avatar })); } catch {}
+        }
+      }).catch(() => {});
+    }
+  }, [user?.avatar]);
 
   return (
     <nav className="fixed top-0 w-full z-50 bg-[#0F0F10] backdrop-blur-lg border-b border-[#2A2A2A] h-16 flex items-center justify-between px-4 lg:px-8 text-[#FFFFFF] font-['Orbitron',_sans-serif] shadow-[0_2px_20px_rgba(15,15,16,0.8)]">
@@ -212,8 +236,12 @@ export const NavbarUser = ({ onMenuToggle }) => {
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
             className="flex items-center space-x-2 p-2 rounded-lg hover:bg-[#2A2A2A] transition-all"
           >
-            <div className="w-8 h-8 rounded-full flex items-center justify-center bg-gradient-to-br from-[#6D28D9] to-[#8B5CF6]">
-              <span className="text-sm leading-none text-[#FFFFFF] font-bold">👤</span>
+            <div className="w-8 h-8 rounded-full overflow-hidden flex items-center justify-center bg-gradient-to-br from-[#6D28D9] to-[#8B5CF6]">
+              {getAvatarUrl() ? (
+                <img src={getAvatarUrl()} alt={user?.name || 'Avatar'} className="w-full h-full object-cover" />
+              ) : (
+                <span className="text-sm leading-none text-[#FFFFFF] font-bold">{getInitial()}</span>
+              )}
             </div>
             <svg
               className={`w-4 h-4 text-[#CFCFCF] transition-transform hidden sm:block ${
@@ -231,8 +259,12 @@ export const NavbarUser = ({ onMenuToggle }) => {
             <div className="absolute right-0 mt-3 w-72 bg-[#0F0F10]/95 text-[#FFFFFF] rounded-2xl shadow-xl py-3 z-50 border border-[#2A2A2A] backdrop-blur-md">
               <div className="px-4 pb-3 border-b border-[#2A2A2A]/60">
                   <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#6D28D9] to-[#8B5CF6] flex items-center justify-center">
-                    <span className="text-lg text-[#FFFFFF]">👤</span>
+                  <div className="w-10 h-10 rounded-full overflow-hidden ring-2 ring-[#6D28D9]/30 bg-[#6D28D9] flex items-center justify-center">
+                    {getAvatarUrl() ? (
+                      <img src={getAvatarUrl()} alt={user?.name || 'Avatar'} className="w-full h-full object-cover" />
+                    ) : (
+                      <span className="text-lg text-[#FFFFFF] font-bold">{getInitial()}</span>
+                    )}
                     </div>
                     <div>
                     <div className="text-sm font-semibold text-[#FFFFFF] font-['Rajdhani',_sans-serif]">{user?.name || 'Usuario'}</div>

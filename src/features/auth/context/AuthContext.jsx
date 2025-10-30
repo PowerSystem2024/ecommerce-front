@@ -97,7 +97,15 @@ export function AuthProvider({ children }) {
     return { success: true, message: res?.message };
   };
 
-  const value = { user, isAuthenticated, loading, login, logout, register };
+  const updateUser = (partial) => {
+    setUser(prev => {
+      const next = { ...(prev || {}), ...(partial || {}) };
+      try { localStorage.setItem('userData', JSON.stringify(next)); } catch {}
+      return next;
+    });
+  };
+
+  const value = { user, isAuthenticated, loading, login, logout, register, updateUser };
   return (
     <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
   );

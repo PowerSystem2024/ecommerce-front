@@ -1,14 +1,16 @@
-import React from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Tab } from '@headlessui/react';
+import ProductAdminTable from './Products/ProductAdminTable';
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
 }
 
 export default function AdminTabs() {
+  const [openCreateProduct, setOpenCreateProduct] = useState(false);
   const tabs = [
     { key: 'users', title: 'Usuarios', content: <UsuariosTab /> },
-    { key: 'products', title: 'Productos', content: <ProductosTab /> },
+    { key: 'products', title: 'Productos', content: <ProductosTab onCreate={() => setOpenCreateProduct(true)} openCreate={openCreateProduct} onCloseCreate={() => setOpenCreateProduct(false)} /> },
     { key: 'reviews', title: 'Reseñas', content: <ResenasTab /> },
   ];
 
@@ -76,20 +78,18 @@ function UsuariosTab() {
   );
 }
 
-function ProductosTab() {
+function ProductosTab({ onCreate, openCreate, onCloseCreate }) {
   return (
     <div>
       <div className="flex items-center justify-between mb-4">
         <h4 className="text-lg text-[#0F0F10] font-['Orbitron',_sans-serif]">Gestión de productos</h4>
-        <button className="px-3 py-2 bg-[#0F0F10] text-white rounded-md text-sm hover:bg-[#E11D74] transition shadow-sm font-['Quantico',_sans-serif]">
-          Nuevo producto
-        </button>
+        <div className="flex items-center gap-2">
+          <button onClick={onCreate} className="px-3 py-2 bg-[#0F0F10] text-white rounded-md text-sm hover:bg-[#E11D74] transition shadow-sm font-['Quantico',_sans-serif]">
+            Crear producto
+          </button>
+        </div>
       </div>
-      <EmptyState
-        title="Sin productos en el panel"
-        description="Conecta esta vista a la API para listar, crear y editar productos."
-        cta={<button className="text-sm text-[#E11D74] hover:underline font-['Quantico',_sans-serif]">Ir a catálogo</button>}
-      />
+      <ProductAdminTable openCreate={openCreate} onCloseCreate={onCloseCreate} />
     </div>
   );
 }

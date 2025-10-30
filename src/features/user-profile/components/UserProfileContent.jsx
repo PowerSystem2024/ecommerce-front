@@ -6,7 +6,7 @@ import { userService } from '../services/userService';
 
 const UserProfileContent = () => {
   const navigate = useNavigate();
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated, updateUser } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingProfile, setIsLoadingProfile] = useState(true);
@@ -76,6 +76,8 @@ const UserProfileContent = () => {
       // Cargar avatar si existe
       if (profileData.avatar) {
         setAvatar(profileData.avatar);
+        try { localStorage.setItem('userData', JSON.stringify({ ...(user || {}), avatar: profileData.avatar })); } catch {}
+        if (updateUser) updateUser({ avatar: profileData.avatar });
       }
       
     } catch (error) {
@@ -237,7 +239,11 @@ const UserProfileContent = () => {
 
       const result = await userService.uploadAvatar(file);
       
-      setAvatar(result.avatar || result.avatarUrl);
+      const newAvatar = result.avatar || result.avatarUrl;
+      setAvatar(newAvatar);
+      if (updateUser) updateUser({ avatar: newAvatar });
+      try { localStorage.setItem('userData', JSON.stringify({ ...(user || {}), avatar: newAvatar })); } catch {}
+      
       setMessage({ 
         type: 'success', 
         text: 'Avatar actualizado correctamente' 

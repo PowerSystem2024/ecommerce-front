@@ -1,8 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../../auth/context/AuthContext';
+import userService from '../../../user-profile/services/userService';
 
 export const NavbarAdmin = ({ onMenuToggle }) => {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
 
@@ -26,6 +29,28 @@ export const NavbarAdmin = ({ onMenuToggle }) => {
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+
+  const getAvatarUrl = () => {
+    const ctx = user?.avatar || user?.photoURL || user?.image || user?.picture || user?.profileImage || user?.profilePhoto || user?.profile?.avatar || user?.profile?.image || '';
+    if (ctx) return ctx;
+    try {
+      const saved = JSON.parse(localStorage.getItem('userData') || 'null');
+      return saved?.avatar || '';
+    } catch { return ''; }
+  };
+  const getInitial = () => (user?.name || user?.email || 'A').trim().charAt(0).toUpperCase();
+
+  // Hidratar avatar si falta
+  useEffect(() => {
+    if (!getAvatarUrl()) {
+      userService.getProfile().then((res) => {
+        const profile = res?.data || res;
+        if (profile?.avatar) {
+          try { localStorage.setItem('userData', JSON.stringify({ ...(user || {}), avatar: profile.avatar })); } catch {}
+        }
+      }).catch(() => {});
+    }
+  }, [user?.avatar]);
 
   return (
     <nav className="bg-white shadow-sm border-b border-gray-200 h-16 flex items-center justify-between px-4 lg:px-6">
@@ -61,13 +86,17 @@ export const NavbarAdmin = ({ onMenuToggle }) => {
           >
             {/* Avatar */}
             <div className="w-8 h-8 rounded-full overflow-hidden flex items-center justify-center bg-red-600">
-              <span className="text-sm leading-none text-white">👑</span>
+              {getAvatarUrl() ? (
+                <img src={getAvatarUrl()} alt={user?.name || 'Avatar'} className="w-full h-full object-cover" />
+              ) : (
+                <span className="text-sm leading-none text-white font-bold">{getInitial()}</span>
+              )}
             </div>
             
             {/* Información del usuario */}
             <div className="hidden sm:block text-left">
               <div className="text-sm font-medium text-gray-900">
-                Administrador
+                {user?.name || 'Administrador'}
               </div>
               <div className="text-xs text-red-600 font-medium">
                 Admin
@@ -86,11 +115,15 @@ export const NavbarAdmin = ({ onMenuToggle }) => {
               <div className="px-6 pb-4 border-b border-gray-100/50">
                 <div className="flex items-center space-x-3">
                   <div className="w-10 h-10 rounded-full overflow-hidden ring-2 ring-red-500/20 bg-red-600 flex items-center justify-center">
-                    <span className="text-lg text-white">👑</span>
+                    {getAvatarUrl() ? (
+                      <img src={getAvatarUrl()} alt={user?.name || 'Avatar'} className="w-full h-full object-cover" />
+                    ) : (
+                      <span className="text-lg text-white font-bold">{getInitial()}</span>
+                    )}
                   </div>
                   <div>
                     <div className="text-sm font-semibold text-gray-900">
-                      Administrador
+                      {user?.name || 'Administrador'}
                     </div>
                     <div className="text-xs text-red-600 font-medium">
                       Admin • La Tiendita
