@@ -63,7 +63,7 @@ export const NavbarUser = ({ onMenuToggle }) => {
     <nav className="fixed top-0 w-full z-50 bg-[#0F0F10] backdrop-blur-lg border-b border-[#2A2A2A] h-16 flex items-center justify-between px-4 lg:px-8 text-[#FFFFFF] font-['Orbitron',_sans-serif] shadow-[0_2px_20px_rgba(15,15,16,0.8)]">
       {/* Logo - Solo en desktop */}
           <button 
-            onClick={() => navigate('/')}
+            onClick={() => navigate('/shop')}
         className="hidden md:flex items-center space-x-2 hover:opacity-80 transition-opacity"
           >
         <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-[#6D28D9] to-[#8B5CF6] flex items-center justify-center">
@@ -158,9 +158,9 @@ export const NavbarUser = ({ onMenuToggle }) => {
                 className="flex items-center space-x-3 w-full px-3 py-2.5 text-sm hover:bg-[#2A2A2A] rounded-lg transition-all"
               >
                 <svg className="w-5 h-5 text-[#E11D74]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                 </svg>
-                <span className="font-bold text-[#FFFFFF] tracking-[0.1em] uppercase font-['Quantico',_sans-serif]">Historial</span>
+                <span className="font-bold text-[#FFFFFF] tracking-[0.1em] uppercase font-['Quantico',_sans-serif]">Mis Pedidos</span>
               </button>
 
               <button
@@ -276,8 +276,7 @@ export const NavbarUser = ({ onMenuToggle }) => {
               <div className="px-2 py-2 space-y-1">
                 {/* Sección principal */}
                 <DropdownItem icon="user" label="Mi Perfil" onClick={() => navigate('/profile')} />
-                <DropdownItem icon="bag" label="Mis Pedidos" onClick={() => navigate('/orders')} />
-                <DropdownItem icon="history" label="Historial de Pedidos" onClick={() => navigate('/order-history')} />
+                <DropdownItem icon="bag" label="Mis Pedidos" onClick={() => navigate('/order-history')} />
                 
                 {/* Separador */}
                 <div className="h-px bg-gradient-to-r from-transparent via-[#2A2A2A] to-transparent my-2"></div>
