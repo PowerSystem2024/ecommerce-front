@@ -373,7 +373,7 @@ const OrderHistoryContent = () => {
           transition={{ delay: 0.2 }}
           className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-3 font-orbitron"
         >
-          Historial de Pedidos
+          Mis Pedidos
         </motion.h1>
         <motion.p 
           initial={{ opacity: 0, x: -20 }}
