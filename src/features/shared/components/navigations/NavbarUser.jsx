@@ -236,11 +236,7 @@ export const NavbarUser = ({ onMenuToggle }) => {
                 {/* Sección principal */}
                 <DropdownItem icon="user" label="Mi Perfil" onClick={() => navigate('/profile')} />
                 
-                {/* Separador */}
-                <div className="h-px bg-gradient-to-r from-transparent via-[#2A2A2A] to-transparent my-2"></div>
                 
-                {/* Sección secundaria */}
-                <DropdownItem icon="map" label="Direcciones" onClick={() => navigate('/addresses')} />
                 </div>
 
                 <div className="px-4 py-2">
