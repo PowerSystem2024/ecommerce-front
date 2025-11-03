@@ -332,10 +332,17 @@ export default function ProductDetail({ product, open, onClose }) {
 
                   {/* Sección de Reseñas */}
                   <ReviewsSection
-                    reviews={product.reviews || []}
+                    productId={product._id || product.id}
+                    reviews={product.reviews || null}
                     averageRating={product.rating || product.averageRating}
                     reviewsCount={product.reviewsCount || product.reviews?.length || 0}
+                    ratingSummary={product.meta?.ratingSummary || null}
                     reviewsPerPage={5}
+                    canReview={product.canReview !== undefined ? product.canReview : true}
+                    onReviewAdded={() => {
+                      // Recargar producto si es necesario
+                      // Esto puede ser manejado por el componente padre
+                    }}
                   />
                 </div>
               </div>
