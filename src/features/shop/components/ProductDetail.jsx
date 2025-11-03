@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { Dialog, DialogBackdrop, DialogPanel } from '@headlessui/react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
 import { StarIcon } from '@heroicons/react/20/solid'
@@ -15,42 +15,116 @@ export default function ProductDetail({ product, open, onClose }) {
   const [selectedSize, setSelectedSize] = useState(null)
   const [isAdding, setIsAdding] = useState(false)
 
-  // Si no hay producto, no renderizar nada
-  if (!product) return null
+  // Normalizar colores y tallas desde el producto (sin datos hardcodeados)
+  // IMPORTANTE: Los hooks deben estar siempre antes de cualquier return condicional
+  const colors = useMemo(() => {
+    if (!product) return []
+    
+    // Normalizar colores: puede venir como array de strings o array de objetos
+    const productColors = product.colors || []
+    if (productColors.length === 0) {
+      return [] // No hay colores, retornar array vacío
+    }
+    
+    // Si es array de strings, convertirlos a objetos
+    if (typeof productColors[0] === 'string') {
+      // Mapeo de colores comunes a clases de Tailwind
+      const colorClasses = {
+        'gris': 'bg-gray-400 checked:outline-gray-400',
+        'negro': 'bg-gray-900 checked:outline-gray-900',
+        'blanco': 'bg-white checked:outline-gray-300',
+        'azul': 'bg-blue-500 checked:outline-blue-500',
+        'rojo': 'bg-red-500 checked:outline-red-500',
+        'verde': 'bg-green-500 checked:outline-green-500',
+        'amarillo': 'bg-yellow-500 checked:outline-yellow-500',
+        'rosa': 'bg-pink-500 checked:outline-pink-500',
+        'morado': 'bg-purple-500 checked:outline-purple-500',
+        'naranja': 'bg-orange-500 checked:outline-orange-500',
+      }
+      
+      return productColors.map((color) => {
+        const colorLower = color.toLowerCase().trim()
+        const classes = colorClasses[colorLower] || 'bg-gray-600 checked:outline-gray-600'
+        return {
+          id: colorLower.replace(/\s+/g, '-'),
+          name: color,
+          classes: classes
+        }
+      })
+    }
+    
+    // Si ya es array de objetos, retornarlo tal cual
+    return productColors
+  }, [product?.colors, product?._id])
 
-  // Configurar colores y tallas por defecto si el producto no los tiene
-  const colors = product.colors || [
-    { id: 'default', name: 'Color único', classes: 'bg-gray-900 checked:outline-gray-900' },
-  ]
+  const sizes = useMemo(() => {
+    if (!product) return []
+    
+    // Normalizar tallas: puede venir como array de strings o array de objetos
+    const productSizes = product.sizes || []
+    if (productSizes.length === 0) {
+      return [] // No hay talles, retornar array vacío
+    }
+    
+    // Si es array de strings, convertirlos a objetos
+    if (typeof productSizes[0] === 'string') {
+      return productSizes.map(size => ({
+        id: size.toLowerCase().replace(/\s+/g, '-'),
+        name: size,
+        inStock: true // Asumimos que están en stock si no se especifica
+      }))
+    }
+    
+    // Si ya es array de objetos, retornarlo tal cual
+    return productSizes
+  }, [product?.sizes, product?._id])
 
-  const sizes = product.sizes || [
-    { id: 's', name: 'S', inStock: true },
-    { id: 'm', name: 'M', inStock: true },
-    { id: 'l', name: 'L', inStock: true },
-    { id: 'xl', name: 'XL', inStock: true },
-  ]
+  // Inicializar selecciones por defecto cuando cambia el producto o se abre el modal
+  useEffect(() => {
+    if (!open || !product) {
+      // Resetear cuando se cierra el modal o no hay producto
+      setSelectedColor(null)
+      setSelectedSize(null)
+      return
+    }
 
-  // Inicializar selecciones por defecto
-  if (!selectedColor && colors.length > 0) {
-    setSelectedColor(colors[0].id)
-  }
-  if (!selectedSize && sizes.length > 0) {
-    setSelectedSize(sizes.find(s => s.inStock)?.id || sizes[0].id)
-  }
+    // Establecer valores por defecto solo si hay opciones disponibles
+    if (colors.length > 0) {
+      setSelectedColor(colors[0].id)
+    } else {
+      setSelectedColor(null)
+    }
+    
+    if (sizes.length > 0) {
+      setSelectedSize(sizes.find(s => s.inStock)?.id || sizes[0].id)
+    } else {
+      setSelectedSize(null)
+    }
+  }, [open, product?._id, colors, sizes])
 
   const handleAddToCart = async (e) => {
     e.preventDefault()
+    if (!product) return
+    
     setIsAdding(true)
     
     // Simular delay
     await new Promise(resolve => setTimeout(resolve, 500))
     
-    // Agregar al carrito con la información seleccionada
-    addItem({
+    // Agregar al carrito con la información seleccionada (solo si hay valores seleccionados)
+    const cartItem = {
       ...product,
-      selectedColor: colors.find(c => c.id === selectedColor)?.name,
-      selectedSize: sizes.find(s => s.id === selectedSize)?.name,
-    })
+    }
+    
+    if (selectedColor) {
+      cartItem.selectedColor = colors.find(c => c.id === selectedColor)?.name
+    }
+    
+    if (selectedSize) {
+      cartItem.selectedSize = sizes.find(s => s.id === selectedSize)?.name
+    }
+    
+    addItem(cartItem)
     
     setIsAdding(false)
     
@@ -59,6 +133,9 @@ export default function ProductDetail({ product, open, onClose }) {
       onClose()
     }, 300)
   }
+
+  // Si no hay producto, no renderizar nada (después de todos los hooks)
+  if (!product) return null
 
   return (
     <Dialog open={open} onClose={onClose} className="relative z-50">
@@ -164,7 +241,7 @@ export default function ProductDetail({ product, open, onClose }) {
 
                     <form onSubmit={handleAddToCart}>
                       {/* Color picker */}
-                      {colors.length > 1 && (
+                      {colors.length > 0 && (
                         <fieldset aria-label="Elegir un color">
                           <legend className="text-sm font-medium text-gray-900 font-['Quantico',_sans-serif]">Color</legend>
 
@@ -193,7 +270,7 @@ export default function ProductDetail({ product, open, onClose }) {
                       )}
 
                       {/* Size picker */}
-                      {sizes.length > 1 && (
+                      {sizes.length > 0 && (
                         <fieldset aria-label="Elegir una talla" className="mt-6">
                           <div className="flex items-center justify-between">
                             <div className="text-sm font-medium text-gray-900 font-['Quantico',_sans-serif]">Talla</div>

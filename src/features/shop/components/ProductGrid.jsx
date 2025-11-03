@@ -7,13 +7,14 @@ export default function ProductGrid({ products, onAddToCart, onViewDetails, load
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
         {[...Array(8)].map((_, index) => (
-          <div key={index} className="animate-pulse">
-            <div className="bg-[#2A2A2A]/10 rounded-2xl overflow-hidden">
-              <div className="aspect-square bg-[#2A2A2A]/20" />
-              <div className="p-6 space-y-4">
+          <div key={index} className="animate-pulse h-full">
+            <div className="bg-[#2A2A2A]/10 rounded-2xl overflow-hidden h-full flex flex-col">
+              <div className="aspect-square bg-[#2A2A2A]/20 flex-shrink-0" />
+              <div className="p-6 space-y-4 flex-grow flex flex-col">
                 <div className="h-4 bg-[#2A2A2A]/20 rounded" />
                 <div className="h-3 bg-[#2A2A2A]/20 rounded w-3/4" />
-                <div className="h-6 bg-[#2A2A2A]/20 rounded w-1/2" />
+                <div className="flex-grow" />
+                <div className="h-6 bg-[#2A2A2A]/20 rounded w-1/2 flex-shrink-0" />
               </div>
             </div>
           </div>
@@ -57,6 +58,7 @@ export default function ProductGrid({ products, onAddToCart, onViewDetails, load
       {products.map((product, index) => (
         <motion.div
           key={product.id}
+          className="h-full"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: index * 0.1, duration: 0.5 }}

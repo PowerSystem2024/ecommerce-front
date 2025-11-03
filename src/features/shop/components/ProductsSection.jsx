@@ -5,115 +5,7 @@ import ProductGrid from "./ProductGrid";
 import ProductDetail from "./ProductDetail";
 import productService from "../services/productService";
 
-// Datos simulados de productos (fallback)
-const mockProducts = [
-  {
-    id: 1,
-    name: "Vestido Elegante Negro",
-    description: "Perfecto para ocasiones especiales con un diseño moderno y sofisticado",
-    price: 45000,
-    originalPrice: 55000,
-    category: "Mujer",
-    size: "M",
-    color: "#000000",
-    image: "https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?auto=format&fit=crop&w=400&q=80",
-    rating: 4.8,
-    stock: 12,
-    discount: 18
-  },
-  {
-    id: 2,
-    name: "Camisa Casual Blanca",
-    description: "Comodidad y estilo para el día a día con materiales premium",
-    price: 25000,
-    category: "Hombre",
-    size: "L",
-    color: "#FFFFFF",
-    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80",
-    rating: 4.6,
-    stock: 8
-  },
-  {
-    id: 3,
-    name: "Pantalón Moderno Gris",
-    description: "Corte perfecto y materiales premium para un look profesional",
-    price: 35000,
-    originalPrice: 42000,
-    category: "Hombre",
-    size: "L",
-    color: "#6B7280",
-    image: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=400&q=80",
-    rating: 4.7,
-    stock: 15,
-    discount: 17
-  },
-  {
-    id: 4,
-    name: "Blusa Rosa Elegante",
-    description: "Detalles únicos que marcan la diferencia en tu guardarropa",
-    price: 28000,
-    category: "Mujer",
-    size: "S",
-    color: "#EC4899",
-    image: "https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=400&q=80",
-    rating: 4.9,
-    stock: 6
-  },
-  {
-    id: 5,
-    name: "Chaqueta Azul Deportiva",
-    description: "Estilo deportivo con tecnología de última generación",
-    price: 52000,
-    category: "Hombre",
-    size: "XL",
-    color: "#3B82F6",
-    image: "https://images.unsplash.com/photo-1549298916-b41d501d3772?auto=format&fit=crop&w=400&q=80",
-    rating: 4.5,
-    stock: 10
-  },
-  {
-    id: 6,
-    name: "Falda Verde Vintage",
-    description: "Estilo retro con un toque moderno para ocasiones especiales",
-    price: 32000,
-    originalPrice: 40000,
-    category: "Mujer",
-    size: "M",
-    color: "#10B981",
-    image: "https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?auto=format&fit=crop&w=400&q=80",
-    rating: 4.8,
-    stock: 7,
-    discount: 20
-  },
-  {
-    id: 7,
-    name: "Reloj Púrpura Premium",
-    description: "Accesorio elegante que complementa cualquier outfit",
-    price: 18000,
-    category: "Accesorios",
-    size: "Único",
-    color: "#8B5CF6",
-    image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=400&q=80",
-    rating: 4.9,
-    stock: 25
-  },
-  {
-    id: 8,
-    name: "Zapatos Rojos Clásicos",
-    description: "Calzado de calidad superior para el hombre moderno",
-    price: 65000,
-    originalPrice: 80000,
-    category: "Hombre",
-    size: "42",
-    color: "#EF4444",
-    image: "https://images.unsplash.com/photo-1549298916-b41d501d3772?auto=format&fit=crop&w=400&q=80",
-    rating: 4.7,
-    stock: 5,
-    discount: 19
-  }
-];
-
-export default function ProductsSection({ initialSearch = "" }) {
+export default function ProductsSection({ initialSearch = "", initialCategory = "" }) {
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -121,8 +13,11 @@ export default function ProductsSection({ initialSearch = "" }) {
   const [cartCount, setCartCount] = useState(0);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [productsPerPage] = useState(8);
+  const [categories, setCategories] = useState([]);
   const [filters, setFilters] = useState({
-    category: "Todos",
+    category: initialCategory || "Todos",
     size: "",
     color: "",
     minPrice: "",
@@ -144,13 +39,34 @@ export default function ProductsSection({ initialSearch = "" }) {
       }
 
       // Filtro por talle
-      if (currentFilters.size && product.size !== currentFilters.size) {
-        return false;
+      if (currentFilters.size) {
+        const productSizes = Array.isArray(product.sizes) ? product.sizes : [];
+        // Verificar si el producto tiene el talle seleccionado (puede ser string o objeto)
+        const hasSize = productSizes.some(size => {
+          if (typeof size === 'string') {
+            return size.toUpperCase() === currentFilters.size.toUpperCase();
+          }
+          return size.name?.toUpperCase() === currentFilters.size.toUpperCase();
+        });
+        if (!hasSize) {
+          return false;
+        }
       }
 
       // Filtro por color
-      if (currentFilters.color && product.color !== currentFilters.color) {
-        return false;
+      if (currentFilters.color) {
+        const productColors = Array.isArray(product.colors) ? product.colors : [];
+        // Verificar si el producto tiene el color seleccionado
+        const hasColor = productColors.some(color => {
+          if (typeof color === 'string') {
+            return color.toLowerCase() === currentFilters.color.toLowerCase();
+          }
+          return color.name?.toLowerCase() === currentFilters.color.toLowerCase() || 
+                 color.toLowerCase() === currentFilters.color.toLowerCase();
+        });
+        if (!hasColor) {
+          return false;
+        }
       }
 
       // Filtro por precio
@@ -168,12 +84,14 @@ export default function ProductsSection({ initialSearch = "" }) {
   // Manejar cambios en filtros
   const handleFiltersChange = (newFilters) => {
     setFilters(newFilters);
+    setCurrentPage(1); // Resetear a página 1 cuando cambian los filtros
     const filtered = filterProducts(products, newFilters);
     setFilteredProducts(filtered);
   };
 
   // Manejar búsqueda
   const handleSearch = (searchTerm) => {
+    setCurrentPage(1); // Resetear a página 1 cuando se busca
     const filtered = filterProducts(products, filters, searchTerm);
     setFilteredProducts(filtered);
   };
@@ -197,29 +115,107 @@ export default function ProductsSection({ initialSearch = "" }) {
     setTimeout(() => setSelectedProduct(null), 300);
   };
 
+  // Cargar categorías desde la API
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await productService.getCategories();
+        const categoriesFromData = Array.isArray(response?.data) ? response.data : null;
+        const categoriesFromRoot = Array.isArray(response?.categories) ? response.categories : null;
+        const categoriesList = categoriesFromData || categoriesFromRoot || [];
+        
+        // Crear un mapa de IDs de categoría a nombres
+        const categoriesMap = {};
+        categoriesList.forEach(cat => {
+          if (cat._id) {
+            categoriesMap[cat._id] = cat.name || cat.title || '';
+          }
+        });
+        
+        setCategories(categoriesMap);
+      } catch (err) {
+        console.error('❌ Error al cargar categorías:', err);
+        setCategories({});
+      }
+    };
+    
+    fetchCategories();
+  }, []);
+
   // Cargar productos desde la API
   useEffect(() => {
+    const controller = new AbortController();
     const fetchProducts = async () => {
       try {
         setLoading(true);
         setError(null);
         
-        const response = await productService.getProducts({ isActive: true });
-        console.log('📦 Productos recibidos:', response);
+        // Traer todos los productos activos usando paginación
+        // El límite máximo es 100, así que hacemos múltiples requests si es necesario
+        let allProducts = [];
+        let currentPage = 1;
+        const limit = 100; // Máximo permitido por el backend
+        let hasMore = true;
         
-        // La respuesta puede venir en response.data o directamente en response
-        const productsData = response?.data?.products || response?.products || response?.data || [];
+        while (hasMore && !controller.signal.aborted) {
+          const params = new URLSearchParams();
+          params.append('isActive', 'true');
+          params.append('page', String(currentPage));
+          params.append('limit', String(limit));
+          
+          const endpoint = `/products?${params.toString()}`;
+          const response = await productService.makeRequest(endpoint, { 
+            method: 'GET', 
+            signal: controller.signal 
+          });
+          
+          // Normalizar respuesta igual que en admin
+          const itemsFromStd = Array.isArray(response?.data?.products) ? response.data.products : null;
+          const itemsFromDataItems = Array.isArray(response?.data?.items) ? response.data.items : null;
+          const itemsFromData = Array.isArray(response?.data) ? response.data : null;
+          const itemsFromProducts = Array.isArray(response?.products) ? response.products : null;
+          const itemsFromItems = Array.isArray(response?.items) ? response.items : null;
+          const items = itemsFromStd || itemsFromDataItems || itemsFromData || itemsFromProducts || itemsFromItems || [];
+          
+          allProducts = [...allProducts, ...items];
+          
+          // Verificar si hay más páginas
+          const totalFromStd = typeof response?.data?.pagination?.totalProducts === 'number' ? response.data.pagination.totalProducts : null;
+          const totalFromData = typeof response?.data?.total === 'number' ? response.data.total : null;
+          const totalFromRoot = typeof response?.total === 'number' ? response.total : null;
+          const total = totalFromStd || totalFromData || totalFromRoot || allProducts.length;
+          
+          // Si obtenemos menos productos que el límite o alcanzamos el total, no hay más páginas
+          hasMore = items.length === limit && allProducts.length < total;
+          currentPage++;
+        }
+        
+        console.log('📦 Productos recibidos:', allProducts.length);
         
         // Normalizar los productos para que coincidan con el formato esperado
-        const normalizedProducts = productsData.map(product => {
-          // Extraer el nombre real de la descripción (formato: "id - Categoría")
-          const descriptionParts = product.description?.split(' - ') || [];
-          const categoryName = descriptionParts[1] || product.category?.name || product.category || 'Sin categoría';
+        const normalizedProducts = allProducts.map(product => {
+          // Obtener el nombre de la categoría usando el mapa de categorías
+          let categoryName = 'Sin categoría';
+          if (product.category) {
+            if (typeof product.category === 'object' && product.category._id) {
+              // Si category es un objeto con _id, buscar en el mapa
+              categoryName = categories[product.category._id] || product.category.name || product.category.title || 'Sin categoría';
+            } else if (typeof product.category === 'object' && product.category.$oid) {
+              // Si category es un objeto con $oid (formato MongoDB)
+              categoryName = categories[product.category.$oid] || product.category.name || product.category.title || 'Sin categoría';
+            } else if (typeof product.category === 'string') {
+              // Si category es un string (ID), buscar en el mapa
+              categoryName = categories[product.category] || 'Sin categoría';
+            } else if (product.category.name) {
+              // Si category tiene nombre directamente
+              categoryName = product.category.name;
+            }
+          }
           
           return {
             id: product._id,
             _id: product._id,
-            name: categoryName, // Usar el nombre de la categoría como nombre del producto
+            name: product.name || categoryName,
             description: product.description || `Producto de ${categoryName}`,
             price: product.price || 0,
             originalPrice: product.originalPrice,
@@ -236,61 +232,87 @@ export default function ProductsSection({ initialSearch = "" }) {
           };
         });
         
-        console.log('✅ Productos normalizados:', normalizedProducts);
+        console.log('✅ Productos normalizados:', normalizedProducts.length);
         setProducts(normalizedProducts);
         setFilteredProducts(normalizedProducts);
       } catch (err) {
+        if (err?.name === 'AbortError') {
+          return; // Ignorar errores de abort
+        }
         console.error('❌ Error al cargar productos:', err);
         setError(err.message || 'Error al cargar productos');
-        // Usar productos mock como fallback
-        setProducts(mockProducts);
-        setFilteredProducts(mockProducts);
+        setProducts([]);
+        setFilteredProducts([]);
       } finally {
         setLoading(false);
       }
     };
-
+    
     fetchProducts();
-  }, []);
+    return () => controller.abort();
+  }, [categories]);
 
   // Manejar búsqueda inicial del Hero
   useEffect(() => {
     if (initialSearch) {
+      setCurrentPage(1); // Resetear a página 1 cuando hay búsqueda inicial
       const filtered = filterProducts(products, filters, initialSearch);
       setFilteredProducts(filtered);
     }
   }, [initialSearch, products, filters]);
 
+  // Manejar cambio de categoría inicial
+  useEffect(() => {
+    // Si initialCategory está vacío, significa que se limpió el filtro
+    setFilters(prev => ({ ...prev, category: initialCategory || "Todos" }));
+    setCurrentPage(1); // Resetear a página 1 cuando cambia la categoría
+  }, [initialCategory]);
+
+  // Aplicar filtros cuando cambian los productos o filtros
+  useEffect(() => {
+    const filtered = filterProducts(products, filters, initialSearch);
+    setFilteredProducts(filtered);
+  }, [products, filters, initialSearch]);
+
+  // Calcular productos paginados y total de páginas
+  const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
+  const startIndex = (currentPage - 1) * productsPerPage;
+  const endIndex = startIndex + productsPerPage;
+  const paginatedProducts = filteredProducts.slice(startIndex, endIndex);
+
+  // Funciones de navegación
+  const goToPage = (page) => {
+    if (page >= 1 && page <= totalPages) {
+      setCurrentPage(page);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
+  const goToPreviousPage = () => {
+    if (currentPage > 1) {
+      goToPage(currentPage - 1);
+    }
+  };
+
+  const goToNextPage = () => {
+    if (currentPage < totalPages) {
+      goToPage(currentPage + 1);
+    }
+  };
+
   return (
-    <section className="py-16">
+    <section className="py-16" data-products-section>
       <div className="max-w-7xl mx-auto px-6">
-        {/* Header de la sección */}
-        <motion.div 
-          className="text-center mb-12"
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-        >
-          <h2 className="text-4xl font-light text-[#0F0F10] mb-4 font-['Orbitron',_sans-serif]">
-            Todos los
-            <span className="block font-bold bg-gradient-to-r from-[#6D28D9] to-[#8B5CF6] bg-clip-text text-transparent">
-              Productos
-            </span>
-          </h2>
-          <p className="text-xl text-[#2A2A2A] max-w-2xl mx-auto font-['Rajdhani',_sans-serif]">
-            Descubrí nuestra colección completa de prendas y accesorios
-          </p>
-        </motion.div>
 
         {/* Mensaje de error si falla la carga */}
         {error && (
           <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mb-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg"
+            className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg"
           >
-            <p className="text-yellow-800 font-['Rajdhani',_sans-serif]">
-              ⚠️ {error}. Mostrando productos de ejemplo.
+            <p className="text-red-800 font-['Rajdhani',_sans-serif]">
+              ⚠️ {error}
             </p>
           </motion.div>
         )}
@@ -306,7 +328,7 @@ export default function ProductsSection({ initialSearch = "" }) {
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-4">
             <span className="text-[#2A2A2A] font-['Rajdhani',_sans-serif]">
-              Mostrando {filteredProducts.length} de {products.length} productos
+              Mostrando {startIndex + 1}-{Math.min(endIndex, filteredProducts.length)} de {filteredProducts.length} productos
             </span>
             {cartCount > 0 && (
               <span className="bg-[#6D28D9] text-white px-3 py-1 rounded-full text-sm font-semibold font-['Quantico',_sans-serif]">
@@ -329,7 +351,7 @@ export default function ProductsSection({ initialSearch = "" }) {
 
         {/* Grid de productos */}
         <ProductGrid 
-          products={filteredProducts}
+          products={paginatedProducts}
           onAddToCart={handleAddToCart}
           onViewDetails={handleViewDetails}
           loading={loading}
@@ -342,25 +364,72 @@ export default function ProductsSection({ initialSearch = "" }) {
           onClose={handleCloseDetail}
         />
 
-        {/* Paginación (opcional) */}
-        {filteredProducts.length > 0 && (
+        {/* Paginación */}
+        {filteredProducts.length > 0 && totalPages > 1 && (
           <motion.div 
-            className="flex justify-center mt-12"
+            className="flex justify-center items-center gap-2 mt-12"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5, duration: 0.5 }}
           >
-            <div className="flex items-center gap-2">
-              <button className="px-4 py-2 border border-[#2A2A2A]/20 text-[#2A2A2A] rounded-lg hover:bg-[#6D28D9] hover:text-white transition-all duration-300 font-['Rajdhani',_sans-serif]">
-                Anterior
-              </button>
-              <span className="px-4 py-2 bg-[#6D28D9] text-white rounded-lg font-semibold font-['Quantico',_sans-serif]">
-                1
-              </span>
-              <button className="px-4 py-2 border border-[#2A2A2A]/20 text-[#2A2A2A] rounded-lg hover:bg-[#6D28D9] hover:text-white transition-all duration-300 font-['Rajdhani',_sans-serif]">
-                Siguiente
-              </button>
+            <button 
+              onClick={goToPreviousPage}
+              disabled={currentPage === 1}
+              className={`px-4 py-2 border border-[#2A2A2A]/20 text-[#2A2A2A] rounded-lg transition-all duration-300 font-['Rajdhani',_sans-serif] ${
+                currentPage === 1 
+                  ? 'opacity-50 cursor-not-allowed' 
+                  : 'hover:bg-[#6D28D9] hover:text-white hover:border-[#6D28D9]'
+              }`}
+            >
+              Anterior
+            </button>
+            
+            <div className="flex items-center gap-1">
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => {
+                // Mostrar solo algunas páginas alrededor de la actual
+                if (
+                  page === 1 ||
+                  page === totalPages ||
+                  (page >= currentPage - 1 && page <= currentPage + 1)
+                ) {
+                  return (
+                    <button
+                      key={page}
+                      onClick={() => goToPage(page)}
+                      className={`px-4 py-2 rounded-lg font-semibold font-['Quantico',_sans-serif] transition-all duration-300 ${
+                        currentPage === page
+                          ? 'bg-[#6D28D9] text-white'
+                          : 'border border-[#2A2A2A]/20 text-[#2A2A2A] hover:bg-[#6D28D9] hover:text-white hover:border-[#6D28D9]'
+                      }`}
+                    >
+                      {page}
+                    </button>
+                  );
+                } else if (
+                  page === currentPage - 2 ||
+                  page === currentPage + 2
+                ) {
+                  return (
+                    <span key={page} className="px-2 text-[#2A2A2A] font-['Rajdhani',_sans-serif]">
+                      ...
+                    </span>
+                  );
+                }
+                return null;
+              })}
             </div>
+            
+            <button 
+              onClick={goToNextPage}
+              disabled={currentPage === totalPages}
+              className={`px-4 py-2 border border-[#2A2A2A]/20 text-[#2A2A2A] rounded-lg transition-all duration-300 font-['Rajdhani',_sans-serif] ${
+                currentPage === totalPages 
+                  ? 'opacity-50 cursor-not-allowed' 
+                  : 'hover:bg-[#6D28D9] hover:text-white hover:border-[#6D28D9]'
+              }`}
+            >
+              Siguiente
+            </button>
           </motion.div>
         )}
       </div>

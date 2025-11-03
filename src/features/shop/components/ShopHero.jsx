@@ -1,14 +1,66 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import productService from "../services/productService";
 
-export default function ShopHero() {
- 
-  const quickCategories = [
-    { name: "Mujer", href: "/categoria/mujer", icon: "👗" },
-    { name: "Hombre", href: "/categoria/hombre", icon: "👔" },
-    { name: "Accesorios", href: "/categoria/accesorios", icon: "👜" },
-    { name: "Ofertas", href: "/ofertas", icon: "🏷️" }
-  ];
+// Mapeo de iconos para categorías
+const categoryIcons = {
+  'Accesorios': '👜',
+  'Buzos': '🧥',
+  'Camperas': '🧥',
+  'Conjuntos': '👗',
+  'Pantalones': '👖',
+  'Remeras': '👕',
+  'Vestidos': '👗',
+  'default': '🛍️'
+};
+
+export default function ShopHero({ onCategoryClick, selectedCategory = "" }) {
+  const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // Cargar categorías desde la API
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await productService.getCategories();
+        const categoriesFromData = Array.isArray(response?.data) ? response.data : null;
+        const categoriesFromRoot = Array.isArray(response?.categories) ? response.categories : null;
+        const categoriesList = categoriesFromData || categoriesFromRoot || [];
+        
+        // Normalizar categorías
+        const normalizedCategories = categoriesList.map(cat => ({
+          _id: cat._id,
+          name: cat.name || cat.title || '',
+        })).filter(cat => cat.name); // Filtrar categorías sin nombre
+        
+        setCategories(normalizedCategories);
+      } catch (err) {
+        console.error('❌ Error al cargar categorías:', err);
+        setCategories([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchCategories();
+  }, []);
+
+  const handleCategoryClick = (categoryName) => {
+    if (onCategoryClick) {
+      onCategoryClick(categoryName);
+      // Hacer scroll hacia abajo donde están los productos
+      setTimeout(() => {
+        const productsSection = document.querySelector('[data-products-section]');
+        if (productsSection) {
+          productsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 100);
+    }
+  };
+
+  const getCategoryIcon = (categoryName) => {
+    return categoryIcons[categoryName] || categoryIcons.default;
+  };
 
   return (
     <section className="relative py-12 lg:py-16">
@@ -38,68 +90,75 @@ export default function ShopHero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3, duration: 0.6 }}
         >
-          {quickCategories.map((category, index) => (
-            <motion.a
-              key={category.name}
-              href={category.href}
-              className="group bg-white rounded-2xl p-6 text-center shadow-sm border border-[#2A2A2A]/10 hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
-              whileHover={{ scale: 1.02 }}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4 + index * 0.1, duration: 0.5 }}
-            >
-              <div className="text-4xl mb-3 group-hover:scale-110 transition-transform duration-300">
-                {category.icon}
+          {/* Botón "Todos" para limpiar filtro */}
+          <motion.button
+            onClick={() => handleCategoryClick("")}
+            className={`group rounded-2xl p-6 text-center shadow-sm border border-[#2A2A2A]/10 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer ${
+              selectedCategory === "" 
+                ? "bg-gradient-to-br from-[#6D28D9] to-[#8B5CF6] text-white" 
+                : "bg-white text-[#0F0F10]"
+            }`}
+            whileHover={{ scale: 1.02 }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4, duration: 0.5 }}
+          >
+            <div className="text-4xl mb-3 group-hover:scale-110 transition-transform duration-300">
+              🛍️
+            </div>
+            <h3 className={`font-semibold transition-colors font-['Quantico',_sans-serif] ${
+              selectedCategory === "" 
+                ? "text-white group-hover:text-[#E11D74]" 
+                : "text-[#0F0F10] group-hover:text-[#E11D74]"
+            }`}>
+              Todos
+            </h3>
+          </motion.button>
+
+          {loading ? (
+            // Skeletons mientras carga (3 más para completar 4 arriba)
+            Array.from({ length: 3 }).map((_, i) => (
+              <div key={i} className="bg-white rounded-2xl p-6 text-center shadow-sm border border-[#2A2A2A]/10 animate-pulse">
+                <div className="text-4xl mb-3 bg-gray-200 rounded-full w-16 h-16 mx-auto"></div>
+                <div className="h-4 bg-gray-200 rounded w-24 mx-auto"></div>
               </div>
-              <h3 className="font-semibold text-[#0F0F10] group-hover:text-[#E11D74] transition-colors font-['Quantico',_sans-serif]">
-                {category.name}
-              </h3>
-            </motion.a>
-          ))}
-        </motion.div>
-
-        {/* Información rápida */}
-        <motion.div 
-          className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6, duration: 0.6 }}
-        >
-          <div className="flex items-center gap-3 text-[#2A2A2A] font-['Rajdhani',_sans-serif]">
-            <div className="w-10 h-10 bg-gradient-to-r from-[#6D28D9] to-[#8B5CF6] rounded-full flex items-center justify-center">
-              <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-              </svg>
+            ))
+          ) : categories.length > 0 ? (
+            categories.slice(0, 7).map((category, index) => {
+              const isSelected = selectedCategory === category.name;
+              return (
+                <motion.button
+                  key={category._id || category.name}
+                  onClick={() => handleCategoryClick(category.name)}
+                  className={`group rounded-2xl p-6 text-center shadow-sm border border-[#2A2A2A]/10 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer ${
+                    isSelected 
+                      ? "bg-gradient-to-br from-[#6D28D9] to-[#8B5CF6] text-white" 
+                      : "bg-white text-[#0F0F10]"
+                  }`}
+                  whileHover={{ scale: 1.02 }}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.4 + (index + 1) * 0.1, duration: 0.5 }}
+                >
+                  <div className="text-4xl mb-3 group-hover:scale-110 transition-transform duration-300">
+                    {getCategoryIcon(category.name)}
+                  </div>
+                  <h3 className={`font-semibold transition-colors font-['Quantico',_sans-serif] ${
+                    isSelected 
+                      ? "text-white group-hover:text-[#E11D74]" 
+                      : "text-[#0F0F10] group-hover:text-[#E11D74]"
+                  }`}>
+                    {category.name}
+                  </h3>
+                </motion.button>
+              );
+            })
+          ) : (
+            // Si no hay categorías, mostrar mensaje
+            <div className="col-span-full text-center text-[#2A2A2A] font-['Rajdhani',_sans-serif]">
+              No hay categorías disponibles
             </div>
-            <div>
-              <div className="font-semibold text-[#0F0F10]">Envío Gratis</div>
-              <div className="text-sm">En compras +$50.000</div>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-3 text-[#2A2A2A] font-['Rajdhani',_sans-serif]">
-            <div className="w-10 h-10 bg-gradient-to-r from-[#6D28D9] to-[#8B5CF6] rounded-full flex items-center justify-center">
-              <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-            </div>
-            <div>
-              <div className="font-semibold text-[#0F0F10]">Calidad Garantizada</div>
-              <div className="text-sm">Productos seleccionados</div>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-3 text-[#2A2A2A] font-['Rajdhani',_sans-serif]">
-            <div className="w-10 h-10 bg-gradient-to-r from-[#6D28D9] to-[#8B5CF6] rounded-full flex items-center justify-center">
-              <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-              </svg>
-            </div>
-            <div>
-              <div className="font-semibold text-[#0F0F10]">Atención 24/7</div>
-              <div className="text-sm">Soporte personalizado</div>
-            </div>
-          </div>
+          )}
         </motion.div>
       </div>
     </section>

@@ -5,22 +5,50 @@ export default function ProductFilters({ filters, onFiltersChange, onSearch }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
-  const categories = ["Todos", "Mujer", "Hombre", "Accesorios", "Ofertas"];
   const sizes = ["XS", "S", "M", "L", "XL", "XXL"];
   const colors = [
-    { name: "Negro", value: "#000000" },
-    { name: "Blanco", value: "#FFFFFF" },
-    { name: "Gris", value: "#6B7280" },
-    { name: "Azul", value: "#3B82F6" },
-    { name: "Rojo", value: "#EF4444" },
-    { name: "Verde", value: "#10B981" },
-    { name: "Rosa", value: "#EC4899" },
-    { name: "Púrpura", value: "#8B5CF6" }
+    { name: "Negro", value: "negro" },
+    { name: "Blanco", value: "blanco" },
+    { name: "Gris", value: "gris" },
+    { name: "Azul", value: "azul" },
+    { name: "Rojo", value: "rojo" },
+    { name: "Verde", value: "verde" },
+    { name: "Rosa", value: "rosa" },
+    { name: "Morado", value: "morado" },
+    { name: "Violeta", value: "violeta" },
+    { name: "Beige", value: "beige" },
+    { name: "Naranja", value: "naranja" },
+    { name: "Amarillo", value: "amarillo" }
   ];
+
+  const getColorHex = (colorName) => {
+    const colorMap = {
+      'negro': '#000000',
+      'blanco': '#FFFFFF',
+      'gris': '#6B7280',
+      'azul': '#3B82F6',
+      'rojo': '#EF4444',
+      'verde': '#10B981',
+      'rosa': '#EC4899',
+      'morado': '#8B5CF6',
+      'violeta': '#8B5CF6',
+      'beige': '#D4A574',
+      'naranja': '#F97316',
+      'amarillo': '#FBBF24'
+    };
+    return colorMap[colorName.toLowerCase()] || '#6B7280';
+  };
 
   const handleSearch = (e) => {
     e.preventDefault();
     onSearch(searchQuery);
+  };
+
+  const handleSearchChange = (e) => {
+    const value = e.target.value;
+    setSearchQuery(value);
+    // Búsqueda en tiempo real
+    onSearch(value);
   };
 
   const handleFilterChange = (filterType, value) => {
@@ -32,7 +60,7 @@ export default function ProductFilters({ filters, onFiltersChange, onSearch }) {
 
   const clearFilters = () => {
     onFiltersChange({
-      category: "Todos",
+      ...filters,
       size: "",
       color: "",
       minPrice: "",
@@ -51,7 +79,7 @@ export default function ProductFilters({ filters, onFiltersChange, onSearch }) {
             <input
               type="text"
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={handleSearchChange}
               placeholder="Buscar productos..."
               className="w-full px-4 py-3 pl-12 pr-4 bg-[#2A2A2A]/5 border border-[#2A2A2A]/20 rounded-full focus:ring-2 focus:ring-[#6D28D9] focus:border-transparent transition-all duration-200 font-['Rajdhani',_sans-serif]"
             />
@@ -110,29 +138,7 @@ export default function ProductFilters({ filters, onFiltersChange, onSearch }) {
         transition={{ duration: 0.3 }}
         className="overflow-hidden"
       >
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 pt-4 border-t border-[#2A2A2A]/10">
-          {/* Filtro por categoría */}
-          <div>
-            <label className="block text-sm font-semibold text-[#0F0F10] mb-3 font-['Quantico',_sans-serif]">
-              Categoría
-            </label>
-            <div className="space-y-2">
-              {categories.map((category) => (
-                <label key={category} className="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="radio"
-                    name="category"
-                    value={category}
-                    checked={filters.category === category}
-                    onChange={(e) => handleFilterChange("category", e.target.value)}
-                    className="w-4 h-4 text-[#6D28D9] border-[#2A2A2A] focus:ring-[#6D28D9]"
-                  />
-                  <span className="text-sm text-[#2A2A2A] font-['Rajdhani',_sans-serif]">{category}</span>
-                </label>
-              ))}
-            </div>
-          </div>
-
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4 border-t border-[#2A2A2A]/10">
           {/* Filtro por talle */}
           <div>
             <label className="block text-sm font-semibold text-[#0F0F10] mb-3 font-['Quantico',_sans-serif]">
@@ -165,12 +171,12 @@ export default function ProductFilters({ filters, onFiltersChange, onSearch }) {
                 <button
                   key={color.name}
                   onClick={() => handleFilterChange("color", filters.color === color.value ? "" : color.value)}
-                  className={`w-8 h-8 rounded-full border-2 transition-all duration-200 ${
+                  className={`w-10 h-10 rounded-full border-2 transition-all duration-200 ${
                     filters.color === color.value
-                      ? 'border-[#6D28D9] scale-110'
+                      ? 'border-[#6D28D9] scale-110 ring-2 ring-[#6D28D9] ring-offset-2'
                       : 'border-[#2A2A2A] hover:scale-110'
                   }`}
-                  style={{ backgroundColor: color.value }}
+                  style={{ backgroundColor: getColorHex(color.value) }}
                   title={color.name}
                 />
               ))}
