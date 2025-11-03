@@ -13,6 +13,7 @@ import CartPage from '../features/cart/pages/cartpage';
 import UserProfilePage from '../features/user-profile/pages/UserProfilePage';
 import OrderHistoryPage from '../features/order-history/pages/OrderHistoryPage';
 import OrderDetailPage from '../features/order-history/pages/OrderDetailPage';
+import OrderReviewPage from '../features/order-history/pages/OrderReviewPage';
 
 // Importar páginas de autenticación
 import LoginPage from '../features/auth/pages/LoginPage';
@@ -70,6 +71,11 @@ export default function AppRoutes() {
       <Route path="/orders/:orderId" element={
         <ProtectedRoute>
           <OrderDetailPage />
+        </ProtectedRoute>
+      } />
+      <Route path="/orders/:orderId/review" element={
+        <ProtectedRoute>
+          <OrderReviewPage />
         </ProtectedRoute>
       } />
       
