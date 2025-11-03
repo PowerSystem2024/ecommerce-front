@@ -84,6 +84,20 @@ class ProductService {
       method: 'GET',
     });
   }
+
+  // Crear/enviar una reseña para un producto
+  async createReview(productId, { rating, comment, orderId }) {
+    if (!productId) throw new Error('productId es requerido');
+    const payload = {
+      rating: Number(rating),
+      comment: comment?.trim?.() || '',
+      orderId,
+    };
+    return this.makeRequest(`/products/${productId}/reviews`, {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+  }
 }
 
 // Exportar instancia única del servicio
