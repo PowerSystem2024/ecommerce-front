@@ -1,14 +1,14 @@
 import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import RatingStars from './RatingStars';
 import ReviewCard from './ReviewCard';
-import ReviewForm from './ReviewForm';
 import ReviewsPagination from './ReviewsPagination';
 import productService from '../services/productService';
 import { useAuth } from '../../auth/context/AuthContext';
-import { orderService } from '../../order-history/services/orderService';
 
 /**
  * Sección completa de reseñas para el detalle del producto
+ * Solo muestra reseñas - NO permite crear reseñas desde aquí
+ * Las reseñas solo se pueden crear desde "Mis Pedidos"
  * 
  * @param {object} props
  * @param {string} props.productId - ID del producto (requerido para cargar desde API)
@@ -17,8 +17,6 @@ import { orderService } from '../../order-history/services/orderService';
  * @param {number} props.reviewsCount - Cantidad total de reseñas
  * @param {object} props.ratingSummary - Resumen de calificaciones del backend (meta.ratingSummary)
  * @param {number} props.reviewsPerPage - Reseñas por página (default: 5)
- * @param {boolean} props.canReview - Si el usuario puede reseñar este producto
- * @param {function} props.onReviewAdded - Callback cuando se agrega una reseña
  * @param {string} className - Clases CSS adicionales
  */
 export default function ReviewsSection({ 
@@ -28,8 +26,6 @@ export default function ReviewsSection({
   reviewsCount: initialReviewsCount = 0,
   ratingSummary = null,
   reviewsPerPage = 5,
-  canReview = false,
-  onReviewAdded,
   className = '' 
 }) {
   const { user, isAuthenticated } = useAuth();
@@ -41,75 +37,8 @@ export default function ReviewsSection({
   const [totalPages, setTotalPages] = useState(1);
   const [totalReviews, setTotalReviews] = useState(initialReviewsCount);
   const [averageRating, setAverageRating] = useState(initialAverageRating);
-  const [editingReview, setEditingReview] = useState(null);
-  const [showReviewForm, setShowReviewForm] = useState(false);
   const [submitError, setSubmitError] = useState('');
   const [submitSuccess, setSubmitSuccess] = useState('');
-  const [userOrders, setUserOrders] = useState([]);
-  const [loadingOrders, setLoadingOrders] = useState(false);
-
-  // Cargar pedidos del usuario para verificar si puede reseñar
-  const loadUserOrders = useCallback(async () => {
-    if (!isAuthenticated || !user) return;
-
-    setLoadingOrders(true);
-    try {
-      const ordersData = await orderService.getUserOrders();
-      
-      // Normalizar respuesta según estructura del backend
-      let ordersList = [];
-      if (Array.isArray(ordersData)) {
-        ordersList = ordersData;
-      } else if (ordersData && ordersData.orders) {
-        ordersList = ordersData.orders;
-      } else if (ordersData && ordersData.data) {
-        ordersList = ordersData.data;
-      }
-      
-      setUserOrders(ordersList || []);
-    } catch (err) {
-      console.error('Error al cargar pedidos del usuario:', err);
-      setUserOrders([]);
-    } finally {
-      setLoadingOrders(false);
-    }
-  }, [isAuthenticated, user]);
-
-  // Verificar si el usuario puede reseñar este producto
-  const checkCanReview = useCallback((productId, orders) => {
-    if (!productId || !orders || orders.length === 0) return false;
-
-    // Buscar si hay algún pedido entregado que contenga este producto
-    return orders.some(order => {
-      // Verificar que el pedido esté entregado
-      if (order.status !== 'Entregado') return false;
-
-      // Verificar que el pedido tenga items
-      if (!order.items || !Array.isArray(order.items)) return false;
-
-      // Buscar si alguno de los items contiene el producto
-      return order.items.some(item => {
-        const itemProductId = item.productId || item.product?._id || item.product?.id || item.id;
-        return itemProductId === productId || itemProductId?.toString() === productId?.toString();
-      });
-    });
-  }, []);
-
-  // Cargar pedidos cuando el usuario esté autenticado
-  useEffect(() => {
-    if (isAuthenticated && user && productId) {
-      loadUserOrders();
-    }
-  }, [isAuthenticated, user, productId, loadUserOrders]);
-
-  // Calcular si el usuario puede reseñar
-  const canUserReview = useMemo(() => {
-    if (!productId || !isAuthenticated || userOrders.length === 0) {
-      // Si se pasa canReview como prop, usarlo como fallback
-      return canReview;
-    }
-    return checkCanReview(productId, userOrders);
-  }, [productId, isAuthenticated, userOrders, canReview, checkCanReview]);
 
   // Cargar reseñas desde la API
   const loadReviews = useCallback(async (page = 1, sort = 'newest') => {
@@ -200,43 +129,15 @@ export default function ReviewsSection({
     return distribution;
   }, [ratingSummary, reviews]);
 
-  // Handlers para crear/editar/eliminar reseñas
-  const handleCreateReview = async (reviewData) => {
-    if (!productId) return;
+  // Handlers para editar/eliminar reseñas (solo el autor puede)
+  const handleUpdateReview = async (reviewId, reviewData) => {
+    if (!reviewId) return;
 
     setSubmitError('');
     setSubmitSuccess('');
     try {
-      await productService.createReview(productId, reviewData);
-      setSubmitSuccess('¡Reseña creada exitosamente!');
-      setShowReviewForm(false);
-      
-      // Recargar reseñas
-      if (productId && initialReviews === null) {
-        await loadReviews(currentPage, sortBy);
-      } else {
-        // Si se usan reseñas iniciales, recargar página
-        if (onReviewAdded) {
-          onReviewAdded();
-        }
-      }
-      
-      // Limpiar mensaje de éxito después de 3 segundos
-      setTimeout(() => setSubmitSuccess(''), 3000);
-    } catch (err) {
-      setSubmitError(err.message || 'Error al crear la reseña. Por favor, intenta nuevamente.');
-    }
-  };
-
-  const handleUpdateReview = async (reviewData) => {
-    if (!productId || !editingReview?._id) return;
-
-    setSubmitError('');
-    setSubmitSuccess('');
-    try {
-      await productService.updateReview(productId, editingReview._id, reviewData);
+      await productService.updateReview(reviewId, reviewData);
       setSubmitSuccess('¡Reseña actualizada exitosamente!');
-      setEditingReview(null);
       
       // Recargar reseñas
       if (productId && initialReviews === null) {
@@ -244,7 +145,7 @@ export default function ReviewsSection({
       } else {
         // Actualizar reseña localmente
         setReviews(prev => prev.map(r => 
-          r._id === editingReview._id 
+          r._id === reviewId 
             ? { ...r, ...reviewData }
             : r
         ));
@@ -258,12 +159,12 @@ export default function ReviewsSection({
   };
 
   const handleDeleteReview = async (reviewId) => {
-    if (!productId || !reviewId) return;
+    if (!reviewId) return;
 
     setSubmitError('');
     setSubmitSuccess('');
     try {
-      await productService.deleteReview(productId, reviewId);
+      await productService.deleteReview(reviewId);
       setSubmitSuccess('Reseña eliminada exitosamente');
       
       // Recargar reseñas
@@ -283,29 +184,6 @@ export default function ReviewsSection({
     }
   };
 
-  const handleEditReview = (review) => {
-    setEditingReview(review);
-    setShowReviewForm(true);
-    setSubmitError('');
-  };
-
-  const handleCancelEdit = () => {
-    setEditingReview(null);
-    setShowReviewForm(false);
-    setSubmitError('');
-  };
-
-  // Verificar si el usuario ya reseñó
-  const userReview = useMemo(() => {
-    if (!user?._id) return null;
-    return reviews.find(r => {
-      const reviewUserId = r.userId || r.user?._id || r.user?.id;
-      return reviewUserId === user._id;
-    });
-  }, [reviews, user]);
-
-  const showCanReviewIndicator = canUserReview && isAuthenticated && userReview;
-
   // Estados de loading
   if (loading && reviews.length === 0) {
     return (
@@ -321,7 +199,7 @@ export default function ReviewsSection({
   }
 
   // Si no hay reseñas, mostrar mensaje
-  if (!loading && reviews.length === 0 && !showReviewForm) {
+  if (!loading && reviews.length === 0) {
     return (
       <section className={`mt-8 ${className}`}>
         <div className="bg-white rounded-lg border border-gray-200 p-8 text-center">
@@ -334,18 +212,10 @@ export default function ReviewsSection({
           <p className="text-[#2A2A2A]/70 font-['Rajdhani',_sans-serif] text-sm mt-2">
             Sé el primero en dejar una reseña
           </p>
-          {canUserReview && isAuthenticated && !showReviewForm && (
-            <button
-              onClick={() => setShowReviewForm(true)}
-              className="mt-4 px-6 py-2 bg-[#0F0F10] text-white rounded-lg hover:bg-[#E11D74] transition font-['Quantico',_sans-serif]"
-            >
-              Escribir reseña
-            </button>
-          )}
-          {!canUserReview && isAuthenticated && (
-            <div className="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-              <p className="text-sm text-yellow-800 font-['Rajdhani',_sans-serif] text-center">
-                ℹ️ Para reseñar este producto, primero debes comprarlo y recibir tu pedido. Revisa tus pedidos entregados en la sección "Mis Pedidos".
+          {isAuthenticated && (
+            <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+              <p className="text-sm text-blue-800 font-['Rajdhani',_sans-serif] text-center">
+                💡 Para reseñar este producto, primero debes comprarlo y recibir tu pedido. Ve a "Mis Pedidos" para dejar tu reseña.
               </p>
             </div>
           )}
@@ -358,49 +228,12 @@ export default function ReviewsSection({
     <section className={`mt-8 ${className}`} aria-labelledby="reviews-heading">
       {/* Header de la sección */}
       <div className="mb-6">
-        <div className="flex items-center justify-between mb-4">
-          <h3 
-            id="reviews-heading" 
-            className="text-2xl font-bold text-[#0F0F10] font-['Quantico',_sans-serif]"
-          >
-            Reseñas
-          </h3>
-          
-          {/* Botón para escribir reseña */}
-          {canUserReview && isAuthenticated && !showReviewForm && !editingReview && !userReview && (
-            <button
-              onClick={() => setShowReviewForm(true)}
-              className="px-4 py-2 bg-[#0F0F10] text-white rounded-lg hover:bg-[#E11D74] transition font-['Quantico',_sans-serif] text-sm"
-            >
-              Escribir reseña
-            </button>
-          )}
-          {/* Mensaje si no puede reseñar */}
-          {!canUserReview && isAuthenticated && !userReview && (
-            <div className="px-4 py-2 bg-yellow-50 border border-yellow-200 rounded-lg">
-              <p className="text-sm text-yellow-800 font-['Rajdhani',_sans-serif]">
-                ⚠️ Solo puedes reseñar productos de pedidos entregados
-              </p>
-            </div>
-          )}
-        </div>
-
-        {/* Indicador de "ya reseñaste" */}
-        {showCanReviewIndicator && (
-          <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-            <p className="text-sm text-blue-800 font-['Rajdhani',_sans-serif]">
-              ✓ Ya has reseñado este producto
-            </p>
-          </div>
-        )}
-        {/* Indicador si no tiene pedidos entregados */}
-        {!canUserReview && isAuthenticated && !userReview && !showCanReviewIndicator && (
-          <div className="mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
-            <p className="text-sm text-yellow-800 font-['Rajdhani',_sans-serif]">
-              ℹ️ Para reseñar este producto, primero debes comprarlo y recibir tu pedido. Revisa tus pedidos entregados en la sección "Mis Pedidos".
-            </p>
-          </div>
-        )}
+        <h3 
+          id="reviews-heading" 
+          className="text-2xl font-bold text-[#0F0F10] mb-4 font-['Quantico',_sans-serif]"
+        >
+          Reseñas
+        </h3>
 
         {/* Mensajes de feedback */}
         {submitSuccess && (
@@ -418,21 +251,8 @@ export default function ReviewsSection({
           </div>
         )}
 
-        {/* Formulario de reseña */}
-        {showReviewForm && (
-          <div className="mb-6">
-            <ReviewForm
-              productId={productId}
-              existingReview={editingReview}
-              onSubmit={editingReview ? handleUpdateReview : handleCreateReview}
-              onCancel={editingReview ? handleCancelEdit : () => setShowReviewForm(false)}
-            />
-          </div>
-        )}
-
         {/* Estadísticas de reseñas */}
-        {!showReviewForm && (
-          <div className="flex flex-wrap items-center gap-6 mb-6">
+        <div className="flex flex-wrap items-center gap-6 mb-6">
             {/* Promedio de calificación */}
             <div className="flex items-center gap-3">
               <div className="text-center">
@@ -484,10 +304,9 @@ export default function ReviewsSection({
               </div>
             </div>
           </div>
-        )}
 
         {/* Selector de ordenamiento */}
-        {!showReviewForm && reviews.length > 0 && (
+        {reviews.length > 0 && (
           <div className="mb-4">
             <label htmlFor="sort-reviews" className="text-sm font-medium text-[#0F0F10] mr-2 font-['Rajdhani',_sans-serif]">
               Ordenar por:
@@ -524,33 +343,35 @@ export default function ReviewsSection({
       )}
 
       {/* Lista de reseñas */}
-      {!showReviewForm && (
-        <div className="space-y-4 mb-6">
-          {loading && reviews.length === 0 ? (
-            <div className="text-center py-8">
-              <div className="w-8 h-8 border-2 border-gray-300 border-t-[#E11D74] rounded-full animate-spin mx-auto mb-2" />
-              <p className="text-sm text-gray-500">Cargando reseñas...</p>
-            </div>
-          ) : currentReviews.length > 0 ? (
+      <div className="space-y-4 mb-6">
+        {loading && reviews.length === 0 ? (
+          <div className="text-center py-8">
+            <div className="w-8 h-8 border-2 border-gray-300 border-t-[#E11D74] rounded-full animate-spin mx-auto mb-2" />
+            <p className="text-sm text-gray-500">Cargando reseñas...</p>
+          </div>
+        ) : currentReviews.length > 0 ? (
             currentReviews.map((review, index) => (
               <ReviewCard 
                 key={review._id || review.id || index} 
                 review={review}
                 currentUserId={user?._id}
-                onEdit={handleEditReview}
+                onEdit={(review) => {
+                  // TODO: Implementar modal de edición de reseña
+                  // Por ahora, solo mostramos un mensaje
+                  alert('Para editar tu reseña, ve a "Mis Pedidos" y busca el pedido donde compraste este producto.');
+                }}
                 onDelete={handleDeleteReview}
               />
             ))
-          ) : (
-            <div className="text-center py-8 text-gray-500 font-['Rajdhani',_sans-serif]">
-              No hay reseñas en esta página
-            </div>
-          )}
-        </div>
-      )}
+        ) : (
+          <div className="text-center py-8 text-gray-500 font-['Rajdhani',_sans-serif]">
+            No hay reseñas en esta página
+          </div>
+        )}
+      </div>
 
       {/* Paginación */}
-      {!showReviewForm && totalPages > 1 && (
+      {totalPages > 1 && (
         <ReviewsPagination
           currentPage={currentPage}
           totalPages={totalPages}
