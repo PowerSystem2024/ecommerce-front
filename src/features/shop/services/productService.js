@@ -86,6 +86,7 @@ class ProductService {
   }
 
   // Obtener reseñas de un producto con paginación y ordenamiento
+  // GET /products/{productId}/reviews
   async getReviews(productId, { page = 1, limit = 10, sort = 'newest' } = {}) {
     if (!productId) throw new Error('productId es requerido');
     
@@ -95,30 +96,32 @@ class ProductService {
     if (sort) queryParams.append('sort', sort);
     
     const queryString = queryParams.toString();
-    const endpoint = `/api/products/${productId}/reviews${queryString ? `?${queryString}` : ''}`;
+    const endpoint = `/products/${productId}/reviews${queryString ? `?${queryString}` : ''}`;
     
     return this.makeRequest(endpoint, {
       method: 'GET',
     });
   }
 
-  // Crear/enviar una reseña para un producto
+  // Crear/enviar una reseña para un producto (requiere compra previa)
+  // POST /reviews
   async createReview(productId, { rating, comment, orderId }) {
     if (!productId) throw new Error('productId es requerido');
     const payload = {
+      productId,
       rating: Number(rating),
       comment: comment?.trim?.() || '',
       orderId,
     };
-    return this.makeRequest(`/api/reviews`, {
+    return this.makeRequest(`/reviews`, {
       method: 'POST',
-      body: JSON.stringify({ ...payload, productId }),
+      body: JSON.stringify(payload),
     });
   }
 
   // Actualizar una reseña existente
-  async updateReview(productId, reviewId, { rating, comment }) {
-    if (!productId) throw new Error('productId es requerido');
+  // PUT /reviews/{id}
+  async updateReview(reviewId, { rating, comment }) {
     if (!reviewId) throw new Error('reviewId es requerido');
     
     const payload = {
@@ -126,18 +129,18 @@ class ProductService {
       comment: comment?.trim?.() || '',
     };
     
-    return this.makeRequest(`/api/products/${productId}/reviews/${reviewId}`, {
+    return this.makeRequest(`/reviews/${reviewId}`, {
       method: 'PUT',
       body: JSON.stringify(payload),
     });
   }
 
-  // Eliminar una reseña
-  async deleteReview(productId, reviewId) {
-    if (!productId) throw new Error('productId es requerido');
+  // Eliminar una reseña (autor o admin)
+  // DELETE /reviews/{id}
+  async deleteReview(reviewId) {
     if (!reviewId) throw new Error('reviewId es requerido');
     
-    return this.makeRequest(`/api/products/${productId}/reviews/${reviewId}`, {
+    return this.makeRequest(`/reviews/${reviewId}`, {
       method: 'DELETE',
     });
   }
