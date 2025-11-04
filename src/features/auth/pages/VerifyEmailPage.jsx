@@ -13,33 +13,36 @@ export default function VerifyEmailPage() {
   const [success, setSuccess] = useState(false);
 
   useEffect(() => {
-    console.log('🚀 VerifyEmailPage useEffect ejecutándose...');
-    console.log('🔑 Token recibido:', token);
-    console.log('🔄 Estado isVerifying:', isVerifying);
-    
     // ✅ PREVENIR MÚLTIPLES EJECUCIONES
     if (isVerifying) {
-      console.log('🚫 Ya se está verificando, ignorando...');
       setMessage('⏳ Verificación en progreso...');
       setLoading(false);
       return;
     }
 
-    const verifyEmail = async () => {
-      if (!token) {
-        setMessage('❌ Token de verificación no válido');
-        setLoading(false);
-        return;
-      }
+    // ✅ VERIFICAR SI YA ESTÁ VERIFICADO
+    if (success) {
+      return;
+    }
+
+    // ✅ VERIFICAR TOKEN
+    if (!token) {
+      setMessage('❌ No se proporcionó un token de verificación');
+      setLoading(false);
+      return;
+    }
+
+    // ✅ FUNCIÓN ASÍNCRONA PARA VERIFICAR
+    const verifyToken = async () => {
+      // Evitar múltiples verificaciones
+      if (isVerifying) return;
 
       // ✅ MARCAR COMO VERIFICANDO
       isVerifying = true;
-      console.log('🔄 Iniciando verificación del token:', token);
 
       try {
         // ✅ UNA SOLA PETICIÓN AL BACKEND
-        const response = await authService.verifyEmail(token);
-        console.log('✅ Respuesta de verificación:', response);
+        await authService.verifyEmail(token);
         
         setSuccess(true);
         setMessage('✅ ¡Email verificado correctamente!');
@@ -62,7 +65,7 @@ export default function VerifyEmailPage() {
       }
     };
 
-    verifyEmail();
+    verifyToken();
   }, []); // ✅ ARRAY VACÍO - SOLO SE EJECUTA UNA VEZ
 
   return (

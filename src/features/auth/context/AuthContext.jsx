@@ -23,11 +23,9 @@ export function AuthProvider({ children }) {
 
         try {
           const response = await authService.getCurrentUser();
-          console.log('🔍 AuthContext - Respuesta completa del backend:', response);
           
           // Extraer el usuario de la respuesta (puede venir en response.data.user o response.user)
           const userData = response?.data?.user || response?.user || response;
-          console.log('🔍 AuthContext - userData extraída:', userData);
           
           const normalizedUser = {
             name: userData.name,
@@ -36,7 +34,6 @@ export function AuthProvider({ children }) {
             avatar: userData.avatar,
             _id: userData._id
           };
-          console.log('✅ AuthContext - Usuario normalizado:', normalizedUser);
           
           setUser(normalizedUser);
           localStorage.setItem('userData', JSON.stringify(normalizedUser));
@@ -77,7 +74,6 @@ export function AuthProvider({ children }) {
       _id: userFromResponse._id
     };
     
-    console.log('Usuario logueado:', userData); // Debug
     localStorage.setItem('userData', JSON.stringify(userData));
     setUser(userData);
     setIsAuthenticated(true);

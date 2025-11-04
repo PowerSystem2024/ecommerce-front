@@ -41,16 +41,11 @@ export default function LoginPage() {
     setError('');
     try {
       const result = await login(formData.email, formData.password);
-      console.log('🔍 LoginPage - Resultado del login:', result);
-      console.log('🔍 LoginPage - Usuario:', result?.user);
-      console.log('🔍 LoginPage - Role:', result?.user?.role);
       
       // Redirigir según el rol del usuario
       if (result?.user?.role === 'admin') {
-        console.log('✅ Usuario admin detectado, redirigiendo a /admin');
         navigate('/admin');
       } else {
-        console.log('✅ Usuario normal detectado, redirigiendo a /shop');
         navigate('/shop');
       }
     } catch (err) {
