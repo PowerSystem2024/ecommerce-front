@@ -151,7 +151,7 @@ const OrderDetail = () => {
         
         if (result.success) {
           // La descarga se maneja automáticamente en el servicio
-          console.log('Factura descargada exitosamente');
+          // Éxito silencioso
         }
       } catch (error) {
         console.error('Error descargando factura:', error);
