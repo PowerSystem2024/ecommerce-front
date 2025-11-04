@@ -1,12 +1,12 @@
 import React from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 
 // Importar tus páginas existentes
 import LandingPage from '../features/landing/page/LandingPage';
 import ShopPage from '../features/shop/page/shopPage';
 import OrdersPage from '../features/orders/pages/OrdersPage';
-import DashboardAdmin from '../features/dashboard-admin/pages/dashboardAdmin';
-import AdminProfilePage from '../features/dashboard-admin/pages/AdminProfilePage';
+import { DashboardAdmin, AdminProfilePage } from '../features/admin';
+import { DashboardContent } from '../features/admin/components';
 import CartPage from '../features/cart/pages/cartpage';
 
 // Importar nuevas páginas
@@ -78,12 +78,11 @@ export default function AppRoutes() {
         <AdminRoute>
           <DashboardAdmin />
         </AdminRoute>
-      } />
-      <Route path="/admin/profile" element={
-        <AdminRoute>
-          <AdminProfilePage />
-        </AdminRoute>
-      } />
+      }>
+        <Route index element={<Navigate to="dashboard" replace />} />
+        <Route path="dashboard" element={<DashboardContent />} />
+        <Route path="profile" element={<AdminProfilePage />} />
+      </Route>
       
       {/* Rutas de autenticación */}
       <Route path="/login" element={<LoginPage />} />
