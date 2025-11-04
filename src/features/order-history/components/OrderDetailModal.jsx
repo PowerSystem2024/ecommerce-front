@@ -190,7 +190,12 @@ const OrderDetailModal = ({ orderId, isOpen, onClose }) => {
                           <div className="text-gray-700">
                             <p className="font-medium">Total: ${(order.total || order.totalAmount || order.amount || 0).toFixed(2)}</p>
                             <p className="text-sm">
-                              {Array.isArray(order.items) ? order.items.length : 0} {Array.isArray(order.items) && order.items.length === 1 ? 'artículo' : 'artículos'}
+                              {(() => {
+                                const orderProducts = Array.isArray(order.products) 
+                                  ? order.products 
+                                  : (Array.isArray(order.items) ? order.items : []);
+                                return `${orderProducts.length} ${orderProducts.length === 1 ? 'artículo' : 'artículos'}`;
+                              })()}
                             </p>
                           </div>
                         </div>
@@ -242,52 +247,63 @@ const OrderDetailModal = ({ orderId, isOpen, onClose }) => {
                         <span>Productos</span>
                       </h3>
                       <div className="space-y-4">
-                        {Array.isArray(order.items) && order.items.length > 0 ? (
-                          order.items.map((item, index) => {
-                            const product = item.product || {};
-                            const productName = product.name || item.name || item.productName || 'Producto sin nombre';
-                            const productDescription = product.description || item.description || '';
-                            const productImage = product.image || product.images?.[0] || item.image || item.productImage || null;
-                            const itemPrice = item.price || item.unitPrice || product.price || 0;
-                            const itemQuantity = item.quantity || item.qty || 1;
+                        {(() => {
+                          // Normalizar productos/items - el backend usa 'products'
+                          const orderProducts = Array.isArray(order.products) 
+                            ? order.products 
+                            : (Array.isArray(order.items) ? order.items : []);
+                          
+                          return orderProducts.length > 0 ? (
+                            orderProducts.map((item, index) => {
+                              // El backend usa: products[].product.name, products[].product.description, etc.
+                              const product = item.product || {};
+                              const productName = product.name || item.name || item.productName || 'Producto sin nombre';
+                              const productDescription = product.description || item.description || '';
+                              // Manejar images como array o string
+                              const productImage = Array.isArray(product.images) && product.images.length > 0
+                                ? product.images[0]
+                                : (product.image || item.image || item.productImage || null);
+                              const itemPrice = item.price || product.price || 0;
+                              const itemQuantity = item.quantity || item.qty || 1;
 
-                            return (
-                              <motion.div
-                                key={item.id || product._id || product.id || index}
-                                initial={{ opacity: 0, y: 10 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: index * 0.1 }}
-                                className="flex items-start space-x-4 p-4 bg-gray-50 rounded-lg border border-gray-200"
-                              >
-                                {productImage && (
-                                  <img
-                                    src={productImage}
-                                    alt={productName}
-                                    className="w-20 h-20 object-cover rounded-lg"
-                                  />
-                                )}
-                                <div className="flex-1">
-                                  <h4 className="font-bold text-gray-900">{productName}</h4>
-                                  {productDescription && (
-                                    <p className="text-sm text-gray-600 mt-1 line-clamp-2">{productDescription}</p>
+                              return (
+                                <motion.div
+                                  key={item.id || item._id || product._id || product.id || index}
+                                  initial={{ opacity: 0, y: 10 }}
+                                  animate={{ opacity: 1, y: 0 }}
+                                  transition={{ delay: index * 0.1 }}
+                                  className="flex items-start space-x-4 p-4 bg-gray-50 rounded-lg border border-gray-200"
+                                >
+                                  {productImage && (
+                                    <img
+                                      src={productImage}
+                                      alt={productName}
+                                      className="w-20 h-20 object-cover rounded-lg"
+                                    />
                                   )}
-                                  <div className="flex items-center justify-between mt-2">
-                                    <div className="text-sm text-gray-600">
-                                      Cantidad: {itemQuantity} × ${itemPrice.toFixed(2)}
-                                    </div>
-                                    <div className="font-bold text-gray-900">
-                                      ${(itemPrice * itemQuantity).toFixed(2)}
+                                  <div className="flex-1">
+                                    <h4 className="font-bold text-gray-900">{productName}</h4>
+                                    {productDescription && (
+                                      <p className="text-sm text-gray-600 mt-1 line-clamp-2">{productDescription}</p>
+                                    )}
+                                    <div className="flex items-center justify-between mt-2">
+                                      <div className="text-sm text-gray-600">
+                                        Cantidad: {itemQuantity} × ${itemPrice.toFixed(2)}
+                                      </div>
+                                      <div className="font-bold text-gray-900">
+                                        ${(itemPrice * itemQuantity).toFixed(2)}
+                                      </div>
                                     </div>
                                   </div>
-                                </div>
-                              </motion.div>
-                            );
-                          })
-                        ) : (
-                          <div className="text-gray-500 text-center py-8">
-                            <p>No hay productos disponibles en este pedido</p>
-                          </div>
-                        )}
+                                </motion.div>
+                              );
+                            })
+                          ) : (
+                            <div className="text-gray-500 text-center py-8">
+                              <p>No hay productos disponibles en este pedido</p>
+                            </div>
+                          );
+                        })()}
                       </div>
                     </div>
 

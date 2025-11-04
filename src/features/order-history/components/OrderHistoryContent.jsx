@@ -197,11 +197,17 @@ const OrderHistoryContent = () => {
     // Filtro por término de búsqueda
     if (searchTerm) {
       const searchLower = searchTerm.toLowerCase();
+      const orderProducts = Array.isArray(order.products) 
+        ? order.products 
+        : (Array.isArray(order.items) ? order.items : []);
+      
       return (
-        (order.id && order.id.toLowerCase().includes(searchLower)) ||
-        (order.items && Array.isArray(order.items) && order.items.some(item => 
-          item && item.name && item.name.toLowerCase().includes(searchLower)
-        )) ||
+        (order.id && order.id.toString().toLowerCase().includes(searchLower)) ||
+        (orderProducts.some(item => {
+          const product = item.product || {};
+          const productName = product.name || item.name || '';
+          return productName.toLowerCase().includes(searchLower);
+        })) ||
         (order.shippingAddress && order.shippingAddress.city && 
          order.shippingAddress.city.toLowerCase().includes(searchLower))
       );
@@ -266,14 +272,17 @@ const OrderHistoryContent = () => {
       
       if (result.success) {
         // Si el servicio devuelve los items, navegar al carrito
-        navigate('/cart', { state: { reorderItems: result.items || order.items } });
+        const itemsToReorder = result.items || order.products || order.items || [];
+        navigate('/cart', { state: { reorderItems: itemsToReorder } });
       } else {
-        // Fallback: navegar con los items del pedido actual
-        navigate('/cart', { state: { reorderItems: order.items } });
+        // Fallback: navegar con los productos del pedido actual
+        const itemsToReorder = order.products || order.items || [];
+        navigate('/cart', { state: { reorderItems: itemsToReorder } });
       }
     } catch (error) {
       // Fallback: navegar con los items del pedido actual
-      navigate('/cart', { state: { reorderItems: order.items } });
+      const itemsToReorder = order.products || order.items || [];
+      navigate('/cart', { state: { reorderItems: itemsToReorder } });
     } finally {
       setIsLoading(false);
     }
@@ -587,6 +596,11 @@ const OrderHistoryContent = () => {
             // Verificar que el pedido existe y tiene las propiedades necesarias
             if (!order || typeof order !== 'object') return null;
             
+            // Normalizar productos/items - el backend usa 'products'
+            const orderProducts = Array.isArray(order.products) 
+              ? order.products 
+              : (Array.isArray(order.items) ? order.items : []);
+            
             return (
             <motion.div
               key={order.id || `order-${index}`}
@@ -666,7 +680,7 @@ const OrderHistoryContent = () => {
                         <div>
                           <span className="text-gray-600 font-medium text-sm">Productos</span>
                           <div className="font-bold text-lg text-gray-900">
-                            {Array.isArray(order.items) ? order.items.length : 0} {Array.isArray(order.items) && order.items.length === 1 ? 'artículo' : 'artículos'}
+                            {orderProducts.length} {orderProducts.length === 1 ? 'artículo' : 'artículos'}
                           </div>
                         </div>
                       </div>
@@ -807,20 +821,24 @@ const OrderHistoryContent = () => {
                   <span>Productos</span>
                 </h4>
                 <div className="space-y-3">
-                  {Array.isArray(order.items) && order.items.length > 0 ? (
-                    order.items.slice(0, 3).map((item, itemIndex) => {
+                  {orderProducts.length > 0 ? (
+                    orderProducts.slice(0, 3).map((item, itemIndex) => {
                       // Obtener datos del producto desde el item (con populate del backend)
+                      // El backend usa: products[].product.name, products[].product.description, etc.
                       const product = item.product || {};
                       const productName = product.name || item.name || item.productName || 'Producto sin nombre';
                       const productDescription = product.description || item.description || '';
-                      const productImage = product.image || product.images?.[0] || item.image || item.productImage || null;
+                      // Manejar images como array o string
+                      const productImage = Array.isArray(product.images) && product.images.length > 0
+                        ? product.images[0]
+                        : (product.image || item.image || item.productImage || null);
                       const productId = product._id || product.id || item.productId || item._id || item.id;
                       // Intentar obtener precio desde múltiples fuentes
-                      const itemPrice = item.price || item.unitPrice || product.price || 0;
+                      const itemPrice = item.price || product.price || 0;
                       const itemQuantity = item.quantity || item.qty || 1;
                       
                       // Si hay más de 3 productos, mostrar un indicador
-                      const hasMoreItems = order.items.length > 3 && itemIndex === 2;
+                      const hasMoreItems = orderProducts.length > 3 && itemIndex === 2;
 
                     return (
                       <React.Fragment key={item.id || productId || itemIndex}>
@@ -868,7 +886,7 @@ const OrderHistoryContent = () => {
                         </motion.div>
                         {hasMoreItems && (
                           <div className="text-center py-2 text-sm text-gray-500 font-medium">
-                            +{order.items.length - 3} producto{order.items.length - 3 > 1 ? 's' : ''} más
+                            +{orderProducts.length - 3} producto{orderProducts.length - 3 > 1 ? 's' : ''} más
                           </div>
                         )}
                       </React.Fragment>
@@ -877,8 +895,8 @@ const OrderHistoryContent = () => {
                   ) : (
                     <div className="text-gray-500 text-center py-4">
                       <p className="mb-2">No hay productos disponibles en este pedido</p>
-                      {order.items === undefined && (
-                        <p className="text-xs text-gray-400">Los items no están disponibles en la respuesta del servidor</p>
+                      {orderProducts.length === 0 && (
+                        <p className="text-xs text-gray-400">Los productos no están disponibles en la respuesta del servidor</p>
                       )}
                     </div>
                   )}
