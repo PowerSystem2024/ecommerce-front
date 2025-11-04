@@ -2,13 +2,14 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../auth/context/AuthContext';
 import userService from '../../../user-profile/services/userService';
+import { useCart } from '../../../cart/context/useCart';
 
 export const NavbarUser = ({ onMenuToggle }) => {
   const navigate = useNavigate();
   const { user, logout, updateUser } = useAuth();
+  const { totalCount } = useCart();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [cartItemsCount] = useState(3); // Mock temporal
   const dropdownRef = useRef(null);
   const mobileMenuRef = useRef(null);
 
@@ -182,11 +183,9 @@ export const NavbarUser = ({ onMenuToggle }) => {
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
             </svg>
-            {cartItemsCount > 0 && (
             <span className="absolute -top-1 -right-1 w-5 h-5 bg-[#E11D74] text-[#FFFFFF] text-xs font-bold rounded-full flex items-center justify-center">
-                {cartItemsCount}
-              </span>
-            )}
+              {totalCount ?? 0}
+            </span>
           </button>
 
         {/* Dropdown usuario */}
