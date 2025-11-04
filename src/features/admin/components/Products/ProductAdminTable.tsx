@@ -561,11 +561,11 @@ const ProductAdminTable: React.FC<ProductAdminTableProps> = ({ openCreate = fals
             <Badge variant="gray">📊 Página: {products.length}</Badge>
           </div>
           <div className="flex gap-2">
-            <button onClick={exportCSV} className="inline-flex items-center gap-2 px-4 py-2 bg-[#0F0F10] text-white rounded-lg text-sm font-medium hover:bg-[#1F2937] transition-colors font-['Quantico',_sans-serif]">
+            <button 
+              onClick={exportCSV} 
+              className="inline-flex items-center gap-2 px-4 py-2 bg-[#0F0F10] text-white rounded-lg text-sm font-medium hover:bg-pink-600 transition-colors font-['Quantico',_sans-serif]"
+            >
               <Icon name="download" className="w-4 h-4" /> CSV
-            </button>
-            <button onClick={() => setCreateOpen(true)} className="inline-flex items-center gap-2 px-4 py-2 bg-[#0F0F10] text-white rounded-lg text-sm font-medium hover:bg-[#1F2937] transition-colors font-['Quantico',_sans-serif]">
-              <Icon name="edit" className="w-4 h-4" /> Crear producto
             </button>
           </div>
         </div>
