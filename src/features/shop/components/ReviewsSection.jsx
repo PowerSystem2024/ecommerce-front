@@ -252,7 +252,8 @@ export default function ReviewsSection({
         )}
 
         {/* Estadísticas de reseñas */}
-        <div className="flex flex-wrap items-center gap-6 mb-6">
+        {totalReviews > 0 ? (
+          <div className="flex flex-wrap items-center gap-6 mb-6">
             {/* Promedio de calificación */}
             <div className="flex items-center gap-3">
               <div className="text-center">
@@ -304,6 +305,13 @@ export default function ReviewsSection({
               </div>
             </div>
           </div>
+        ) : (
+          <div className="mb-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
+            <p className="text-sm text-gray-600 font-['Rajdhani',_sans-serif] text-center">
+              Este producto aún no tiene reseñas. Las reseñas solo pueden ser creadas por usuarios que compraron y recibieron el producto.
+            </p>
+          </div>
+        )}
 
         {/* Selector de ordenamiento */}
         {reviews.length > 0 && (
