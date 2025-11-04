@@ -59,47 +59,22 @@ const OrderHistoryContent = () => {
         setIsLoadingOrders(true);
         setError(null);
         
-        console.log('🔍 Cargando pedidos del usuario...');
         const ordersData = await orderService.getUserOrders();
-        console.log('📦 Datos recibidos:', ordersData);
         
         // Manejar diferentes formatos de respuesta
         let ordersList = [];
+        
         if (Array.isArray(ordersData)) {
-          ordersList = ordersData;
-        } else if (ordersData && ordersData.orders) {
-          ordersList = ordersData.orders;
-        } else if (ordersData && ordersData.data) {
-          ordersList = ordersData.data;
-        } else {
-          console.warn('⚠️ Formato de respuesta inesperado:', ordersData);
-          ordersList = [];
-        }
-        
-        console.log('📋 Pedidos procesados:', ordersList);
-        
-        // Log detallado para debug
-        if (ordersList.length > 0) {
-          console.log('📦 Primer pedido de ejemplo:', {
-            id: ordersList[0].id || ordersList[0]._id,
-            status: ordersList[0].status,
-            items: ordersList[0].items,
-            itemsCount: ordersList[0].items?.length || 0,
-            total: ordersList[0].total,
-            totalAmount: ordersList[0].totalAmount,
-            paymentMethod: ordersList[0].paymentMethod
-          });
+          ordersList = ordersData; // Si es un array directo
+        } else if (ordersData?.data && Array.isArray(ordersData.data)) {
+          ordersList = ordersData.data; // Si es { data: [] }
+        } else if (ordersData?.orders && Array.isArray(ordersData.orders)) {
+          ordersList = ordersData.orders; // Si es { orders: [] }
         }
         
         setOrders(ordersList);
         
       } catch (error) {
-        console.error('❌ Error cargando pedidos:', error);
-        console.error('❌ Detalles del error:', {
-          message: error.message,
-          stack: error.stack,
-          name: error.name
-        });
         setError(error.message || 'Error al cargar los pedidos');
       } finally {
         setIsLoadingOrders(false);
@@ -297,7 +272,6 @@ const OrderHistoryContent = () => {
         navigate('/cart', { state: { reorderItems: order.items } });
       }
     } catch (error) {
-      console.error('Error reordenando:', error);
       // Fallback: navegar con los items del pedido actual
       navigate('/cart', { state: { reorderItems: order.items } });
     } finally {
@@ -313,10 +287,9 @@ const OrderHistoryContent = () => {
       
       if (result.success) {
         // La descarga se maneja automáticamente en el servicio
-        console.log('Factura descargada exitosamente');
+        // Éxito silencioso
       }
     } catch (error) {
-      console.error('Error descargando factura:', error);
       alert('Error al descargar la factura. Inténtalo de nuevo.');
     } finally {
       setIsLoading(false);
@@ -339,7 +312,7 @@ const OrderHistoryContent = () => {
             className="w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg"
           >
             <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2m0 0l4 4m4-4l4-4" />
             </svg>
           </motion.div>
           <motion.h3 
@@ -421,21 +394,12 @@ const OrderHistoryContent = () => {
             onClick={() => window.location.reload()}
             className="px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all duration-300 shadow-lg hover:shadow-xl font-medium"
           >
-            🔄 Reintentar
+            Reintentar
           </motion.button>
         </motion.div>
       </div>
     );
   }
-
-  // Debug: mostrar estado actual
-  console.log('🔍 Estado actual:', {
-    isAuthenticated,
-    isLoadingOrders,
-    error,
-    ordersCount: orders.length,
-    orders: orders.slice(0, 2) // Solo los primeros 2 para debug
-  });
 
   try {
     return (

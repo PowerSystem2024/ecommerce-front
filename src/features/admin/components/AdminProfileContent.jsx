@@ -72,12 +72,8 @@ const AdminProfileContent = () => {
       // Cargar perfil completo desde la API
       const response = await userService.getProfile();
       
-      console.log('Datos cargados del servidor (completo):', response);
-      
       // Extraer los datos del objeto response
       const profileData = response.data || response;
-      
-      console.log('Datos extraídos:', profileData);
       
       setFormData({
         name: profileData.name || '',
@@ -133,12 +129,8 @@ const AdminProfileContent = () => {
       // Eliminar zipCode de los datos a enviar
       delete dataToSend.address.zipCode;
       
-      console.log('Datos a enviar al servidor:', dataToSend);
-      
       // Actualizar perfil usando la API real
       const response = await userService.updateProfile(dataToSend);
-      
-      console.log('Datos actualizados del servidor:', response);
       
       // Extraer los datos del objeto response
       const updatedProfile = response.data || response;

@@ -100,7 +100,7 @@ export default function ProductsSection({ initialSearch = "", initialCategory = 
   const handleAddToCart = (product) => {
     setCartCount(prev => prev + 1);
     // Aquí podrías integrar con un contexto global o estado de carrito
-    console.log(`Agregado al carrito: ${product.name}`);
+    // Producto agregado al carrito
   };
 
   // Ver detalles del producto
@@ -190,8 +190,6 @@ export default function ProductsSection({ initialSearch = "", initialCategory = 
           currentPage++;
         }
         
-        console.log('📦 Productos recibidos:', allProducts.length);
-        
         // Normalizar los productos para que coincidan con el formato esperado
         const normalizedProducts = allProducts.map(product => {
           // Obtener el nombre de la categoría usando el mapa de categorías
@@ -232,7 +230,6 @@ export default function ProductsSection({ initialSearch = "", initialCategory = 
           };
         });
         
-        console.log('✅ Productos normalizados:', normalizedProducts.length);
         setProducts(normalizedProducts);
         setFilteredProducts(normalizedProducts);
       } catch (err) {
