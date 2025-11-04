@@ -1,19 +1,23 @@
 import React, { useState, useEffect } from "react";
-import { AuthNavbar } from "../../../shared/components/navigations";
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-    function onEsc(e) {
-      if (e.key === "Escape") setMenuOpen(false);
-    }
-    document.addEventListener("keydown", onEsc);
-    return () => document.removeEventListener("keydown", onEsc);
+    const handleScroll = () => setScrolled(window.scrollY > 50);
+    window.addEventListener("scroll", handleScroll);
+
+    const handleEsc = (e) => e.key === "Escape" && setMenuOpen(false);
+    document.addEventListener("keydown", handleEsc);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      document.removeEventListener("keydown", handleEsc);
+    };
   }, []);
 
-  // 👇 función para hacer scroll suave a una sección
-  const handleScroll = (id) => {
+  const handleScrollTo = (id) => {
     const section = document.querySelector(id);
     if (section) {
       section.scrollIntoView({ behavior: "smooth" });
@@ -22,61 +26,39 @@ export default function Navbar() {
   };
 
   return (
-    <AuthNavbar />
-  );
-}
-
-// Mantener el componente original como fallback
-export function OriginalNavbar() {
-  const [menuOpen, setMenuOpen] = useState(false);
-
-  useEffect(() => {
-    function onEsc(e) {
-      if (e.key === "Escape") setMenuOpen(false);
-    }
-    document.addEventListener("keydown", onEsc);
-    return () => document.removeEventListener("keydown", onEsc);
-  }, []);
-
-  // 👇 función para hacer scroll suave a una sección
-  const handleScroll = (id) => {
-    const section = document.querySelector(id);
-    if (section) {
-      section.scrollIntoView({ behavior: "smooth" });
-      setMenuOpen(false);
-    }
-  };
-
-  return (
-    <header className="fixed top-0 left-0 w-full z-50 bg-white border-b border-gray-200 shadow-sm overflow-x-hidden">
-      <nav className="flex items-center justify-between h-16 w-full px-6 md:px-12 overflow-hidden">
+    <header
+      className={`fixed top-0 left-0 w-full z-50 transition-colors duration-500 ${
+        scrolled ? "bg-black/95 backdrop-blur-md shadow-lg" : "bg-black/70"
+      }`}
+    >
+      <nav className="flex items-center justify-between h-16 w-full px-6 md:px-12">
         {/* LOGO */}
-        <a href="/" className="flex items-center gap-2">
-          <div className="h-10 w-10 rounded-md bg-gradient-to-r from-pink-500 to-red-500 flex items-center justify-center text-white font-bold">
-            R
+        <a href="/" className="flex items-center gap-2 transform transition-transform duration-300 hover:scale-105">
+          <div className="h-10 w-10 rounded-md bg-gradient-to-r from-[#6D28D9] to-[#8B5CF6] flex items-center justify-center text-white font-orbitron font-bold shadow-md">
+            FS
           </div>
-          <span className="font-semibold text-gray-800 text-lg tracking-wide">
-            Ropa Moderna
+          <span className="font-orbitron text-white text-lg tracking-wider uppercase">
+            Fatal Store
           </span>
         </a>
 
         {/* LINKS DESKTOP */}
         <div className="hidden md:flex items-center gap-8">
           <button
-            onClick={() => handleScroll("#about")}
-            className="text-gray-700 hover:text-gray-900 transition font-medium"
+            onClick={() => handleScrollTo("#about")}
+            className="text-white hover:text-[#E11D74] font-rajdhani font-medium transition duration-300 transform hover:scale-105"
           >
             SOBRE NOSOTROS
           </button>
           <button
-            onClick={() => handleScroll("#contact")}
-            className="text-gray-700 hover:text-gray-900 transition font-medium"
+            onClick={() => handleScrollTo("#contact")}
+            className="text-white hover:text-[#E11D74] font-rajdhani font-medium transition duration-300 transform hover:scale-105"
           >
             CONTACTO
           </button>
           <a
             href="/login"
-            className="border border-gray-700 hover:bg-gray-800 hover:text-white transition rounded-md px-4 py-2 text-sm font-medium"
+            className="bg-[#2A2A2A] hover:bg-white hover:text-[#2A2A2A] transition duration-300 rounded-md px-4 py-2 font-quantico text-white font-semibold shadow hover:shadow-lg transform hover:scale-105"
           >
             INICIAR SESIÓN
           </a>
@@ -85,7 +67,7 @@ export function OriginalNavbar() {
         {/* BOTÓN HAMBURGUESA */}
         <button
           onClick={() => setMenuOpen(!menuOpen)}
-          className="md:hidden text-gray-700 hover:text-gray-900 p-2 rounded-md"
+          className="md:hidden text-white p-2 rounded-md transition-transform duration-300 hover:scale-110"
           aria-label="Abrir menú"
         >
           {menuOpen ? (
@@ -122,22 +104,22 @@ export function OriginalNavbar() {
 
       {/* MENÚ MÓVIL */}
       {menuOpen && (
-        <div className="md:hidden bg-white border-t border-gray-200 px-[6%] py-4 space-y-3 shadow-lg">
+        <div className="md:hidden bg-black/95 backdrop-blur-md px-6 py-4 space-y-3 shadow-lg animate-fadeIn">
           <button
-            onClick={() => handleScroll("#about")}
-            className="block w-full text-left text-gray-700 hover:text-gray-900 transition"
+            onClick={() => handleScrollTo("#about")}
+            className="block w-full text-left text-white hover:text-[#E11D74] font-rajdhani transition duration-300 transform hover:scale-105"
           >
             SOBRE NOSOTROS
           </button>
           <button
-            onClick={() => handleScroll("#contact")}
-            className="block w-full text-left text-gray-700 hover:text-gray-900 transition"
+            onClick={() => handleScrollTo("#contact")}
+            className="block w-full text-left text-white hover:text-[#E11D74] font-rajdhani transition duration-300 transform hover:scale-105"
           >
             CONTACTO
           </button>
           <a
             href="/login"
-            className="block text-gray-700 hover:text-gray-900 font-medium border border-gray-700 rounded-md text-center py-2 transition"
+            className="block w-full text-center bg-[#2A2A2A] hover:bg-white hover:text-[#2A2A2A] font-quantico text-white py-2 rounded-md transition duration-300 shadow hover:shadow-lg transform hover:scale-105"
             onClick={() => setMenuOpen(false)}
           >
             INICIAR SESIÓN
