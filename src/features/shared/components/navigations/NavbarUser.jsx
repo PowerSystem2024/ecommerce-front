@@ -234,7 +234,7 @@ export const NavbarUser = ({ onMenuToggle }) => {
               <div className="px-2 py-2 space-y-1">
                 {/* Sección principal */}
                 <DropdownItem icon="user" label="Mi Perfil" onClick={() => navigate('/profile')} />
-                
+                <DropdownItem icon="bag" label="Mis Pedidos" onClick={() => navigate('/order-history')} />
                 
                 </div>
 

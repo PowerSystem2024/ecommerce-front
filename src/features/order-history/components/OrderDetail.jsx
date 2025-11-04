@@ -27,7 +27,23 @@ const OrderDetail = () => {
       setError(null);
       
       try {
-        const orderData = await orderService.getOrderById(orderId);
+        const response = await orderService.getOrderById(orderId);
+        // Normalizar respuesta según estructura del backend
+        const orderData = response?.data || response;
+        
+        // Log detallado para debug
+        console.log('📦 Datos del pedido recibidos:', {
+          orderId,
+          response: response,
+          orderData: orderData,
+          items: orderData?.items,
+          itemsCount: orderData?.items?.length || 0,
+          total: orderData?.total,
+          totalAmount: orderData?.totalAmount,
+          paymentMethod: orderData?.paymentMethod,
+          status: orderData?.status
+        });
+        
         setOrder(orderData);
       } catch (err) {
         console.error('Error loading order:', err);
@@ -353,8 +369,10 @@ const OrderDetail = () => {
                 <span>{order.status}</span>
               </motion.span>
               <div className="text-gray-600">
-                <p className="font-medium">Total: ${order.total.toFixed(2)}</p>
-                <p className="text-sm">{order.items.length} {order.items.length === 1 ? 'artículo' : 'artículos'}</p>
+                <p className="font-medium">Total: ${(order.total || order.totalAmount || order.amount || 0).toFixed(2)}</p>
+                <p className="text-sm">
+                  {Array.isArray(order.items) ? order.items.length : 0} {Array.isArray(order.items) && order.items.length === 1 ? 'artículo' : 'artículos'}
+                </p>
               </div>
             </div>
             <div className="flex space-x-2">
@@ -453,43 +471,78 @@ const OrderDetail = () => {
               <span className="font-orbitron">Productos</span>
             </h2>
             <div className="space-y-6">
-              {order.items.map((item, index) => (
-                <motion.div 
-                  key={item.id}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.9 + index * 0.1 }}
-                  className="flex items-start space-x-4 p-4 bg-gradient-to-r from-gray-50/50 to-gray-100/30 rounded-xl hover:from-gray-100/50 hover:to-gray-200/30 transition-all duration-200 border border-gray-200/30"
-                >
-                  <div className="w-20 h-20 bg-gradient-to-br from-blue-100 to-blue-200 rounded-xl flex items-center justify-center shadow-sm border border-blue-200/50">
-                    <svg className="w-10 h-10 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-                    </svg>
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="font-bold text-gray-900 text-lg mb-1">{item.name}</h3>
-                    <p className="text-gray-600 text-sm mb-2">{item.description}</p>
-                    <div className="flex items-center space-x-4 text-sm text-gray-500">
-                      <span>Marca: {item.brand}</span>
-                      <span>•</span>
-                      <span>Categoría: {item.category}</span>
-                    </div>
-                    <div className="flex items-center justify-between mt-3">
-                      <div className="text-gray-600 font-medium">
-                        Cantidad: {item.quantity} × ${item.price.toFixed(2)}
+              {Array.isArray(order.items) && order.items.length > 0 ? (
+                order.items.map((item, index) => {
+                // Obtener datos del producto desde el item (con populate del backend)
+                const product = item.product || {};
+                const productName = product.name || item.name || 'Producto sin nombre';
+                const productDescription = product.description || item.description || '';
+                const productImage = product.image || product.images?.[0] || item.image || null;
+                const productCategory = product.category || item.category || '';
+                    const itemPrice = item.price || item.unitPrice || product.price || 0;
+                    const itemQuantity = item.quantity || item.qty || 1;
+
+                    return (
+                  <motion.div 
+                    key={item.id || product._id || index}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.9 + index * 0.1 }}
+                    className="flex items-start space-x-4 p-4 bg-gradient-to-r from-gray-50/50 to-gray-100/30 rounded-xl hover:from-gray-100/50 hover:to-gray-200/30 transition-all duration-200 border border-gray-200/30"
+                  >
+                    {/* Imagen del producto */}
+                    {productImage ? (
+                      <img 
+                        src={productImage} 
+                        alt={productName}
+                        className="w-20 h-20 object-cover rounded-xl shadow-sm border border-gray-200/50 flex-shrink-0"
+                      />
+                    ) : (
+                      <div className="w-20 h-20 bg-gradient-to-br from-blue-100 to-blue-200 rounded-xl flex items-center justify-center shadow-sm border border-blue-200/50 flex-shrink-0">
+                        <svg className="w-10 h-10 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                        </svg>
                       </div>
-                      <div className="text-right">
-                        <div className="font-bold text-xl text-gray-900">
-                          ${(item.price * item.quantity).toFixed(2)}
+                    )}
+                    <div className="flex-1 min-w-0">
+                      <h3 className="font-bold text-gray-900 text-lg mb-1 font-['Quantico',_sans-serif]">
+                        {productName}
+                      </h3>
+                      {productDescription && (
+                        <p className="text-gray-600 text-sm mb-2 line-clamp-2 font-['Rajdhani',_sans-serif]">
+                          {productDescription}
+                        </p>
+                      )}
+                      {productCategory && (
+                        <div className="flex items-center space-x-4 text-sm text-gray-500 mb-2 font-['Rajdhani',_sans-serif]">
+                          <span>Categoría: {productCategory}</span>
                         </div>
-                        <div className="text-sm text-gray-500">
-                          ${item.price.toFixed(2)} c/u
+                      )}
+                      <div className="flex items-center justify-between mt-3">
+                        <div className="text-gray-600 font-medium font-['Rajdhani',_sans-serif]">
+                          Cantidad: {itemQuantity} × ${itemPrice.toFixed(2)}
+                        </div>
+                        <div className="text-right">
+                          <div className="font-bold text-xl text-gray-900 font-['Orbitron',_sans-serif]">
+                            ${(itemPrice * itemQuantity).toFixed(2)}
+                          </div>
+                          <div className="text-sm text-gray-500 font-['Rajdhani',_sans-serif]">
+                            ${itemPrice.toFixed(2)} c/u
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                </motion.div>
-              ))}
+                  </motion.div>
+                );
+              })
+              ) : (
+                <div className="text-gray-500 text-center py-8">
+                  <p className="mb-2">No hay productos disponibles en este pedido</p>
+                  {order.items === undefined && (
+                    <p className="text-xs text-gray-400">Los items no están disponibles en la respuesta del servidor</p>
+                  )}
+                </div>
+              )}
             </div>
           </motion.div>
         </div>
@@ -507,20 +560,20 @@ const OrderDetail = () => {
             <div className="space-y-3">
               <div className="flex justify-between text-gray-600">
                 <span>Subtotal:</span>
-                <span>${order.subtotal.toFixed(2)}</span>
+                <span>${(order.subtotal || order.subTotal || 0).toFixed(2)}</span>
               </div>
               <div className="flex justify-between text-gray-600">
                 <span>Envío:</span>
-                <span>${order.shipping.toFixed(2)}</span>
+                <span>${(order.shipping || order.shippingCost || order.shippingFee || 0).toFixed(2)}</span>
               </div>
               <div className="flex justify-between text-gray-600">
                 <span>Impuestos:</span>
-                <span>${order.tax.toFixed(2)}</span>
+                <span>${(order.tax || order.taxes || 0).toFixed(2)}</span>
               </div>
               <div className="border-t border-gray-200 pt-3">
                 <div className="flex justify-between text-lg font-bold text-gray-900">
                   <span>Total:</span>
-                  <span>${order.total.toFixed(2)}</span>
+                  <span>${(order.total || order.totalAmount || order.amount || 0).toFixed(2)}</span>
                 </div>
               </div>
             </div>
@@ -599,10 +652,22 @@ const OrderDetail = () => {
                 </svg>
               </div>
               <div>
-                <p className="font-semibold text-gray-900">{order.paymentMethod.type}</p>
-                <p className="text-sm text-gray-600">
-                  {order.paymentMethod.brand} terminada en {order.paymentMethod.last4}
-                </p>
+                {order.paymentMethod && typeof order.paymentMethod === 'object' ? (
+                  <>
+                    <p className="font-semibold text-gray-900">
+                      {order.paymentMethod.type || order.paymentMethod.method || 'Método de pago'}
+                    </p>
+                    {order.paymentMethod.brand && order.paymentMethod.last4 && (
+                      <p className="text-sm text-gray-600">
+                        {order.paymentMethod.brand} terminada en {order.paymentMethod.last4}
+                      </p>
+                    )}
+                  </>
+                ) : (
+                  <p className="font-semibold text-gray-900">
+                    {order.paymentMethod || order.payment?.method || order.paymentMethodName || 'No especificado'}
+                  </p>
+                )}
               </div>
             </div>
           </motion.div>
