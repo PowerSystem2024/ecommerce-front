@@ -2,13 +2,14 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../auth/context/AuthContext';
 import userService from '../../../user-profile/services/userService';
+import { useCart } from '../../../cart/context/useCart';
 
 export const NavbarUser = ({ onMenuToggle }) => {
   const navigate = useNavigate();
   const { user, logout, updateUser } = useAuth();
+  const { totalCount } = useCart();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [cartItemsCount] = useState(3); // Mock temporal
   const dropdownRef = useRef(null);
   const mobileMenuRef = useRef(null);
 
@@ -120,18 +121,7 @@ export const NavbarUser = ({ onMenuToggle }) => {
                 <span className="font-bold text-[#FFFFFF] tracking-[0.1em] uppercase font-['Quantico',_sans-serif]">Tienda</span>
               </button>
 
-              <button
-                onClick={() => {
-                  setIsMobileMenuOpen(false);
-                  navigate('/collections');
-                }}
-                className="flex items-center space-x-3 w-full px-3 py-2.5 text-sm hover:bg-[#2A2A2A] rounded-lg transition-all"
-              >
-                <svg className="w-5 h-5 text-[#E11D74]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-                </svg>
-                <span className="font-bold text-[#FFFFFF] tracking-[0.1em] uppercase font-['Quantico',_sans-serif]">Colecciones</span>
-              </button>
+              
 
               {/* Separador */}
               <div className="h-px bg-gradient-to-r from-transparent via-[#2A2A2A] to-transparent my-2"></div>
@@ -150,18 +140,7 @@ export const NavbarUser = ({ onMenuToggle }) => {
                 <span className="font-bold text-[#FFFFFF] tracking-[0.1em] uppercase font-['Quantico',_sans-serif]">Mi Perfil</span>
               </button>
 
-              <button
-                onClick={() => {
-                  setIsMobileMenuOpen(false);
-                  navigate('/order-history');
-                }}
-                className="flex items-center space-x-3 w-full px-3 py-2.5 text-sm hover:bg-[#2A2A2A] rounded-lg transition-all"
-              >
-                <svg className="w-5 h-5 text-[#E11D74]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-                </svg>
-                <span className="font-bold text-[#FFFFFF] tracking-[0.1em] uppercase font-['Quantico',_sans-serif]">Mis Pedidos</span>
-              </button>
+              
 
               <button
                 onClick={() => {
@@ -188,32 +167,13 @@ export const NavbarUser = ({ onMenuToggle }) => {
          >
            Tienda
          </button>
-         <button 
-           onClick={() => navigate('/collections')} 
-          className="text-lg font-bold text-[#CFCFCF] hover:text-[#E11D74] transition-all duration-300 hover:scale-105 tracking-[0.1em] uppercase font-['Quantico',_sans-serif]"
-         >
-           Colecciones
-         </button>
-         <button 
-           onClick={() => navigate('/order-history')} 
-          className="text-lg font-bold text-[#CFCFCF] hover:text-[#E11D74] transition-all duration-300 hover:scale-105 tracking-[0.1em] uppercase font-['Quantico',_sans-serif]"
-         >
-           Mis Pedidos
-         </button>
+         
        </div>
 
       {/* Acciones lado derecho */}
       <div className="flex items-center space-x-3">
 
-        {/* Favoritos */}
-          <button
-          onClick={() => navigate('/favorites')}
-          className="hidden sm:block p-2 rounded-lg text-[#CFCFCF] hover:text-[#E11D74] hover:bg-[#2A2A2A] transition-colors"
-          >
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-            </svg>
-          </button>
+        
 
         {/* Carrito */}
           <button
@@ -223,11 +183,9 @@ export const NavbarUser = ({ onMenuToggle }) => {
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
             </svg>
-            {cartItemsCount > 0 && (
             <span className="absolute -top-1 -right-1 w-5 h-5 bg-[#E11D74] text-[#FFFFFF] text-xs font-bold rounded-full flex items-center justify-center">
-                {cartItemsCount}
-              </span>
-            )}
+              {totalCount ?? 0}
+            </span>
           </button>
 
         {/* Dropdown usuario */}
@@ -278,12 +236,6 @@ export const NavbarUser = ({ onMenuToggle }) => {
                 <DropdownItem icon="user" label="Mi Perfil" onClick={() => navigate('/profile')} />
                 <DropdownItem icon="bag" label="Mis Pedidos" onClick={() => navigate('/order-history')} />
                 
-                {/* Separador */}
-                <div className="h-px bg-gradient-to-r from-transparent via-[#2A2A2A] to-transparent my-2"></div>
-                
-                {/* Sección secundaria */}
-                <DropdownItem icon="heart" label="Favoritos" onClick={() => navigate('/favorites')} />
-                <DropdownItem icon="map" label="Direcciones" onClick={() => navigate('/addresses')} />
                 </div>
 
                 <div className="px-4 py-2">

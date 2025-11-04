@@ -84,6 +84,66 @@ class ProductService {
       method: 'GET',
     });
   }
+
+  // Obtener reseñas de un producto con paginación y ordenamiento
+  // GET /products/{productId}/reviews
+  async getReviews(productId, { page = 1, limit = 10, sort = 'newest' } = {}) {
+    if (!productId) throw new Error('productId es requerido');
+    
+    const queryParams = new URLSearchParams();
+    if (page) queryParams.append('page', page);
+    if (limit) queryParams.append('limit', limit);
+    if (sort) queryParams.append('sort', sort);
+    
+    const queryString = queryParams.toString();
+    const endpoint = `/products/${productId}/reviews${queryString ? `?${queryString}` : ''}`;
+    
+    return this.makeRequest(endpoint, {
+      method: 'GET',
+    });
+  }
+
+  // Crear/enviar una reseña para un producto (requiere compra previa)
+  // POST /reviews
+  async createReview(productId, { rating, comment, orderId }) {
+    if (!productId) throw new Error('productId es requerido');
+    const payload = {
+      productId,
+      rating: Number(rating),
+      comment: comment?.trim?.() || '',
+      orderId,
+    };
+    return this.makeRequest(`/reviews`, {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+  }
+
+  // Actualizar una reseña existente
+  // PUT /reviews/{id}
+  async updateReview(reviewId, { rating, comment }) {
+    if (!reviewId) throw new Error('reviewId es requerido');
+    
+    const payload = {
+      rating: Number(rating),
+      comment: comment?.trim?.() || '',
+    };
+    
+    return this.makeRequest(`/reviews/${reviewId}`, {
+      method: 'PUT',
+      body: JSON.stringify(payload),
+    });
+  }
+
+  // Eliminar una reseña (autor o admin)
+  // DELETE /reviews/{id}
+  async deleteReview(reviewId) {
+    if (!reviewId) throw new Error('reviewId es requerido');
+    
+    return this.makeRequest(`/reviews/${reviewId}`, {
+      method: 'DELETE',
+    });
+  }
 }
 
 // Exportar instancia única del servicio

@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../auth/context/AuthContext';
 import { orderService } from '../services/orderService';
+import OrderDetailModal from './OrderDetailModal';
 
 const OrderHistoryContent = () => {
   const navigate = useNavigate();
@@ -41,6 +42,10 @@ const OrderHistoryContent = () => {
 
   // Estado para los pedidos reales
   const [orders, setOrders] = useState([]);
+  
+  // Estado para el modal de detalles
+  const [selectedOrderId, setSelectedOrderId] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Cargar pedidos del usuario
   useEffect(() => {
@@ -125,14 +130,68 @@ const OrderHistoryContent = () => {
     }
   };
 
+  // Mapear estados a categorías (DEBE ESTAR ANTES DE SU USO)
+  // Mejorado para manejar variaciones: entregada, entregado, Entregada, Entregado, etc.
+  const mapStatusToCategory = (status) => {
+    if (!status) return 'other';
+    const statusLower = (status || '').toString().toLowerCase().trim();
+    
+    // Pendientes
+    if (statusLower.includes('pendiente') || statusLower === 'procesando' || statusLower === 'nuevo') {
+      return 'pendientes';
+    }
+    
+    // Confirmados
+    if (
+      statusLower.includes('confirmado') || 
+      statusLower.includes('confirmada') || 
+      statusLower.includes('en camino') || 
+      statusLower.includes('preparando') ||
+      statusLower.includes('enviado') ||
+      statusLower.includes('enviada')
+    ) {
+      return 'confirmados';
+    }
+    
+    // Entregados - Manejar todas las variaciones
+    if (
+      statusLower.includes('entregado') || 
+      statusLower.includes('entregada') ||
+      statusLower === 'delivered' ||
+      statusLower === 'completado' ||
+      statusLower === 'completada'
+    ) {
+      return 'entregados';
+    }
+    
+    return 'other';
+  };
+
+  // Función para abrir el modal de detalles
+  const handleViewDetails = (order) => {
+    const orderIdToUse = order.id || order._id;
+    if (orderIdToUse) {
+      setSelectedOrderId(orderIdToUse);
+      setIsModalOpen(true);
+    } else {
+      alert('Error: No se pudo obtener el ID del pedido');
+    }
+  };
+
+  // Función para cerrar el modal
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedOrderId(null);
+  };
+
   const filteredOrders = orders.filter(order => {
     // Verificar que el pedido existe y tiene las propiedades necesarias
     if (!order || typeof order !== 'object') return false;
     
     // Filtro por tab activo
     if (activeTab !== 'all') {
-      const statusMatch = order.status && order.status.toLowerCase().replace(' ', '') === activeTab;
-      if (!statusMatch) return false;
+      const category = mapStatusToCategory(order.status);
+      if (category !== activeTab) return false;
     }
 
     // Filtro por término de búsqueda
@@ -183,12 +242,19 @@ const OrderHistoryContent = () => {
     }
   });
 
+  // Categorizar pedidos (DESPUÉS de definir mapStatusToCategory)
+  const categorizedOrders = {
+    pendientes: orders.filter(o => o && mapStatusToCategory(o.status) === 'pendientes'),
+    confirmados: orders.filter(o => o && mapStatusToCategory(o.status) === 'confirmados'),
+    entregados: orders.filter(o => o && mapStatusToCategory(o.status) === 'entregados'),
+    other: orders.filter(o => o && mapStatusToCategory(o.status) === 'other')
+  };
+
   const tabs = [
     { id: 'all', label: 'Todos', count: orders.length },
-    { id: 'procesando', label: 'Procesando', count: orders.filter(o => o && o.status === 'Procesando').length },
-    { id: 'encamino', label: 'En camino', count: orders.filter(o => o && o.status === 'En camino').length },
-    { id: 'entregado', label: 'Entregado', count: orders.filter(o => o && o.status === 'Entregado').length },
-    { id: 'cancelado', label: 'Cancelado', count: orders.filter(o => o && o.status === 'Cancelado').length }
+    { id: 'pendientes', label: 'Pendientes', count: categorizedOrders.pendientes.length },
+    { id: 'confirmados', label: 'Confirmados', count: categorizedOrders.confirmados.length },
+    { id: 'entregados', label: 'Entregados', count: categorizedOrders.entregados.length }
   ];
 
   const handleReorder = async (order) => {
@@ -585,7 +651,7 @@ const OrderHistoryContent = () => {
                         <div>
                           <span className="text-gray-600 font-medium text-sm">Total</span>
                           <div className="font-bold text-2xl text-gray-900">
-                            ${order.total ? order.total.toFixed(2) : '0.00'}
+                            ${(order.total || order.totalAmount || order.amount || 0).toFixed(2)}
                           </div>
                         </div>
                       </div>
@@ -600,7 +666,7 @@ const OrderHistoryContent = () => {
                         <div>
                           <span className="text-gray-600 font-medium text-sm">Productos</span>
                           <div className="font-bold text-lg text-gray-900">
-                            {order.items ? order.items.length : 0} {(order.items ? order.items.length : 0) === 1 ? 'artículo' : 'artículos'}
+                            {Array.isArray(order.items) ? order.items.length : 0} {Array.isArray(order.items) && order.items.length === 1 ? 'artículo' : 'artículos'}
                           </div>
                         </div>
                       </div>
@@ -669,8 +735,8 @@ const OrderHistoryContent = () => {
                   <motion.button
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    onClick={() => navigate(`/orders/${order.id}`)}
-                    className="flex items-center justify-center space-x-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-all duration-200 text-sm font-semibold shadow-sm hover:shadow-md"
+                    onClick={() => handleViewDetails(order)}
+                    className="flex items-center justify-center space-x-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all duration-300 text-sm font-semibold shadow-md hover:shadow-lg"
                   >
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -691,18 +757,25 @@ const OrderHistoryContent = () => {
                       <span>Rastrear</span>
                     </motion.button>
                   )}
-                  {order.status === 'Entregado' && (
+                  {(order.status === 'Entregado' || mapStatusToCategory(order.status) === 'entregados') && (
                     <>
                       <motion.button
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
-                        onClick={() => navigate(`/orders/${order.id}/review`)}
+                        onClick={() => {
+                          const orderIdToUse = order.id || order._id;
+                          if (orderIdToUse) {
+                            navigate(`/orders/${orderIdToUse}/review`);
+                          } else {
+                            alert('Error: No se pudo obtener el ID del pedido');
+                          }
+                        }}
                         className="flex items-center justify-center space-x-2 px-4 py-2 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-lg hover:from-green-700 hover:to-green-800 transition-all duration-300 text-sm font-semibold shadow-md hover:shadow-lg"
                       >
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
                         </svg>
-                        <span>Evaluar</span>
+                        <span>Dejar Reseña</span>
                       </motion.button>
                       <motion.button
                         whileHover={{ scale: 1.05 }}
@@ -745,39 +818,126 @@ const OrderHistoryContent = () => {
                   <span>Productos</span>
                 </h4>
                 <div className="space-y-3">
-                  {order.items && Array.isArray(order.items) ? order.items.map((item, itemIndex) => (
-                    <motion.div 
-                      key={item.id} 
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 1.4 + index * 0.1 + itemIndex * 0.1 }}
-                      className="flex items-center space-x-4 p-4 bg-gradient-to-r from-gray-50/50 to-gray-100/30 rounded-xl hover:from-gray-100/50 hover:to-gray-200/30 transition-all duration-200 border border-gray-200/30"
-                    >
-                      <div className="w-16 h-16 bg-gradient-to-br from-blue-100 to-blue-200 rounded-xl flex items-center justify-center shadow-sm border border-blue-200/50">
-                        <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-                        </svg>
-                      </div>
-                      <div className="flex-1">
-                        <div className="font-bold text-gray-900 text-lg">{item.name}</div>
-                        <div className="text-gray-600 font-medium text-sm">
-                          Cantidad: {item.quantity} × ${item.price.toFixed(2)}
+                  {Array.isArray(order.items) && order.items.length > 0 ? (
+                    order.items.slice(0, 3).map((item, itemIndex) => {
+                      // Obtener datos del producto desde el item (con populate del backend)
+                      const product = item.product || {};
+                      const productName = product.name || item.name || item.productName || 'Producto sin nombre';
+                      const productDescription = product.description || item.description || '';
+                      const productImage = product.image || product.images?.[0] || item.image || item.productImage || null;
+                      const productId = product._id || product.id || item.productId || item._id || item.id;
+                      // Intentar obtener precio desde múltiples fuentes
+                      const itemPrice = item.price || item.unitPrice || product.price || 0;
+                      const itemQuantity = item.quantity || item.qty || 1;
+                      
+                      // Si hay más de 3 productos, mostrar un indicador
+                      const hasMoreItems = order.items.length > 3 && itemIndex === 2;
+
+                    return (
+                      <React.Fragment key={item.id || productId || itemIndex}>
+                        <motion.div 
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 1.4 + index * 0.1 + itemIndex * 0.1 }}
+                        className="flex items-start space-x-4 p-4 bg-gradient-to-r from-gray-50/50 to-gray-100/30 rounded-xl hover:from-gray-100/50 hover:to-gray-200/30 transition-all duration-200 border border-gray-200/30"
+                      >
+                        {/* Imagen del producto */}
+                        {productImage ? (
+                          <img 
+                            src={productImage} 
+                            alt={productName}
+                            className="w-20 h-20 object-cover rounded-xl shadow-sm border border-gray-200/50"
+                          />
+                        ) : (
+                          <div className="w-20 h-20 bg-gradient-to-br from-blue-100 to-blue-200 rounded-xl flex items-center justify-center shadow-sm border border-blue-200/50">
+                            <svg className="w-10 h-10 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                            </svg>
+                          </div>
+                        )}
+                        <div className="flex-1 min-w-0">
+                          <div className="font-bold text-gray-900 text-lg mb-1 font-['Quantico',_sans-serif]">
+                            {productName}
+                          </div>
+                          {productDescription && (
+                            <p className="text-gray-600 text-sm mb-2 line-clamp-2 font-['Rajdhani',_sans-serif]">
+                              {productDescription}
+                            </p>
+                          )}
+                          <div className="text-gray-600 font-medium text-sm font-['Rajdhani',_sans-serif]">
+                            Cantidad: {itemQuantity} × ${itemPrice.toFixed(2)}
+                          </div>
                         </div>
-                      </div>
-                      <div className="text-right">
-                        <div className="font-bold text-2xl text-gray-900">
-                          ${(item.price * item.quantity).toFixed(2)}
+                        <div className="text-right flex-shrink-0">
+                          <div className="font-bold text-2xl text-gray-900 font-['Orbitron',_sans-serif]">
+                            ${(itemPrice * itemQuantity).toFixed(2)}
+                          </div>
+                          <div className="text-sm text-gray-500 font-['Rajdhani',_sans-serif]">
+                            ${itemPrice.toFixed(2)} c/u
+                          </div>
                         </div>
-                        <div className="text-sm text-gray-500">
-                          ${item.price.toFixed(2)} c/u
-                        </div>
-                      </div>
-                    </motion.div>
-                  )) : (
-                    <p className="text-gray-500 text-center py-4">No hay productos disponibles</p>
+                        </motion.div>
+                        {hasMoreItems && (
+                          <div className="text-center py-2 text-sm text-gray-500 font-medium">
+                            +{order.items.length - 3} producto{order.items.length - 3 > 1 ? 's' : ''} más
+                          </div>
+                        )}
+                      </React.Fragment>
+                    );
+                  })
+                  ) : (
+                    <div className="text-gray-500 text-center py-4">
+                      <p className="mb-2">No hay productos disponibles en este pedido</p>
+                      {order.items === undefined && (
+                        <p className="text-xs text-gray-400">Los items no están disponibles en la respuesta del servidor</p>
+                      )}
+                    </div>
                   )}
                 </div>
               </motion.div>
+
+              {/* Sección de reseñas para pedidos entregados */}
+              {(order.status === 'Entregado' || mapStatusToCategory(order.status) === 'entregados') && (
+                <motion.div 
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 1.5 + index * 0.1 }}
+                  className="border-t border-gray-200/50 pt-6 mt-6"
+                >
+                  <div className="bg-gradient-to-r from-green-50 to-green-100/50 rounded-xl p-4 border border-green-200/50 mb-4">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-3">
+                        <div className="w-10 h-10 bg-green-500 rounded-lg flex items-center justify-center">
+                          <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+                          </svg>
+                        </div>
+                        <div>
+                          <h4 className="font-bold text-gray-900 text-lg font-['Quantico',_sans-serif]">
+                            ¿Cómo fue tu experiencia?
+                          </h4>
+                          <p className="text-gray-600 text-sm font-['Rajdhani',_sans-serif]">
+                            Compartí tu opinión sobre los productos que compraste
+                          </p>
+                        </div>
+                      </div>
+                      <motion.button
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={() => {
+                          const orderIdToUse = order.id || order._id;
+                          if (orderIdToUse) {
+                            navigate(`/orders/${orderIdToUse}/review`);
+                          }
+                        }}
+                        className="px-5 py-2 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-lg hover:from-green-700 hover:to-green-800 transition-all duration-300 text-sm font-semibold shadow-md hover:shadow-lg font-['Quantico',_sans-serif]"
+                      >
+                        Escribir Reseña
+                      </motion.button>
+                    </div>
+                  </div>
+                </motion.div>
+              )}
 
               {/* Información de envío */}
               <motion.div 
@@ -811,7 +971,9 @@ const OrderHistoryContent = () => {
                       </div>
                       <h4 className="font-bold text-gray-900 text-lg">Método de pago</h4>
                     </div>
-                    <p className="text-gray-700 font-medium">{order.paymentMethod || 'N/A'}</p>
+                    <p className="text-gray-700 font-medium">
+                      {order.paymentMethod || order.payment?.method || order.paymentMethodName || 'No especificado'}
+                    </p>
                   </div>
                 </div>
               </motion.div>
@@ -820,6 +982,13 @@ const OrderHistoryContent = () => {
           })
         )}
       </div>
+
+      {/* Modal de detalles del pedido */}
+      <OrderDetailModal
+        orderId={selectedOrderId}
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+      />
     </div>
     );
   } catch (renderError) {
