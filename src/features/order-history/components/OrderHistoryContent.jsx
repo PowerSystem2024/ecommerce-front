@@ -777,17 +777,6 @@ const OrderHistoryContent = () => {
                         </svg>
                         <span>Dejar Reseña</span>
                       </motion.button>
-                      <motion.button
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        onClick={() => handleReorder(order)}
-                        className="flex items-center justify-center space-x-2 px-4 py-2 bg-gradient-to-r from-purple-600 to-purple-700 text-white rounded-lg hover:from-purple-700 hover:to-purple-800 transition-all duration-300 text-sm font-semibold shadow-md hover:shadow-lg"
-                      >
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                        </svg>
-                        <span>Volver a Pedir</span>
-                      </motion.button>
                     </>
                   )}
                   <motion.button
@@ -896,48 +885,7 @@ const OrderHistoryContent = () => {
                 </div>
               </motion.div>
 
-              {/* Sección de reseñas para pedidos entregados */}
-              {(order.status === 'Entregado' || mapStatusToCategory(order.status) === 'entregados') && (
-                <motion.div 
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 1.5 + index * 0.1 }}
-                  className="border-t border-gray-200/50 pt-6 mt-6"
-                >
-                  <div className="bg-gradient-to-r from-green-50 to-green-100/50 rounded-xl p-4 border border-green-200/50 mb-4">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-3">
-                        <div className="w-10 h-10 bg-green-500 rounded-lg flex items-center justify-center">
-                          <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
-                          </svg>
-                        </div>
-                        <div>
-                          <h4 className="font-bold text-gray-900 text-lg font-['Quantico',_sans-serif]">
-                            ¿Cómo fue tu experiencia?
-                          </h4>
-                          <p className="text-gray-600 text-sm font-['Rajdhani',_sans-serif]">
-                            Compartí tu opinión sobre los productos que compraste
-                          </p>
-                        </div>
-                      </div>
-                      <motion.button
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        onClick={() => {
-                          const orderIdToUse = order.id || order._id;
-                          if (orderIdToUse) {
-                            navigate(`/orders/${orderIdToUse}/review`);
-                          }
-                        }}
-                        className="px-5 py-2 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-lg hover:from-green-700 hover:to-green-800 transition-all duration-300 text-sm font-semibold shadow-md hover:shadow-lg font-['Quantico',_sans-serif]"
-                      >
-                        Escribir Reseña
-                      </motion.button>
-                    </div>
-                  </div>
-                </motion.div>
-              )}
+              {/* Sección de reseñas para pedidos entregados - Removida la CTA duplicada "Escribir Reseña" */}
 
               {/* Información de envío */}
               <motion.div 
