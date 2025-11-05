@@ -6,11 +6,6 @@ export default function AdminRoute({ children }) {
   const { user, isAuthenticated, loading } = useAuth();
   const location = useLocation();
 
-  // Debug: ver qué usuario tenemos
-  console.log('AdminRoute - Usuario:', user);
-  console.log('AdminRoute - isAuthenticated:', isAuthenticated);
-  console.log('AdminRoute - Role:', user?.role);
-
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-[#0F0F10]">

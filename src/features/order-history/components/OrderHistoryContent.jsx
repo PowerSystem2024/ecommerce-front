@@ -59,47 +59,22 @@ const OrderHistoryContent = () => {
         setIsLoadingOrders(true);
         setError(null);
         
-        console.log('🔍 Cargando pedidos del usuario...');
         const ordersData = await orderService.getUserOrders();
-        console.log('📦 Datos recibidos:', ordersData);
         
         // Manejar diferentes formatos de respuesta
         let ordersList = [];
+        
         if (Array.isArray(ordersData)) {
-          ordersList = ordersData;
-        } else if (ordersData && ordersData.orders) {
-          ordersList = ordersData.orders;
-        } else if (ordersData && ordersData.data) {
-          ordersList = ordersData.data;
-        } else {
-          console.warn('⚠️ Formato de respuesta inesperado:', ordersData);
-          ordersList = [];
-        }
-        
-        console.log('📋 Pedidos procesados:', ordersList);
-        
-        // Log detallado para debug
-        if (ordersList.length > 0) {
-          console.log('📦 Primer pedido de ejemplo:', {
-            id: ordersList[0].id || ordersList[0]._id,
-            status: ordersList[0].status,
-            items: ordersList[0].items,
-            itemsCount: ordersList[0].items?.length || 0,
-            total: ordersList[0].total,
-            totalAmount: ordersList[0].totalAmount,
-            paymentMethod: ordersList[0].paymentMethod
-          });
+          ordersList = ordersData; // Si es un array directo
+        } else if (ordersData?.data && Array.isArray(ordersData.data)) {
+          ordersList = ordersData.data; // Si es { data: [] }
+        } else if (ordersData?.orders && Array.isArray(ordersData.orders)) {
+          ordersList = ordersData.orders; // Si es { orders: [] }
         }
         
         setOrders(ordersList);
         
       } catch (error) {
-        console.error('❌ Error cargando pedidos:', error);
-        console.error('❌ Detalles del error:', {
-          message: error.message,
-          stack: error.stack,
-          name: error.name
-        });
         setError(error.message || 'Error al cargar los pedidos');
       } finally {
         setIsLoadingOrders(false);
@@ -222,11 +197,17 @@ const OrderHistoryContent = () => {
     // Filtro por término de búsqueda
     if (searchTerm) {
       const searchLower = searchTerm.toLowerCase();
+      const orderProducts = Array.isArray(order.products) 
+        ? order.products 
+        : (Array.isArray(order.items) ? order.items : []);
+      
       return (
-        (order.id && order.id.toLowerCase().includes(searchLower)) ||
-        (order.items && Array.isArray(order.items) && order.items.some(item => 
-          item && item.name && item.name.toLowerCase().includes(searchLower)
-        )) ||
+        (order.id && order.id.toString().toLowerCase().includes(searchLower)) ||
+        (orderProducts.some(item => {
+          const product = item.product || {};
+          const productName = product.name || item.name || '';
+          return productName.toLowerCase().includes(searchLower);
+        })) ||
         (order.shippingAddress && order.shippingAddress.city && 
          order.shippingAddress.city.toLowerCase().includes(searchLower))
       );
@@ -291,15 +272,17 @@ const OrderHistoryContent = () => {
       
       if (result.success) {
         // Si el servicio devuelve los items, navegar al carrito
-        navigate('/cart', { state: { reorderItems: result.items || order.items } });
+        const itemsToReorder = result.items || order.products || order.items || [];
+        navigate('/cart', { state: { reorderItems: itemsToReorder } });
       } else {
-        // Fallback: navegar con los items del pedido actual
-        navigate('/cart', { state: { reorderItems: order.items } });
+        // Fallback: navegar con los productos del pedido actual
+        const itemsToReorder = order.products || order.items || [];
+        navigate('/cart', { state: { reorderItems: itemsToReorder } });
       }
     } catch (error) {
-      console.error('Error reordenando:', error);
       // Fallback: navegar con los items del pedido actual
-      navigate('/cart', { state: { reorderItems: order.items } });
+      const itemsToReorder = order.products || order.items || [];
+      navigate('/cart', { state: { reorderItems: itemsToReorder } });
     } finally {
       setIsLoading(false);
     }
@@ -313,10 +296,9 @@ const OrderHistoryContent = () => {
       
       if (result.success) {
         // La descarga se maneja automáticamente en el servicio
-        console.log('Factura descargada exitosamente');
+        // Éxito silencioso
       }
     } catch (error) {
-      console.error('Error descargando factura:', error);
       alert('Error al descargar la factura. Inténtalo de nuevo.');
     } finally {
       setIsLoading(false);
@@ -339,7 +321,7 @@ const OrderHistoryContent = () => {
             className="w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg"
           >
             <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2m0 0l4 4m4-4l4-4" />
             </svg>
           </motion.div>
           <motion.h3 
@@ -421,21 +403,12 @@ const OrderHistoryContent = () => {
             onClick={() => window.location.reload()}
             className="px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all duration-300 shadow-lg hover:shadow-xl font-medium"
           >
-            🔄 Reintentar
+            Reintentar
           </motion.button>
         </motion.div>
       </div>
     );
   }
-
-  // Debug: mostrar estado actual
-  console.log('🔍 Estado actual:', {
-    isAuthenticated,
-    isLoadingOrders,
-    error,
-    ordersCount: orders.length,
-    orders: orders.slice(0, 2) // Solo los primeros 2 para debug
-  });
 
   try {
     return (
@@ -623,6 +596,11 @@ const OrderHistoryContent = () => {
             // Verificar que el pedido existe y tiene las propiedades necesarias
             if (!order || typeof order !== 'object') return null;
             
+            // Normalizar productos/items - el backend usa 'products'
+            const orderProducts = Array.isArray(order.products) 
+              ? order.products 
+              : (Array.isArray(order.items) ? order.items : []);
+            
             return (
             <motion.div
               key={order.id || `order-${index}`}
@@ -702,7 +680,7 @@ const OrderHistoryContent = () => {
                         <div>
                           <span className="text-gray-600 font-medium text-sm">Productos</span>
                           <div className="font-bold text-lg text-gray-900">
-                            {Array.isArray(order.items) ? order.items.length : 0} {Array.isArray(order.items) && order.items.length === 1 ? 'artículo' : 'artículos'}
+                            {orderProducts.length} {orderProducts.length === 1 ? 'artículo' : 'artículos'}
                           </div>
                         </div>
                       </div>
@@ -813,17 +791,6 @@ const OrderHistoryContent = () => {
                         </svg>
                         <span>Dejar Reseña</span>
                       </motion.button>
-                      <motion.button
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        onClick={() => handleReorder(order)}
-                        className="flex items-center justify-center space-x-2 px-4 py-2 bg-gradient-to-r from-purple-600 to-purple-700 text-white rounded-lg hover:from-purple-700 hover:to-purple-800 transition-all duration-300 text-sm font-semibold shadow-md hover:shadow-lg"
-                      >
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                        </svg>
-                        <span>Volver a Pedir</span>
-                      </motion.button>
                     </>
                   )}
                   <motion.button
@@ -854,20 +821,24 @@ const OrderHistoryContent = () => {
                   <span>Productos</span>
                 </h4>
                 <div className="space-y-3">
-                  {Array.isArray(order.items) && order.items.length > 0 ? (
-                    order.items.slice(0, 3).map((item, itemIndex) => {
+                  {orderProducts.length > 0 ? (
+                    orderProducts.slice(0, 3).map((item, itemIndex) => {
                       // Obtener datos del producto desde el item (con populate del backend)
+                      // El backend usa: products[].product.name, products[].product.description, etc.
                       const product = item.product || {};
                       const productName = product.name || item.name || item.productName || 'Producto sin nombre';
                       const productDescription = product.description || item.description || '';
-                      const productImage = product.image || product.images?.[0] || item.image || item.productImage || null;
+                      // Manejar images como array o string
+                      const productImage = Array.isArray(product.images) && product.images.length > 0
+                        ? product.images[0]
+                        : (product.image || item.image || item.productImage || null);
                       const productId = product._id || product.id || item.productId || item._id || item.id;
                       // Intentar obtener precio desde múltiples fuentes
-                      const itemPrice = item.price || item.unitPrice || product.price || 0;
+                      const itemPrice = item.price || product.price || 0;
                       const itemQuantity = item.quantity || item.qty || 1;
                       
                       // Si hay más de 3 productos, mostrar un indicador
-                      const hasMoreItems = order.items.length > 3 && itemIndex === 2;
+                      const hasMoreItems = orderProducts.length > 3 && itemIndex === 2;
 
                     return (
                       <React.Fragment key={item.id || productId || itemIndex}>
@@ -915,7 +886,7 @@ const OrderHistoryContent = () => {
                         </motion.div>
                         {hasMoreItems && (
                           <div className="text-center py-2 text-sm text-gray-500 font-medium">
-                            +{order.items.length - 3} producto{order.items.length - 3 > 1 ? 's' : ''} más
+                            +{orderProducts.length - 3} producto{orderProducts.length - 3 > 1 ? 's' : ''} más
                           </div>
                         )}
                       </React.Fragment>
@@ -924,56 +895,15 @@ const OrderHistoryContent = () => {
                   ) : (
                     <div className="text-gray-500 text-center py-4">
                       <p className="mb-2">No hay productos disponibles en este pedido</p>
-                      {order.items === undefined && (
-                        <p className="text-xs text-gray-400">Los items no están disponibles en la respuesta del servidor</p>
+                      {orderProducts.length === 0 && (
+                        <p className="text-xs text-gray-400">Los productos no están disponibles en la respuesta del servidor</p>
                       )}
                     </div>
                   )}
                 </div>
               </motion.div>
 
-              {/* Sección de reseñas para pedidos entregados */}
-              {(order.status === 'Entregado' || mapStatusToCategory(order.status) === 'entregados') && (
-                <motion.div 
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 1.5 + index * 0.1 }}
-                  className="border-t border-gray-200/50 pt-6 mt-6"
-                >
-                  <div className="bg-gradient-to-r from-green-50 to-green-100/50 rounded-xl p-4 border border-green-200/50 mb-4">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-3">
-                        <div className="w-10 h-10 bg-green-500 rounded-lg flex items-center justify-center">
-                          <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
-                          </svg>
-                        </div>
-                        <div>
-                          <h4 className="font-bold text-gray-900 text-lg font-['Quantico',_sans-serif]">
-                            ¿Cómo fue tu experiencia?
-                          </h4>
-                          <p className="text-gray-600 text-sm font-['Rajdhani',_sans-serif]">
-                            Compartí tu opinión sobre los productos que compraste
-                          </p>
-                        </div>
-                      </div>
-                      <motion.button
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        onClick={() => {
-                          const orderIdToUse = order.id || order._id;
-                          if (orderIdToUse) {
-                            navigate(`/orders/${orderIdToUse}/review`);
-                          }
-                        }}
-                        className="px-5 py-2 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-lg hover:from-green-700 hover:to-green-800 transition-all duration-300 text-sm font-semibold shadow-md hover:shadow-lg font-['Quantico',_sans-serif]"
-                      >
-                        Escribir Reseña
-                      </motion.button>
-                    </div>
-                  </div>
-                </motion.div>
-              )}
+              {/* Sección de reseñas para pedidos entregados - Removida la CTA duplicada "Escribir Reseña" */}
 
               {/* Información de envío */}
               <motion.div 

@@ -167,7 +167,7 @@ const OrderDetail = () => {
         
         if (result.success) {
           // La descarga se maneja automáticamente en el servicio
-          console.log('Factura descargada exitosamente');
+          // Éxito silencioso
         }
       } catch (error) {
         console.error('Error descargando factura:', error);
@@ -471,8 +471,13 @@ const OrderDetail = () => {
               <span className="font-orbitron">Productos</span>
             </h2>
             <div className="space-y-6">
-              {Array.isArray(order.items) && order.items.length > 0 ? (
-                order.items.map((item, index) => {
+              {(() => {
+                const normalizedItems = Array.isArray(order.items) && order.items.length > 0
+                  ? order.items
+                  : (Array.isArray(order.products) ? order.products : (Array.isArray(order.orderItems) ? order.orderItems : []));
+
+                return normalizedItems.length > 0 ? (
+                  normalizedItems.map((item, index) => {
                 // Obtener datos del producto desde el item (con populate del backend)
                 const product = item.product || {};
                 const productName = product.name || item.name || 'Producto sin nombre';
@@ -535,14 +540,15 @@ const OrderDetail = () => {
                   </motion.div>
                 );
               })
-              ) : (
+                ) : (
                 <div className="text-gray-500 text-center py-8">
                   <p className="mb-2">No hay productos disponibles en este pedido</p>
                   {order.items === undefined && (
                     <p className="text-xs text-gray-400">Los items no están disponibles en la respuesta del servidor</p>
                   )}
                 </div>
-              )}
+                );
+              })()}
             </div>
           </motion.div>
         </div>
@@ -558,24 +564,44 @@ const OrderDetail = () => {
           >
             <h3 className="text-xl font-bold text-gray-900 mb-4 font-orbitron">Resumen del Pedido</h3>
             <div className="space-y-3">
-              <div className="flex justify-between text-gray-600">
-                <span>Subtotal:</span>
-                <span>${(order.subtotal || order.subTotal || 0).toFixed(2)}</span>
-              </div>
-              <div className="flex justify-between text-gray-600">
-                <span>Envío:</span>
-                <span>${(order.shipping || order.shippingCost || order.shippingFee || 0).toFixed(2)}</span>
-              </div>
-              <div className="flex justify-between text-gray-600">
-                <span>Impuestos:</span>
-                <span>${(order.tax || order.taxes || 0).toFixed(2)}</span>
-              </div>
-              <div className="border-t border-gray-200 pt-3">
-                <div className="flex justify-between text-lg font-bold text-gray-900">
-                  <span>Total:</span>
-                  <span>${(order.total || order.totalAmount || order.amount || 0).toFixed(2)}</span>
-                </div>
-              </div>
+              {(() => {
+                const items = Array.isArray(order.items) && order.items.length > 0
+                  ? order.items
+                  : (Array.isArray(order.products) ? order.products : (Array.isArray(order.orderItems) ? order.orderItems : []));
+                const computedSubtotal = items.reduce((sum, it) => {
+                  const price = it.price || it.unitPrice || it.product?.price || 0;
+                  const qty = it.quantity || it.qty || 1;
+                  return sum + price * qty;
+                }, 0);
+                const subtotal = (order.subtotal || order.subTotal);
+                const shipping = (order.shipping || order.shippingCost || order.shippingFee || 0);
+                const taxes = (order.tax || order.taxes || 0);
+                const total = (order.total || order.totalAmount || order.amount);
+                const finalSubtotal = subtotal !== undefined ? subtotal : computedSubtotal;
+                const finalTotal = total !== undefined ? total : (finalSubtotal + shipping + taxes);
+                return (
+                  <>
+                    <div className="flex justify-between text-gray-600">
+                      <span>Subtotal:</span>
+                      <span>${finalSubtotal.toFixed(2)}</span>
+                    </div>
+                    <div className="flex justify-between text-gray-600">
+                      <span>Envío:</span>
+                      <span>${shipping.toFixed(2)}</span>
+                    </div>
+                    <div className="flex justify-between text-gray-600">
+                      <span>Impuestos:</span>
+                      <span>${taxes.toFixed(2)}</span>
+                    </div>
+                    <div className="border-t border-gray-200 pt-3">
+                      <div className="flex justify-between text-lg font-bold text-gray-900">
+                        <span>Total:</span>
+                        <span>${finalTotal.toFixed(2)}</span>
+                      </div>
+                    </div>
+                  </>
+                );
+              })()}
             </div>
           </motion.div>
 
@@ -692,26 +718,7 @@ const OrderDetail = () => {
             transition={{ delay: 1.1 }}
             className="space-y-3"
           >
-            {order.status === 'Entregado' && (
-              <motion.button
-                whileHover={{ scale: isReordering ? 1 : 1.02 }}
-                whileTap={{ scale: isReordering ? 1 : 0.98 }}
-                onClick={handleReorder}
-                disabled={isReordering}
-                className="w-full flex items-center justify-center space-x-2 px-4 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl hover:from-purple-700 hover:to-pink-700 transition-all duration-300 font-semibold shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {isReordering ? (
-                  <svg className="w-5 h-5 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                  </svg>
-                ) : (
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                  </svg>
-                )}
-                <span>{isReordering ? 'Procesando...' : 'Volver a Pedir'}</span>
-              </motion.button>
-            )}
+            {/* Removido el botón "Volver a Pedir" según requerimiento */}
             
             <motion.button
               whileHover={{ scale: 1.02 }}

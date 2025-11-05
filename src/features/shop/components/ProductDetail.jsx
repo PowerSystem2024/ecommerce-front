@@ -197,36 +197,71 @@ export default function ProductDetail({ product, open, onClose }) {
                       {product.description}
                     </p>
 
-                    {/* Reviews */}
-                    <div className="mt-4">
-                      <h4 className="sr-only">Reseñas</h4>
-                      <div className="flex items-center">
-                        <p className="text-sm text-gray-700 font-semibold">
-                          {product.rating || 4.5}
-                          <span className="sr-only"> de 5 estrellas</span>
-                        </p>
-                        <div className="ml-1 flex items-center">
-                          {[0, 1, 2, 3, 4].map((rating) => (
-                            <StarIcon
-                              key={rating}
-                              aria-hidden="true"
-                              className={classNames(
-                                (product.rating || 4.5) > rating ? 'text-yellow-400' : 'text-gray-200',
-                                'size-5 shrink-0',
-                              )}
-                            />
-                          ))}
-                        </div>
-                        <div className="ml-4 flex items-center">
-                          <span aria-hidden="true" className="text-gray-300">
-                            &middot;
-                          </span>
-                          <span className="ml-2 text-sm text-[#2A2A2A] font-['Rajdhani',_sans-serif]">
-                            {product.stock} disponibles
-                          </span>
+                    {/* Reviews - Solo mostrar si hay reseñas */}
+                    {product.reviewsCount > 0 ? (
+                      <div className="mt-4">
+                        <h4 className="sr-only">Reseñas</h4>
+                        <div className="flex items-center">
+                          <p className="text-sm text-gray-700 font-semibold">
+                            {product.averageRating ? product.averageRating.toFixed(1) : '0'}
+                            <span className="sr-only"> de 5 estrellas</span>
+                          </p>
+                          <div className="ml-1 flex items-center">
+                            {[0, 1, 2, 3, 4].map((rating) => {
+                              const ratingValue = product.averageRating || 0;
+                              return (
+                                <StarIcon
+                                  key={rating}
+                                  aria-hidden="true"
+                                  className={classNames(
+                                    ratingValue > rating ? 'text-yellow-400' : 'text-gray-200',
+                                    'size-5 shrink-0',
+                                  )}
+                                />
+                              );
+                            })}
+                          </div>
+                          <div className="ml-4 flex items-center">
+                            <span aria-hidden="true" className="text-gray-300">
+                              &middot;
+                            </span>
+                            <span className="ml-2 text-sm text-[#2A2A2A] font-['Rajdhani',_sans-serif]">
+                              {product.stock} disponibles
+                            </span>
+                          </div>
                         </div>
                       </div>
-                    </div>
+                    ) : (
+                      <div className="mt-4">
+                        <h4 className="sr-only">Reseñas</h4>
+                        <div className="flex items-center">
+                          <p className="text-sm text-gray-700 font-semibold">
+                            0
+                            <span className="sr-only"> de 5 estrellas</span>
+                          </p>
+                          <div className="ml-1 flex items-center">
+                            {[0, 1, 2, 3, 4].map((rating) => (
+                              <StarIcon
+                                key={rating}
+                                aria-hidden="true"
+                                className={classNames(
+                                  'text-gray-200',
+                                  'size-5 shrink-0',
+                                )}
+                              />
+                            ))}
+                          </div>
+                          <div className="ml-4 flex items-center">
+                            <span aria-hidden="true" className="text-gray-300">
+                              &middot;
+                            </span>
+                            <span className="ml-2 text-sm text-[#2A2A2A] font-['Rajdhani',_sans-serif]">
+                              {product.stock} disponibles
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    )}
 
                     {/* Categoría */}
                     <div className="mt-4">
@@ -334,7 +369,7 @@ export default function ProductDetail({ product, open, onClose }) {
                   <ReviewsSection
                     productId={product._id || product.id}
                     reviews={null}
-                    averageRating={product.rating || product.averageRating}
+                    averageRating={0}
                     reviewsCount={product.reviewsCount || 0}
                     ratingSummary={product.meta?.ratingSummary || null}
                     reviewsPerPage={5}

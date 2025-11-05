@@ -56,12 +56,10 @@ class OrderService {
 
   // OBTENER HISTORIAL DE PEDIDOS DEL USUARIO
   async getUserOrders() {
-    console.log('🚀 OrderService - Iniciando getUserOrders');
     try {
       const result = await this.makeRequest('/orders', {
         method: 'GET',
       });
-      console.log('✅ OrderService - getUserOrders exitoso:', result);
       return result;
     } catch (error) {
       console.error('❌ OrderService - Error en getUserOrders:', error);
