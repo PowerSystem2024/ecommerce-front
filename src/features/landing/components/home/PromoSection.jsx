@@ -1,4 +1,5 @@
 import { motion } from "framer-motion"
+import { Link } from 'react-router-dom'
 
 const colecciones = [
   {
@@ -12,7 +13,6 @@ const colecciones = [
     href: '/categoria/hombre',
     imageSrc: 'https://i.pinimg.com/736x/04/0f/20/040f2051d3493a9416cc2ee04948b413.jpg',
     imageAlt: 'Hombre con look urbano y casual',
-
   },
   {
     name: 'Accesorios',
@@ -44,6 +44,9 @@ const itemVariants = {
     }
   }
 }
+
+// Crear motion components con Link
+const MotionLink = motion(Link);
 
 export default function PromoSection() {
   return (
@@ -93,17 +96,17 @@ export default function PromoSection() {
             transition={{ duration: 1, delay: 0.2 }}
           >
             <motion.h1 
-              className="text-5xl font-['Orbitron'] font-light tracking-widest text-white sm:text-7xl md:text-8xl mb-8 text-center w-full uppercase"
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.4 }}
-            >
-              <div className="flex flex-col items-center justify-center">
-                <span>Estilo que</span>
-                <span className="font-bold bg-gradient-to-r from-[#E11D74] to-[#8B5CF6] bg-clip-text text-transparent mt-4">
-                  Transforma
-                </span>
-              </div>
+            className="text-5xl font-['Orbitron'] font-light tracking-widest text-white sm:text-7xl md:text-8xl mb-8 text-center w-full uppercase"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+          >
+            <div className="flex flex-row items-center justify-center gap-4">
+            <span>fatal</span>
+            <span className="font-bold bg-gradient-to-r from-[#E11D74] to-[#8B5CF6] bg-clip-text text-transparent">
+            store
+            </span>
+            </div>
             </motion.h1>
             
             <motion.p 
@@ -138,8 +141,8 @@ export default function PromoSection() {
               variants={itemVariants}
               className="group relative"
             >
-              <motion.a
-                href={coleccion.href}
+              <MotionLink
+                to={coleccion.href}
                 className="block relative h-96 rounded-3xl bg-[#1A1A1A] shadow-2xl overflow-hidden sm:aspect-4/5 sm:h-auto border border-[#333333]"
                 whileHover={{ y: -8, scale: 1.02 }}
                 transition={{ type: "spring", stiffness: 300, damping: 20 }}
@@ -171,15 +174,6 @@ export default function PromoSection() {
                 {/* Content */}
                 <div className="absolute inset-0 flex items-end rounded-3xl p-8">
                   <div className="w-full text-center flex flex-col items-center justify-end">
-                    <motion.p 
-                      className="text-base text-[#E11D74] mb-3 font-medium w-full tracking-wide"
-                      initial={{ opacity: 0, y: 10 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.2 }}
-                    >
-                      {coleccion.description}
-                    </motion.p>
-                    
                     <motion.h3 
                       className="text-3xl font-['Orbitron'] font-bold text-white mb-6 group-hover:text-[#E11D74] transition-colors duration-300 w-full uppercase tracking-wider"
                       initial={{ opacity: 0, y: 10 }}
@@ -221,38 +215,30 @@ export default function PromoSection() {
                 <div className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500">
                   <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-[#E11D74] to-[#8B5CF6] opacity-20 blur-sm"></div>
                 </div>
-              </motion.a>
+              </MotionLink>
             </motion.div>
           ))}
         </motion.div>
 
-        {/* Bottom Section */}
+        {/* Bottom Section - Botón de texto simple */}
         <motion.div 
-          className="text-center mt-20 px-6 flex flex-col items-center justify-center"
+          className="text-center mt-16 mb-12"
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ delay: 0.8, duration: 0.8 }}
+          transition={{ delay: 0.6, duration: 0.8 }}
         >
-          <p className="text-[#CFCFCF] mb-8 text-xl w-full">
-            ¿No encontrás lo que buscás?
-          </p>
-          <motion.a
-            href="/catalogo"
-            className="inline-flex items-center gap-3 text-[#E11D74] hover:text-[#8B5CF6] font-semibold text-xl transition-colors duration-300 justify-center group"
-            whileHover={{ x: 5 }}
-            transition={{ type: "spring", stiffness: 300, damping: 20 }}
+          <MotionLink
+            to="/shop"
+            className="inline-flex items-center justify-center gap-3 text-[#E11D74] no-underline font-orbitron text-xl font-bold hover:text-[#8B5CF6] transition-colors duration-300 tracking-wide cursor-pointer"
+            whileHover={{ scale: 1.05, y: -2 }}
+            whileTap={{ scale: 0.98 }}
           >
-            Ver catálogo completo
-            <motion.div
-              className="w-6 h-6 rounded-full bg-[#E11D74]/20 flex items-center justify-center group-hover:bg-[#E11D74]/30 transition-colors duration-300"
-              whileHover={{ scale: 1.1 }}
-            >
-              <svg className="w-4 h-4 text-[#E11D74] transform group-hover:translate-x-0.5 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-              </svg>
-            </motion.div>
-          </motion.a>
+            Comenzar a Comprar
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+            </svg>
+          </MotionLink>
         </motion.div>
       </section>
 

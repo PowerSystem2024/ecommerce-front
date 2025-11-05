@@ -1,125 +1,45 @@
-import React, { useState } from "react";
+import { motion } from "framer-motion";
 
-export default function Footer() {
-  const [email, setEmail] = useState("");
-  const [status, setStatus] = useState(null);
-
-  function handleSubscribe(e) {
-    e.preventDefault();
-    const valid = /\S+@\S+\.\S+/.test(email);
-    if (!valid) {
-      setStatus("error");
-      return;
-    }
-    setStatus("ok");
-    setEmail("");
-    setTimeout(() => setStatus(null), 3000);
-  }
-
+const Footer = () => {
   return (
-    <footer className="bg-white text-gray-700 border-t border-gray-200 shadow-inner">
-      <div className="max-w-7xl mx-auto px-6 py-14">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
-          
-          {/* Branding */}
-          <div className="space-y-4">
-            <a href="/" className="inline-flex items-center gap-3">
-              <div className="h-10 w-10 rounded-md bg-gradient-to-r from-rose-500 to-pink-500 flex items-center justify-center text-white font-bold shadow">
-                R
-              </div>
-              <div>
-                <div className="font-semibold text-gray-900 text-lg">Ropa Moderna</div>
-                <div className="text-sm text-gray-500">Calidad y estilo</div>
-              </div>
-            </a>
-
-            <p className="text-sm text-gray-500 leading-relaxed">
-              Moda responsable. Productos seleccionados y envío rápido.
-            </p>
-
-            <div className="flex items-center gap-3 mt-3">
-              {["instagram", "facebook", "twitter"].map((icon) => (
-                <a
-                  key={icon}
-                  href="#"
-                  aria-label={icon}
-                  className="p-2 bg-gray-100 rounded-md hover:bg-rose-100 transition"
-                >
-                  <i className={`bi bi-${icon} text-gray-600 hover:text-rose-500`}></i>
-                </a>
-              ))}
+    <footer className="bg-[#0F0F10] border-t border-gray-800">
+      <div className="mx-auto max-w-7xl px-6 py-12 sm:px-8 lg:px-12">
+        {/* Main Footer Content - Centrados con 2cm de separación */}
+        <div className="flex flex-col md:flex-row items-center justify-center gap-60 mb-8">
+          {/* Brand */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="flex items-center gap-4"
+          >
+            <div className="h-16 w-16 rounded-xl bg-gradient-to-r from-[#E11D74] to-[#8B5CF6] flex items-center justify-center text-white font-orbitron font-bold shadow-lg">
+              FS
             </div>
-          </div>
+            <span className="font-orbitron text-white text-2xl tracking-wider uppercase">
+              Fatal Store
+            </span>
+          </motion.div>
 
-          {/* Links Tienda */}
-          <div>
-            <h4 className="text-gray-900 font-semibold mb-4 uppercase text-sm tracking-wide">
-              Tienda
-            </h4>
-            <ul className="space-y-2 text-sm text-gray-600">
-              <li><a href="/categoria/hombre" className="hover:text-rose-500 transition">Hombre</a></li>
-              <li><a href="/categoria/mujer" className="hover:text-rose-500 transition">Mujer</a></li>
-              <li><a href="/categoria/accesorios" className="hover:text-rose-500 transition">Accesorios</a></li>
-              <li><a href="/ofertas" className="hover:text-rose-500 transition">Ofertas</a></li>
-            </ul>
-          </div>
-
-          {/* Atención */}
-          <div>
-            <h4 className="text-gray-900 font-semibold mb-4 uppercase text-sm tracking-wide">
-              Atención
-            </h4>
-            <ul className="space-y-2 text-sm text-gray-600">
-              <li><a href="/preguntas" className="hover:text-rose-500 transition">Preguntas frecuentes</a></li>
-              <li><a href="/envios" className="hover:text-rose-500 transition">Envíos y devoluciones</a></li>
-              <li><a href="/contacto" className="hover:text-rose-500 transition">Contacto</a></li>
-              <li><a href="/tiendas" className="hover:text-rose-500 transition">Nuestras tiendas</a></li>
-            </ul>
-          </div>
-
-          {/* Newsletter */}
-          <div>
-            <h4 className="text-gray-900 font-semibold mb-4 uppercase text-sm tracking-wide">
-              Newsletter
-            </h4>
-            <p className="text-sm text-gray-600 mb-4">
-              Recibí novedades, lanzamientos y descuentos exclusivos.
-            </p>
-            <form onSubmit={handleSubscribe} className="flex gap-2">
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="tu@correo.com"
-                className="flex-1 px-3 py-2 rounded-md border border-gray-300 focus:ring-2 focus:ring-rose-400 focus:outline-none"
-                required
-              />
-              <button
-                type="submit"
-                className="px-4 py-2 bg-rose-500 hover:bg-rose-600 text-white rounded-md shadow-md transition"
-              >
-                Suscribir
-              </button>
-            </form>
-
-            {status === "ok" && (
-              <p className="mt-3 text-sm text-emerald-500">¡Gracias! Te enviamos un correo.</p>
-            )}
-            {status === "error" && (
-              <p className="mt-3 text-sm text-rose-500">Email inválido.</p>
-            )}
+          {/* Contact Info */}
+          <div className="text-center md:text-left">
+            <div className="space-y-2 text-rajdhani text-[#CFCFCF]">
+              <p>📧 info@fatalstore.com</p>
+              <p>📱 +54 11 1234-5678</p>
+              <p>📍 Buenos Aires, Argentina</p>
+            </div>
           </div>
         </div>
 
-        {/* Copyright */}
-        <div className="mt-10 border-t border-gray-200 pt-6 flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-gray-500">
-          <p>© {new Date().getFullYear()} Ropa Moderna. Todos los derechos reservados.</p>
-          <div className="flex items-center gap-6">
-            <a href="/politica-privacidad" className="hover:text-gray-700 transition">Política de privacidad</a>
-            <a href="/terminos" className="hover:text-gray-700 transition">Términos</a>
-          </div>
+        {/* Bottom Bar - Centrado */}
+        <div className="border-t border-gray-800 pt-8 text-center">
+          <p className="text-rajdhani text-[#CFCFCF] text-sm">
+            © 2024 Fatal Store. Todos los derechos reservados.
+          </p>
         </div>
       </div>
     </footer>
   );
-}
+};
+
+export default Footer;
