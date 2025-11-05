@@ -1,5 +1,6 @@
 export { NavbarUser } from './NavbarUser';
-export { UserLayout } from './UserLayout';
+export { ShopLayout } from './ShopLayout';
 export { AdminLayout } from './AdminLayout';
 export { NavbarAdmin } from './NavbarAdmin';
+export { default as AuthNavbar } from './AuthNavbar';
 
