@@ -3,52 +3,92 @@ import { motion } from 'framer-motion'
 
 const equipo = [
   {
-    name: 'María González',
-    role: 'Diseñadora Senior',
-    imageUrl: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?auto=format&fit=crop&w=400&q=80',
-    xUrl: '#',
-    linkedinUrl: '#',
-    description: 'Especialista en diseño de moda y tendencias'
+    name: 'Jorge Mathez',
+    role: 'Desarrollador Full Stack',
+    imageUrl: '/CardsPic/jorge.jpeg',
+    githubUrl: 'https://github.com/Colifaa',
+    linkedinUrl: 'https://www.linkedin.com/in/jorge-mathez/',
+    description: 'Especialista en desarrollo backend y frontend'
   },
   {
-    name: 'Carlos Mendoza',
-    role: 'Diseñador Principal',
-    imageUrl: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=400&q=80',
-    xUrl: '#',
-    linkedinUrl: '#',
-    description: 'Experto en estilo urbano y casual'
+    name: 'Lilith Chacon',
+    role: 'Diseñadora UX/UI',
+    imageUrl: '/CardsPic/lilieth.jpeg',
+    githubUrl: 'https://github.com/lilieth10',
+    linkedinUrl: 'https://www.linkedin.com/in/lilieth-chac%C3%B3n/',
+    description: 'Experta en diseño centrado en el usuario'
   },
   {
-    name: 'Ana Rodríguez',
-    role: 'VP, Experiencia de Usuario',
-    imageUrl: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=400&q=80',
-    xUrl: '#',
-    linkedinUrl: '#',
-    description: 'Líder en estrategia de marca y UX'
+    name: 'Nicolás Cruzate',
+    role: 'Desarrollador Backend',
+    imageUrl: '/CardsPic/nicolas.jpeg',
+    githubUrl: 'https://github.com/NicooCruzate',
+    linkedinUrl: 'https://www.linkedin.com/in/nicol%C3%A1s-cruzate-12a6a0355/',
+    description: 'Especialista en arquitectura de servidores'
   },
   {
-    name: 'Laura Martín',
-    role: 'VP, Recursos Humanos',
-    imageUrl: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=400&q=80',
-    xUrl: '#',
-    linkedinUrl: '#',
-    description: 'Especialista en desarrollo de talento'
-  },
-  {
-    name: 'Diego Fernández',
-    role: 'Desarrollador Senior',
-    imageUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80',
-    xUrl: '#',
-    linkedinUrl: '#',
+    name: 'Matías Fuentes',
+    role: 'Desarrollador Frontend',
+    imageUrl: '/CardsPic/matias.jpeg',
+    githubUrl: 'https://github.com/MatiFuentess',
+    linkedinUrl: 'https://www.linkedin.com/in/matias-fuentes-490420209/',
     description: 'Experto en tecnologías web modernas'
   },
   {
-    name: 'Sofía Bell',
-    role: 'Copywriter Junior',
-    imageUrl: 'https://images.unsplash.com/photo-1509783236416-c9ad59bae472?auto=format&fit=crop&w=400&q=80',
-    xUrl: '#',
-    linkedinUrl: '#',
-    description: 'Especialista en contenido y comunicación'
+    name: 'Luca Perez',
+    role: 'Desarrollador Full Stack',
+    imageUrl: '/CardsPic/luca.png',
+    githubUrl: 'https://github.com/lucaperez123',
+    linkedinUrl: 'https://www.linkedin.com/in/luca-mariano-perez-189a53248/',
+    description: 'Especialista en soluciones integrales'
+  },
+  {
+    name: 'Morena Ruiz',
+    role: 'Diseñadora UI',
+    imageUrl: '/CardsPic/morena.jpeg',
+    githubUrl: 'https://github.com/moreetf',
+    linkedinUrl: 'https://www.linkedin.com/in/zoemorenaruiz/',
+    description: 'Especialista en interfaces modernas y accesibles'
+  },
+  {
+    name: 'Andrés Domínguez',
+    role: 'Desarrollador Backend',
+    imageUrl: '/CardsPic/andres.jpeg',
+    githubUrl: 'https://github.com/AndyDmz',
+    linkedinUrl: 'https://www.linkedin.com/in/andr%C3%A9snicol%C3%A1sdom%C3%ADnguezredondo/',
+    description: 'Experto en APIs y bases de datos'
+  },
+  {
+    name: 'Camila Álvarez',
+    role: 'Desarrolladora Frontend',
+    imageUrl: '/CardsPic/camila.jpeg',
+    githubUrl: 'https://github.com/CamiAnz',
+    linkedinUrl: 'https://linkedin.com',
+    description: 'Especialista en React y experiencia de usuario'
+  },
+  {
+    name: 'Guillermo Kondratiuk',
+    role: 'Desarrollador Full Stack',
+    imageUrl: '/CardsPic/guillermo.jpeg',
+    githubUrl: 'https://github.com/GKondratiuk',
+    linkedinUrl: 'https://www.linkedin.com/in/gkotiuk/',
+    description: 'Experto en desarrollo de aplicaciones web'
+  },
+  {
+    name: 'Santiago Navarrete',
+    role: 'Desarrollador Backend',
+    imageUrl: '/CardsPic/santiago.png',
+    githubUrl: 'https://github.com/SantiagoNavarrete',
+    linkedinUrl: 'https://www.linkedin.com/in/santiago-navarrete-romero-648610302/',
+    description: 'Especialista en optimización y performance'
+  },
+  {
+    name: 'Francisco Valdez',
+    role: 'Desarrollador Frontend',
+    imageUrl: '/CardsPic/francisco.png',
+    githubUrl: 'https://github.com/archiiPOWA',
+    linkedinUrl: 'https://linkedin.com',
+    description: 'Experto en interfaces interactivas y responsivas'
   },
 ]
 
@@ -106,8 +146,7 @@ export default function TeamSection() {
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: 0.4 }}
           >
-            Somos un grupo dinámico de profesionales apasionados por la moda y comprometidos 
-            con brindar la mejor experiencia a nuestros clientes.
+            Somos estudiantes de la carrera de Programación de la UTN dedicados a crear soluciones digitales completas, abarcando tanto el desarrollo backend como frontend. Nos enfocamos en ofrecer productos modernos, accesibles y centrados en el usuario, aplicando buenas prácticas y un enfoque profesional para garantizar resultados de calidad en cada proyecto.
           </motion.p>
         </motion.div>
 
@@ -178,20 +217,24 @@ export default function TeamSection() {
                   >
                     <li>
                       <motion.a 
-                        href={person.xUrl} 
+                        href={person.githubUrl} 
+                        target="_blank"
+                        rel="noopener noreferrer"
                         className="text-gray-400 hover:text-rose-500 transition-colors duration-300 p-2 rounded-full hover:bg-rose-50"
                         whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.95 }}
                       >
-                        <span className="sr-only">X (Twitter)</span>
-                        <svg fill="currentColor" viewBox="0 0 20 20" aria-hidden="true" className="w-5 h-5">
-                          <path d="M11.4678 8.77491L17.2961 2H15.915L10.8543 7.88256L6.81232 2H2.15039L8.26263 10.8955L2.15039 18H3.53159L8.87581 11.7878L13.1444 18H17.8063L11.4675 8.77491H11.4678ZM9.57608 10.9738L8.95678 10.0881L4.02925 3.03974H6.15068L10.1273 8.72795L10.7466 9.61374L15.9156 17.0075H13.7942L9.57608 10.9742V10.9738Z" />
+                        <span className="sr-only">GitHub</span>
+                        <svg fill="currentColor" viewBox="0 0 24 24" aria-hidden="true" className="w-5 h-5">
+                          <path fillRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482C19.138 20.197 22 16.425 22 12.017 22 6.484 17.522 2 12 2z" clipRule="evenodd" />
                         </svg>
                       </motion.a>
                     </li>
                     <li>
                       <motion.a 
                         href={person.linkedinUrl} 
+                        target="_blank"
+                        rel="noopener noreferrer"
                         className="text-gray-400 hover:text-rose-500 transition-colors duration-300 p-2 rounded-full hover:bg-rose-50"
                         whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.95 }}
