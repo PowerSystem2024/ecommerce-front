@@ -14,12 +14,26 @@ export default function LoginPage() {
 
   // Redirigir si ya está autenticado
   useEffect(() => {
+    // Verificar si hay un token activo
+    const token = localStorage.getItem('token');
+    
+    // No redirigir si no hay token
+    if (!token) {
+      return;
+    }
+    
+    // Solo redirigir si hay un usuario autenticado
     if (isAuthenticated && user) {
-      if (user.role === 'admin') {
-        navigate('/admin', { replace: true });
-      } else {
-        navigate('/shop', { replace: true });
-      }
+      // Pequeño retraso para asegurar que todo esté listo
+      const timer = setTimeout(() => {
+        if (user.role === 'admin') {
+          navigate('/admin', { replace: true });
+        } else {
+          navigate('/shop', { replace: true });
+        }
+      }, 100);
+      
+      return () => clearTimeout(timer);
     }
   }, [isAuthenticated, user, navigate]);
 

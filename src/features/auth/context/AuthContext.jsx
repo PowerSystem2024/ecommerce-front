@@ -81,11 +81,34 @@ export function AuthProvider({ children }) {
   };
 
   const logout = async () => {
-    try { await authService.logout(); } catch (_e) {}
-    authService.removeToken();
-    localStorage.removeItem('userData');
-    setUser(null);
-    setIsAuthenticated(false);
+    try {
+      // Limpiar el estado local primero
+      setUser(null);
+      setIsAuthenticated(false);
+      
+      // Limpiar almacenamiento local
+      authService.removeToken();
+      localStorage.removeItem('userData');
+      
+      // Hacer logout en el servidor
+      await authService.logout();
+      
+      // Limpiar cookies accesibles
+      document.cookie.split(';').forEach(cookie => {
+        const [name] = cookie.trim().split('=');
+        document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+      });
+      
+      // Forzar recarga para limpiar todo el estado
+      window.location.href = '/';
+      
+    } catch (_error) {
+      // Forzar limpieza y recarga en caso de error
+      authService.removeToken();
+      localStorage.clear();
+      sessionStorage.clear();
+      window.location.href = '/';
+    }
   };
 
   const register = async (data) => {
