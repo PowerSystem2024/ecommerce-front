@@ -6,7 +6,7 @@ export default function CartList() {
   const { items } = useCart();
 
   if (!items || items.length === 0) {
-    return <div className="p-6 text-center text-gray-600">Tu carrito está vacío.</div>;
+    return <div className="p-6 text-center text-[#CFCFCF] font-['Rajdhani',sans-serif]">Tu carrito está vacío.</div>;
   }
 
   return (

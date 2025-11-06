@@ -133,6 +133,21 @@ class OrderService {
     });
   }
 
+  // CREAR UNA NUEVA ORDEN DESDE EL CARRITO
+  async createOrder(orderData) {
+    return this.makeRequest('/orders', {
+      method: 'POST',
+      body: JSON.stringify(orderData),
+    });
+  }
+
+  // CREAR PAGO DE MERCADO PAGO PARA UNA ORDEN
+  async createPayment(orderId) {
+    return this.makeRequest(`/orders/${orderId}/payment`, {
+      method: 'POST',
+    });
+  }
+
   // OBTENER TOKEN DEL LOCALSTORAGE
   getToken() {
     return localStorage.getItem('authToken');

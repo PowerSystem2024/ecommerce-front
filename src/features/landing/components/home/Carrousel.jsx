@@ -80,7 +80,7 @@ export default function Carrousel() {
         {images.map((src, i) => (
           <motion.div
             key={i}
-            className="flex-shrink-0 w-screen h-full relative bg-gray-900"
+            className="shrink-0 w-screen h-full relative bg-gray-900"
             style={{ width: "100vw" }}
             initial={{ scale: 1.1 }}
             animate={{ scale: i === current ? 1 : 1.05 }}

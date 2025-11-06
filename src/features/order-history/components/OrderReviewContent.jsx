@@ -282,9 +282,13 @@ export default function OrderReviewContent() {
   if (loading) {
     return (
       <div className="max-w-5xl mx-auto p-6">
-        <div className="bg-white rounded-2xl border border-gray-200 p-10 text-center shadow-sm">
-          <div className="w-10 h-10 border-4 border-gray-300 border-t-[#E11D74] rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-gray-600">Cargando pedido...</p>
+        <div className="backdrop-blur-sm rounded-2xl border border-white/10 p-10 text-center shadow-sm"
+          style={{
+            background: "linear-gradient(135deg, rgba(26, 26, 27, 0.95) 0%, rgba(15, 15, 16, 0.98) 50%, rgba(30, 10, 25, 0.95) 100%)"
+          }}
+        >
+          <div className="w-10 h-10 border-4 border-[#CFCFCF]/30 border-t-[#E11D74] rounded-full animate-spin mx-auto mb-4" />
+          <p className="text-[#CFCFCF] font-['Rajdhani',sans-serif]">Cargando pedido...</p>
         </div>
       </div>
     );
@@ -293,9 +297,13 @@ export default function OrderReviewContent() {
   if (error || !order) {
     return (
       <div className="max-w-5xl mx-auto p-6">
-        <div className="bg-white rounded-2xl border border-red-200 p-10 text-center shadow-sm">
-          <p className="text-red-600 font-semibold mb-4">{error || 'No se encontró el pedido'}</p>
-          <button onClick={() => navigate('/order-history')} className="px-5 py-2 rounded-lg bg-[#0F0F10] text-white hover:bg-[#E11D74] transition">Volver a Mis Pedidos</button>
+        <div className="backdrop-blur-sm rounded-2xl border border-red-500/50 p-10 text-center shadow-sm"
+          style={{
+            background: "linear-gradient(135deg, rgba(26, 26, 27, 0.95) 0%, rgba(15, 15, 16, 0.98) 50%, rgba(30, 10, 25, 0.95) 100%)"
+          }}
+        >
+          <p className="text-red-200 font-semibold mb-4 font-['Quantico',sans-serif] uppercase">{error || 'No se encontró el pedido'}</p>
+          <button onClick={() => navigate('/order-history')} className="px-5 py-2 rounded-lg bg-gradient-to-r from-[#E11D74] to-[#6D28D9] text-white hover:from-[#6D28D9] hover:to-[#8B5CF6] transition font-['Quantico',sans-serif] uppercase">Volver a Mis Pedidos</button>
         </div>
       </div>
     );
@@ -309,15 +317,19 @@ export default function OrderReviewContent() {
   return (
     <div className="max-w-5xl mx-auto p-6">
       <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="mb-6">
-        <h1 className="text-3xl font-bold font-['Orbitron',_sans-serif] text-[#0F0F10]">Escribir reseñas</h1>
-        <p className="text-[#2A2A2A] font-['Rajdhani',_sans-serif]">Pedido #{order.id || order._id}</p>
+        <h1 className="text-3xl font-bold font-['Orbitron',sans-serif] text-[#E11D74] uppercase tracking-wide">Escribir reseñas</h1>
+        <p className="text-[#CFCFCF] font-['Rajdhani',sans-serif]">Pedido #{order.id || order._id}</p>
       </motion.div>
 
       <div className="space-y-4">
         {orderProducts.length === 0 ? (
-          <div className="bg-white rounded-2xl border border-gray-200 p-10 text-center">
-            <p className="text-gray-600 mb-2">No hay productos en este pedido.</p>
-            <p className="text-sm text-gray-400">
+          <div className="backdrop-blur-sm rounded-2xl border border-white/10 p-10 text-center"
+            style={{
+              background: "linear-gradient(135deg, rgba(26, 26, 27, 0.9) 0%, rgba(15, 15, 16, 0.95) 50%, rgba(30, 10, 25, 0.9) 100%)"
+            }}
+          >
+            <p className="text-[#CFCFCF] mb-2 font-['Rajdhani',sans-serif]">No hay productos en este pedido.</p>
+            <p className="text-sm text-[#CFCFCF]/70 font-['Rajdhani',sans-serif]">
               {order.products === undefined && order.items === undefined 
                 ? 'Los productos no están disponibles en la respuesta del servidor'
                 : 'Este pedido no contiene productos para reseñar'}
@@ -347,9 +359,13 @@ export default function OrderReviewContent() {
                 initial={{ opacity: 0, y: 8 }} 
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: idx * 0.1 }}
-                className={`bg-white rounded-2xl border p-6 shadow-sm hover:shadow-md transition-shadow ${
-                  isSubmitted ? 'border-green-300 bg-green-50/30' : 'border-gray-200'
-                }`}
+                className="backdrop-blur-sm rounded-2xl border p-6 shadow-sm hover:shadow-md transition-shadow"
+                style={{
+                  background: isSubmitted 
+                    ? "linear-gradient(135deg, rgba(15, 26, 15, 0.9) 0%, rgba(26, 26, 27, 0.95) 50%, rgba(15, 26, 15, 0.9) 100%)"
+                    : "linear-gradient(135deg, rgba(26, 26, 27, 0.9) 0%, rgba(15, 15, 16, 0.95) 50%, rgba(30, 10, 25, 0.9) 100%)",
+                  borderColor: isSubmitted ? 'rgba(34, 197, 94, 0.3)' : 'rgba(255, 255, 255, 0.1)'
+                }}
               >
                 <div className="flex items-start gap-6">
                   {/* Imagen del producto */}
@@ -358,18 +374,21 @@ export default function OrderReviewContent() {
                       <img
                         src={productImage}
                         alt={productName}
-                        className="w-24 h-24 object-cover rounded-lg border border-gray-200"
+                        className="w-24 h-24 object-cover rounded-lg border border-white/20"
+                        style={{
+                          background: "linear-gradient(135deg, #0F0F10 0%, #1A0A15 100%)"
+                        }}
                       />
                     </div>
                   )}
                   
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between mb-1">
-                      <h3 className="text-lg font-semibold text-[#0F0F10] font-['Quantico',_sans-serif]">
+                      <h3 className="text-lg font-semibold text-[#E11D74] font-['Quantico',sans-serif]">
                         {productName}
                       </h3>
                       {isSubmitted && (
-                        <span className="inline-flex items-center space-x-1 px-3 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium">
+                        <span className="inline-flex items-center space-x-1 px-3 py-1 bg-green-900/30 text-green-200 border border-green-500/50 rounded-full text-xs font-medium font-['Quantico',sans-serif]">
                           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                           </svg>
@@ -379,7 +398,7 @@ export default function OrderReviewContent() {
                     </div>
                     
                     {productDescription && (
-                      <p className="text-sm text-gray-600 mb-3 line-clamp-2 font-['Rajdhani',_sans-serif]">
+                      <p className="text-sm text-[#CFCFCF] mb-3 line-clamp-2 font-['Rajdhani',sans-serif]">
                         {productDescription}
                       </p>
                     )}
@@ -387,8 +406,8 @@ export default function OrderReviewContent() {
                     {!isSubmitted || isEditing ? (
                       <>
                         <div className="mb-3">
-                          <label className="block text-sm font-medium text-gray-700 mb-2 font-['Rajdhani',_sans-serif]">
-                            Calificación: <span className="text-red-500">*</span>
+                          <label className="block text-sm font-medium text-[#E11D74] mb-2 font-['Rajdhani',sans-serif] uppercase tracking-wide">
+                            Calificación: <span className="text-red-400">*</span>
                           </label>
                           <RatingStars
                             rating={form.rating}
@@ -399,7 +418,7 @@ export default function OrderReviewContent() {
                         </div>
                         
                         <div className="mb-4">
-                          <label className="block text-sm font-medium text-gray-700 mb-2 font-['Rajdhani',_sans-serif]">
+                          <label className="block text-sm font-medium text-[#E11D74] mb-2 font-['Rajdhani',sans-serif] uppercase tracking-wide">
                             Comentario (opcional):
                           </label>
                           <textarea
@@ -407,7 +426,7 @@ export default function OrderReviewContent() {
                             onChange={(e) => handleChange(productId, 'comment', e.target.value)}
                             rows={3}
                             placeholder="Escribí tu experiencia con el producto..."
-                            className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-[#E11D74]/30 focus:border-[#E11D74] font-['Rajdhani',_sans-serif] resize-none"
+                            className="w-full border border-white/20 rounded-lg p-3 focus:ring-2 focus:ring-[#E11D74]/30 focus:border-[#E11D74] font-['Rajdhani',sans-serif] resize-none bg-[#0F0F10]/90 backdrop-blur-sm text-[#CFCFCF] placeholder:text-[#CFCFCF]/50"
                           />
                         </div>
                         
@@ -416,7 +435,7 @@ export default function OrderReviewContent() {
                             <button
                               onClick={() => handleCancelEdit(productId)}
                               disabled={isSaving}
-                              className="px-4 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 transition font-['Quantico',_sans-serif] disabled:opacity-50"
+                              className="px-4 py-2 rounded-lg border border-white/20 text-[#CFCFCF] bg-[#0F0F10]/80 hover:bg-gradient-to-r hover:from-[#E11D74] hover:to-[#6D28D9] hover:text-white hover:border-transparent transition font-['Quantico',sans-serif] uppercase disabled:opacity-50"
                             >
                               Cancelar
                             </button>
@@ -424,10 +443,10 @@ export default function OrderReviewContent() {
                           <button
                             disabled={isSaving || !form.rating || form.rating === 0}
                             onClick={() => handleSubmit(productId)}
-                            className={`px-6 py-2 rounded-lg text-white font-['Quantico',_sans-serif] transition ${
+                            className={`px-6 py-2 rounded-lg text-white font-['Quantico',sans-serif] transition uppercase ${
                               isSaving || !form.rating || form.rating === 0
-                                ? 'bg-[#2A2A2A] cursor-not-allowed opacity-50'
-                                : 'bg-[#0F0F10] hover:bg-[#E11D74] hover:shadow-md'
+                                ? 'bg-[#0F0F10]/30 cursor-not-allowed opacity-50'
+                                : 'bg-gradient-to-r from-[#E11D74] to-[#6D28D9] hover:from-[#6D28D9] hover:to-[#8B5CF6] hover:shadow-md'
                             }`}
                           >
                             {isSaving ? 'Enviando...' : (isEditing ? 'Guardar cambios' : 'Enviar reseña')}
@@ -436,11 +455,15 @@ export default function OrderReviewContent() {
                       </>
                     ) : (
                       <div className="space-y-3">
-                        <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                        <div className="backdrop-blur-sm border border-green-500/30 rounded-lg p-4"
+                          style={{
+                            background: "linear-gradient(135deg, rgba(15, 26, 15, 0.7) 0%, rgba(26, 26, 27, 0.9) 50%, rgba(15, 26, 15, 0.7) 100%)"
+                          }}
+                        >
                           <div className="flex items-start justify-between mb-2">
                             <div className="flex items-center space-x-2">
                               <RatingStars rating={form.rating} editable={false} size="md" />
-                              <span className="text-sm text-gray-600 font-['Rajdhani',_sans-serif]">
+                              <span className="text-sm text-[#CFCFCF] font-['Rajdhani',sans-serif]">
                                 Tu calificación
                               </span>
                             </div>
@@ -448,7 +471,7 @@ export default function OrderReviewContent() {
                               <button
                                 onClick={() => handleEdit(productId)}
                                 disabled={isSaving}
-                                className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition disabled:opacity-50"
+                                className="p-2 text-[#6D28D9] hover:bg-[#6D28D9]/20 rounded-lg transition disabled:opacity-50"
                                 title="Editar reseña"
                               >
                                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -458,7 +481,7 @@ export default function OrderReviewContent() {
                               <button
                                 onClick={() => handleDelete(productId)}
                                 disabled={isSaving}
-                                className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition disabled:opacity-50"
+                                className="p-2 text-red-300 hover:bg-red-900/30 rounded-lg transition disabled:opacity-50"
                                 title="Eliminar reseña"
                               >
                                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -468,7 +491,7 @@ export default function OrderReviewContent() {
                             </div>
                           </div>
                           {form.comment && (
-                            <p className="text-gray-700 text-sm font-['Rajdhani',_sans-serif] mt-2">
+                            <p className="text-[#CFCFCF] text-sm font-['Rajdhani',sans-serif] mt-2">
                               {form.comment}
                             </p>
                           )}
@@ -484,7 +507,7 @@ export default function OrderReviewContent() {
       </div>
 
       <div className="mt-6">
-        <button onClick={() => navigate('/order-history')} className="px-5 py-2 rounded-lg border border-gray-300 hover:bg-gray-50 transition font-['Rajdhani',_sans-serif]">Volver a Mis Pedidos</button>
+        <button onClick={() => navigate('/order-history')} className="px-5 py-2 rounded-lg border border-white/20 text-[#CFCFCF] bg-[#0F0F10]/80 hover:bg-gradient-to-r hover:from-[#E11D74] hover:to-[#6D28D9] hover:text-white hover:border-transparent transition font-['Quantico',sans-serif] uppercase">Volver a Mis Pedidos</button>
       </div>
     </div>
   );

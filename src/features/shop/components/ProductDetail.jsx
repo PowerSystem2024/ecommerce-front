@@ -151,7 +151,11 @@ export default function ProductDetail({ product, open, onClose }) {
             transition
             className="flex w-full transform text-left text-base transition data-closed:translate-y-4 data-closed:opacity-0 data-enter:duration-300 data-enter:ease-out data-leave:duration-200 data-leave:ease-in md:my-8 md:max-w-2xl md:px-4 data-closed:md:translate-y-0 data-closed:md:scale-95 lg:max-w-4xl"
           >
-            <div className="relative flex w-full flex-col max-h-[90vh] overflow-hidden bg-white px-4 pt-14 pb-8 shadow-2xl sm:px-6 sm:pt-8 md:p-6 lg:p-8 rounded-2xl">
+            <div className="relative flex w-full flex-col max-h-[90vh] overflow-hidden backdrop-blur-md px-4 pt-14 pb-8 shadow-2xl sm:px-6 sm:pt-8 md:p-6 lg:p-8 rounded-2xl border border-white/10"
+              style={{
+                background: "linear-gradient(135deg, rgba(26, 26, 27, 0.95) 0%, rgba(15, 15, 16, 0.98) 50%, rgba(30, 10, 25, 0.95) 100%)"
+              }}
+            >
               <button
                 type="button"
                 onClick={onClose}
@@ -169,10 +173,13 @@ export default function ProductDetail({ product, open, onClose }) {
                   transition={{ duration: 0.3 }}
                   alt={product.name}
                   src={product.image}
-                  className="aspect-2/3 w-full rounded-lg bg-gray-100 object-cover sm:col-span-4 lg:col-span-5 shadow-lg"
+                  className="aspect-2/3 w-full rounded-lg object-cover sm:col-span-4 lg:col-span-5 shadow-lg"
+                  style={{
+                    background: "linear-gradient(135deg, #0F0F10 0%, #1A0A15 100%)"
+                  }}
                 />
                 <div className="sm:col-span-8 lg:col-span-7">
-                  <h2 className="text-2xl font-bold text-[#0F0F10] sm:pr-12 font-['Quantico',_sans-serif]">
+                  <h2 className="text-2xl font-bold text-[#E11D74] sm:pr-12 font-['Quantico',_sans-serif] uppercase tracking-wide">
                     {product.name}
                   </h2>
 
@@ -182,18 +189,18 @@ export default function ProductDetail({ product, open, onClose }) {
                     </h3>
 
                     <div className="flex items-center gap-3 mb-2">
-                      <p className="text-3xl font-bold text-[#0F0F10] font-['Orbitron',_sans-serif]">
+                      <p className="text-3xl font-bold text-[#E11D74] font-['Orbitron',_sans-serif]">
                         ${product.price.toLocaleString()}
                       </p>
                       {product.originalPrice && (
-                        <span className="text-lg text-[#2A2A2A] line-through font-['Rajdhani',_sans-serif]">
+                        <span className="text-lg text-[#CFCFCF]/60 line-through font-['Rajdhani',_sans-serif]">
                           ${product.originalPrice.toLocaleString()}
                         </span>
                       )}
                     </div>
 
                     {/* Descripción */}
-                    <p className="text-[#2A2A2A] font-['Rajdhani',_sans-serif] mb-4">
+                    <p className="text-[#CFCFCF] font-['Rajdhani',_sans-serif] mb-4">
                       {product.description}
                     </p>
 
@@ -225,7 +232,7 @@ export default function ProductDetail({ product, open, onClose }) {
                             <span aria-hidden="true" className="text-gray-300">
                               &middot;
                             </span>
-                            <span className="ml-2 text-sm text-[#2A2A2A] font-['Rajdhani',_sans-serif]">
+                            <span className="ml-2 text-sm text-[#CFCFCF] font-['Rajdhani',_sans-serif]">
                               {product.stock} disponibles
                             </span>
                           </div>
@@ -255,7 +262,7 @@ export default function ProductDetail({ product, open, onClose }) {
                             <span aria-hidden="true" className="text-gray-300">
                               &middot;
                             </span>
-                            <span className="ml-2 text-sm text-[#2A2A2A] font-['Rajdhani',_sans-serif]">
+                            <span className="ml-2 text-sm text-[#CFCFCF] font-['Rajdhani',_sans-serif]">
                               {product.stock} disponibles
                             </span>
                           </div>
@@ -265,7 +272,7 @@ export default function ProductDetail({ product, open, onClose }) {
 
                     {/* Categoría */}
                     <div className="mt-4">
-                      <span className="inline-block bg-[#0F0F10]/10 text-[#0F0F10] px-3 py-1 rounded-full text-xs font-semibold font-['Quantico',_sans-serif]">
+                      <span className="inline-block bg-gradient-to-r from-[#E11D74]/20 to-[#6D28D9]/20 text-[#E11D74] px-3 py-1 rounded-full text-xs font-semibold font-['Quantico',_sans-serif] border border-[#E11D74]/30">
                         {product.category}
                       </span>
                     </div>
@@ -279,14 +286,18 @@ export default function ProductDetail({ product, open, onClose }) {
                     <form onSubmit={handleAddToCart}>
                       {/* Color picker */}
                       {colors.length > 0 && (
-                        <fieldset aria-label="Elegir un color">
-                          <legend className="text-sm font-medium text-gray-900 font-['Quantico',_sans-serif]">Color</legend>
+                        <fieldset aria-label="Elegir un color" className="mb-6">
+                          <legend className="text-sm font-semibold text-[#E11D74] mb-3 font-['Quantico',_sans-serif] uppercase tracking-wide">Color</legend>
 
                           <div className="mt-2 flex items-center gap-x-3">
                             {colors.map((color) => (
                               <div
                                 key={color.id}
-                                className="flex rounded-full outline -outline-offset-1 outline-black/10"
+                                className={`flex rounded-full outline -outline-offset-1 transition-all ${
+                                  selectedColor === color.id 
+                                    ? 'outline-[#E11D74] outline-2' 
+                                    : 'outline-white/20 hover:outline-[#E11D74]/50'
+                                }`}
                               >
                                 <input
                                   value={color.id}
@@ -297,7 +308,7 @@ export default function ProductDetail({ product, open, onClose }) {
                                   aria-label={color.name}
                                   className={classNames(
                                     color.classes,
-                                    'size-8 appearance-none rounded-full forced-color-adjust-none checked:outline-2 checked:outline-offset-2 focus-visible:outline-3 focus-visible:outline-offset-3 cursor-pointer',
+                                    'size-8 appearance-none rounded-full forced-color-adjust-none checked:outline-2 checked:outline-offset-2 focus-visible:outline-3 focus-visible:outline-offset-3 cursor-pointer transition-all',
                                   )}
                                 />
                               </div>
@@ -309,15 +320,13 @@ export default function ProductDetail({ product, open, onClose }) {
                       {/* Size picker */}
                       {sizes.length > 0 && (
                         <fieldset aria-label="Elegir una talla" className="mt-6">
-                          <div className="flex items-center justify-between">
-                            <div className="text-sm font-medium text-gray-900 font-['Quantico',_sans-serif]">Talla</div>
-                          </div>
+                          <legend className="text-sm font-semibold text-[#E11D74] mb-3 block font-['Quantico',_sans-serif] uppercase tracking-wide">Talla</legend>
                           <div className="mt-2 grid grid-cols-4 gap-3">
                             {sizes.map((size) => (
                               <label
                                 key={size.id}
                                 aria-label={size.name}
-                                className="group relative flex items-center justify-center rounded-md border border-gray-300 bg-white p-3 has-checked:border-[#E11D74] has-checked:bg-[#E11D74] has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-[#E11D74] has-disabled:border-gray-400 has-disabled:bg-gray-200 has-disabled:opacity-25 cursor-pointer hover:border-[#E11D74] transition-all"
+                                className="group relative flex items-center justify-center rounded-md border border-white/20 bg-[#0F0F10]/90 backdrop-blur-sm p-3 has-checked:border-[#E11D74] has-checked:bg-gradient-to-r has-checked:from-[#E11D74] has-checked:to-[#6D28D9] has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-[#E11D74] has-disabled:border-white/10 has-disabled:bg-[#0F0F10]/50 has-disabled:opacity-25 cursor-pointer hover:border-[#E11D74] transition-all"
                               >
                                 <input
                                   value={size.id}
@@ -328,7 +337,7 @@ export default function ProductDetail({ product, open, onClose }) {
                                   disabled={!size.inStock}
                                   className="absolute inset-0 appearance-none focus:outline-none disabled:cursor-not-allowed"
                                 />
-                                <span className="text-sm font-medium text-gray-900 uppercase group-has-checked:text-white font-['Quantico',_sans-serif]">
+                                <span className="text-sm font-medium text-[#CFCFCF] uppercase group-has-checked:text-white font-['Quantico',_sans-serif] transition-colors">
                                   {size.name}
                                 </span>
                               </label>
@@ -342,10 +351,10 @@ export default function ProductDetail({ product, open, onClose }) {
                         disabled={isAdding}
                         whileHover={{ scale: isAdding ? 1 : 1.02 }}
                         whileTap={{ scale: isAdding ? 1 : 0.98 }}
-                        className={`mt-8 flex w-full items-center justify-center rounded-lg border border-transparent px-8 py-3 text-base font-medium text-white transition-all font-['Quantico',_sans-serif] ${
+                        className={`mt-8 flex w-full items-center justify-center rounded-lg border border-transparent px-8 py-3 text-base font-medium text-white transition-all font-['Quantico',_sans-serif] uppercase tracking-wide shadow-lg ${
                           isAdding
-                            ? 'bg-[#2A2A2A] cursor-not-allowed'
-                            : 'bg-[#0F0F10] hover:bg-[#E11D74] focus:ring-2 focus:ring-[#E11D74] focus:ring-offset-2'
+                            ? 'bg-[#0F0F10]/30 cursor-not-allowed'
+                            : 'bg-gradient-to-r from-[#E11D74] to-[#6D28D9] hover:from-[#6D28D9] hover:to-[#8B5CF6] focus:ring-2 focus:ring-[#E11D74] focus:ring-offset-2'
                         }`}
                       >
                         {isAdding ? (

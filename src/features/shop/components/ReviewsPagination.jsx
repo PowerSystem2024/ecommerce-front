@@ -65,8 +65,8 @@ export default function ReviewsPagination({
           px-4 py-2 rounded-lg text-sm font-medium font-['Rajdhani',_sans-serif]
           transition-all duration-200
           ${hasPrevious 
-            ? 'bg-[#0F0F10] text-white hover:bg-[#E11D74] cursor-pointer' 
-            : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+            ? 'bg-gradient-to-r from-[#E11D74] to-[#6D28D9] text-white hover:from-[#6D28D9] hover:to-[#8B5CF6] cursor-pointer shadow-lg' 
+            : 'bg-white/30 text-[#CFCFCF] cursor-not-allowed'
           }
         `}
         aria-label="Página anterior"
@@ -81,12 +81,12 @@ export default function ReviewsPagination({
           <>
             <button
               onClick={() => handlePageChange(1)}
-              className="px-3 py-2 rounded-lg text-sm font-medium font-['Rajdhani',_sans-serif] text-[#0F0F10] hover:bg-[#0F0F10]/10 transition-colors"
+              className="px-3 py-2 rounded-lg text-sm font-medium font-['Rajdhani',_sans-serif] text-[#0F0F10] bg-white/80 hover:bg-gradient-to-r hover:from-[#E11D74] hover:to-[#6D28D9] hover:text-white transition-colors border border-white/30"
             >
               1
             </button>
             {visiblePages[0] > 2 && (
-              <span className="px-2 text-[#2A2A2A] font-['Rajdhani',_sans-serif]">...</span>
+              <span className="px-2 text-[#CFCFCF] font-['Rajdhani',_sans-serif]">...</span>
             )}
           </>
         )}
@@ -100,8 +100,8 @@ export default function ReviewsPagination({
               px-3 py-2 rounded-lg text-sm font-medium font-['Rajdhani',_sans-serif]
               transition-all duration-200
               ${page === currentPage
-                ? 'bg-[#E11D74] text-white scale-105'
-                : 'text-[#0F0F10] hover:bg-[#0F0F10]/10'
+                ? 'bg-gradient-to-r from-[#E11D74] to-[#6D28D9] text-white scale-105 shadow-lg'
+                : 'text-[#0F0F10] bg-white/80 hover:bg-gradient-to-r hover:from-[#E11D74] hover:to-[#6D28D9] hover:text-white border border-white/30'
               }
             `}
             aria-label={`Página ${page}`}
@@ -115,11 +115,11 @@ export default function ReviewsPagination({
         {visiblePages[visiblePages.length - 1] < totalPages && (
           <>
             {visiblePages[visiblePages.length - 1] < totalPages - 1 && (
-              <span className="px-2 text-[#2A2A2A] font-['Rajdhani',_sans-serif]">...</span>
+              <span className="px-2 text-[#CFCFCF] font-['Rajdhani',_sans-serif]">...</span>
             )}
             <button
               onClick={() => handlePageChange(totalPages)}
-              className="px-3 py-2 rounded-lg text-sm font-medium font-['Rajdhani',_sans-serif] text-[#0F0F10] hover:bg-[#0F0F10]/10 transition-colors"
+              className="px-3 py-2 rounded-lg text-sm font-medium font-['Rajdhani',_sans-serif] text-[#0F0F10] bg-white/80 hover:bg-gradient-to-r hover:from-[#E11D74] hover:to-[#6D28D9] hover:text-white transition-colors border border-white/30"
             >
               {totalPages}
             </button>
@@ -135,8 +135,8 @@ export default function ReviewsPagination({
           px-4 py-2 rounded-lg text-sm font-medium font-['Rajdhani',_sans-serif]
           transition-all duration-200
           ${hasNext 
-            ? 'bg-[#0F0F10] text-white hover:bg-[#E11D74] cursor-pointer' 
-            : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+            ? 'bg-gradient-to-r from-[#E11D74] to-[#6D28D9] text-white hover:from-[#6D28D9] hover:to-[#8B5CF6] cursor-pointer shadow-lg' 
+            : 'bg-white/30 text-[#CFCFCF] cursor-not-allowed'
           }
         `}
         aria-label="Página siguiente"

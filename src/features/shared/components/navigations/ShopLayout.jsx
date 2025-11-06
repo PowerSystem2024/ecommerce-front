@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { NavbarUser } from './NavbarUser';
+import GlobalBackground from '../../../global-background/global-background';
 
 export const ShopLayout = ({ children }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -25,18 +26,8 @@ export const ShopLayout = ({ children }) => {
   };
 
   return (
-    <div className="min-h-screen">
-      {/* Background fijo que ocupa toda la pantalla */}
-      <div 
-        className="fixed top-0 left-0 right-0 bottom-0 z-0"
-        style={{
-          backgroundImage: `url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80' width='40' height='40' fill='none'%3E%3Ccircle fill='%233b82f6' id='pattern-circle' cx='20' cy='20' r='2.5'%3E%3C/circle%3E%3C/svg%3E")`,
-          backgroundSize: '40px 40px',
-          backgroundRepeat: 'repeat',
-          backgroundPosition: 'center',
-          backgroundColor: 'white'
-        }}
-      />
+    <div className="">  
+    <GlobalBackground />  
       
       {/* Navbar fijo en la parte superior */}
       <div className="fixed top-0 left-0 right-0 z-50">

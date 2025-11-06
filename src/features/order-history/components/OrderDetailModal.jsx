@@ -58,18 +58,18 @@ const OrderDetailModal = ({ orderId, isOpen, onClose }) => {
   const getStatusColor = (status) => {
     switch (status) {
       case 'En camino':
-        return 'bg-blue-100 text-blue-800 border-blue-200';
+        return 'bg-[#6D28D9]/30 text-[#8B5CF6] border-[#6D28D9]/50';
       case 'Entregado':
       case 'entregado':
       case 'entregada':
       case 'Entregada':
-        return 'bg-green-100 text-green-800 border-green-200';
+        return 'bg-green-900/30 text-green-200 border-green-500/50';
       case 'Procesando':
-        return 'bg-yellow-100 text-yellow-800 border-yellow-200';
+        return 'bg-yellow-900/30 text-yellow-200 border-yellow-500/50';
       case 'Cancelado':
-        return 'bg-red-100 text-red-800 border-red-200';
+        return 'bg-red-900/30 text-red-200 border-red-500/50';
       default:
-        return 'bg-gray-100 text-gray-800 border-gray-200';
+        return 'bg-[#0F0F10]/50 text-[#CFCFCF] border-white/20';
     }
   };
 
@@ -138,15 +138,19 @@ const OrderDetailModal = ({ orderId, isOpen, onClose }) => {
             transition
             className="flex w-full max-w-4xl transform text-left transition data-closed:translate-y-4 data-closed:opacity-0 data-enter:duration-300 data-enter:ease-out data-leave:duration-200 data-leave:ease-in data-closed:md:translate-y-0 data-closed:md:scale-95"
           >
-            <div className="relative flex w-full flex-col max-h-[90vh] overflow-hidden bg-white rounded-2xl shadow-2xl">
+            <div className="relative flex w-full flex-col max-h-[90vh] overflow-hidden backdrop-blur-sm rounded-2xl shadow-2xl border border-white/10"
+              style={{
+                background: "linear-gradient(135deg, rgba(26, 26, 27, 0.95) 0%, rgba(15, 15, 16, 0.98) 50%, rgba(30, 10, 25, 0.95) 100%)"
+              }}
+            >
               {/* Header */}
-              <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-purple-50">
+              <div className="flex items-center justify-between px-6 py-4 border-b border-white/10">
                 <div>
-                  <h2 className="text-2xl font-bold text-gray-900 font-orbitron">
+                  <h2 className="text-2xl font-bold text-[#E11D74] font-['Orbitron',sans-serif] uppercase tracking-wide">
                     Detalles del Pedido
                   </h2>
                   {order && (
-                    <p className="text-sm text-gray-600 mt-1">
+                    <p className="text-sm text-[#CFCFCF] mt-1 font-['Rajdhani',sans-serif]">
                       Pedido #{order.id || order._id} • {new Date(order.date || order.createdAt || Date.now()).toLocaleDateString('es-ES')}
                     </p>
                   )}
@@ -154,7 +158,7 @@ const OrderDetailModal = ({ orderId, isOpen, onClose }) => {
                 <button
                   type="button"
                   onClick={onClose}
-                  className="text-gray-400 hover:text-gray-500 transition-colors"
+                  className="text-[#CFCFCF] hover:text-[#E11D74] transition-colors"
                 >
                   <span className="sr-only">Cerrar</span>
                   <XMarkIcon aria-hidden="true" className="size-6" />
@@ -165,30 +169,34 @@ const OrderDetailModal = ({ orderId, isOpen, onClose }) => {
               <div className="overflow-y-auto flex-1 px-6 py-6">
                 {isLoading && (
                   <div className="flex items-center justify-center py-12">
-                    <div className="animate-spin w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full"></div>
-                    <p className="ml-4 text-gray-600">Cargando detalles del pedido...</p>
+                    <div className="animate-spin w-12 h-12 border-4 border-[#E11D74] border-t-transparent rounded-full"></div>
+                    <p className="ml-4 text-[#CFCFCF] font-['Rajdhani',sans-serif]">Cargando detalles del pedido...</p>
                   </div>
                 )}
 
                 {error && (
-                  <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-center">
-                    <p className="text-red-800 font-semibold">{error.message}</p>
-                    <p className="text-red-600 text-sm mt-1">{error.details}</p>
+                  <div className="bg-red-900/30 border border-red-500 rounded-lg p-4 text-center">
+                    <p className="text-red-200 font-semibold font-['Quantico',sans-serif]">{error.message}</p>
+                    <p className="text-red-300 text-sm mt-1 font-['Rajdhani',sans-serif]">{error.details}</p>
                   </div>
                 )}
 
                 {!isLoading && !error && order && (
                   <div className="space-y-6">
                     {/* Estado del pedido */}
-                    <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl p-4 border border-blue-200/50">
+                    <div className="backdrop-blur-sm rounded-xl p-4 border border-white/10"
+                      style={{
+                        background: "linear-gradient(135deg, rgba(15, 15, 16, 0.9) 0%, rgba(26, 26, 27, 0.95) 50%, rgba(15, 15, 16, 0.9) 100%)"
+                      }}
+                    >
                       <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-4">
-                          <span className={`inline-flex items-center space-x-2 px-4 py-2 rounded-full text-sm font-bold shadow-md border ${getStatusColor(order.status)}`}>
+                          <span className={`inline-flex items-center space-x-2 px-4 py-2 rounded-full text-sm font-bold shadow-md border ${getStatusColor(order.status)} font-['Quantico',sans-serif]`}>
                             {getStatusIcon(order.status)}
                             <span>{order.status}</span>
                           </span>
-                          <div className="text-gray-700">
-                            <p className="font-medium">Total: ${(order.total || order.totalAmount || order.amount || 0).toFixed(2)}</p>
+                          <div className="text-[#CFCFCF] font-['Rajdhani',sans-serif]">
+                            <p className="font-medium">Total: <span className="text-[#E11D74] font-['Orbitron',sans-serif]">${(order.total || order.totalAmount || order.amount || 0).toFixed(2)}</span></p>
                             <p className="text-sm">
                               {(() => {
                                 const orderProducts = Array.isArray(order.products) 
@@ -205,7 +213,7 @@ const OrderDetailModal = ({ orderId, isOpen, onClose }) => {
                             whileTap={{ scale: 0.95 }}
                             onClick={() => handleDownloadInvoice(order.id || order._id)}
                             disabled={isDownloading}
-                            className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-gray-600 to-gray-700 text-white rounded-lg hover:from-gray-700 hover:to-gray-800 transition-all duration-300 text-sm font-semibold shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="flex items-center space-x-2 px-4 py-2 bg-[#0F0F10]/80 border border-white/20 text-[#CFCFCF] rounded-lg hover:bg-gradient-to-r hover:from-[#E11D74] hover:to-[#6D28D9] hover:text-white hover:border-transparent transition-all duration-300 text-sm font-semibold shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed font-['Quantico',sans-serif] uppercase"
                           >
                             {isDownloading ? (
                               <svg className="w-4 h-4 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -226,7 +234,7 @@ const OrderDetailModal = ({ orderId, isOpen, onClose }) => {
                                 onClose();
                                 navigate(`/orders/${order.id || order._id}/review`);
                               }}
-                              className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-lg hover:from-green-700 hover:to-green-800 transition-all duration-300 text-sm font-semibold shadow-md hover:shadow-lg"
+                              className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-[#E11D74] to-[#6D28D9] text-white rounded-lg hover:from-[#6D28D9] hover:to-[#8B5CF6] transition-all duration-300 text-sm font-semibold shadow-md hover:shadow-lg font-['Quantico',sans-serif] uppercase"
                             >
                               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
@@ -239,9 +247,13 @@ const OrderDetailModal = ({ orderId, isOpen, onClose }) => {
                     </div>
 
                     {/* Productos del pedido */}
-                    <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6">
-                      <h3 className="text-xl font-bold text-gray-900 mb-4 font-orbitron flex items-center space-x-2">
-                        <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div className="backdrop-blur-sm rounded-xl shadow-md border border-white/10 p-6"
+                      style={{
+                        background: "linear-gradient(135deg, rgba(26, 26, 27, 0.9) 0%, rgba(15, 15, 16, 0.95) 50%, rgba(30, 10, 25, 0.9) 100%)"
+                      }}
+                    >
+                      <h3 className="text-xl font-bold text-[#E11D74] mb-4 font-['Orbitron',sans-serif] uppercase tracking-wide flex items-center space-x-2">
+                        <svg className="w-5 h-5 text-[#CFCFCF]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                         </svg>
                         <span>Productos</span>
@@ -272,25 +284,31 @@ const OrderDetailModal = ({ orderId, isOpen, onClose }) => {
                                   initial={{ opacity: 0, y: 10 }}
                                   animate={{ opacity: 1, y: 0 }}
                                   transition={{ delay: index * 0.1 }}
-                                  className="flex items-start space-x-4 p-4 bg-gray-50 rounded-lg border border-gray-200"
+                                  className="flex items-start space-x-4 p-4 backdrop-blur-sm rounded-lg border border-white/10"
+                                  style={{
+                                    background: "linear-gradient(135deg, rgba(15, 15, 16, 0.9) 0%, rgba(26, 26, 27, 0.95) 50%, rgba(15, 15, 16, 0.9) 100%)"
+                                  }}
                                 >
                                   {productImage && (
                                     <img
                                       src={productImage}
                                       alt={productName}
-                                      className="w-20 h-20 object-cover rounded-lg"
+                                      className="w-20 h-20 object-cover rounded-lg border border-white/20"
+                                      style={{
+                                        background: "linear-gradient(135deg, #0F0F10 0%, #1A0A15 100%)"
+                                      }}
                                     />
                                   )}
                                   <div className="flex-1">
-                                    <h4 className="font-bold text-gray-900">{productName}</h4>
+                                    <h4 className="font-bold text-[#E11D74] font-['Quantico',sans-serif]">{productName}</h4>
                                     {productDescription && (
-                                      <p className="text-sm text-gray-600 mt-1 line-clamp-2">{productDescription}</p>
+                                      <p className="text-sm text-[#CFCFCF] mt-1 line-clamp-2 font-['Rajdhani',sans-serif]">{productDescription}</p>
                                     )}
                                     <div className="flex items-center justify-between mt-2">
-                                      <div className="text-sm text-gray-600">
+                                      <div className="text-sm text-[#CFCFCF] font-['Rajdhani',sans-serif]">
                                         Cantidad: {itemQuantity} × ${itemPrice.toFixed(2)}
                                       </div>
-                                      <div className="font-bold text-gray-900">
+                                      <div className="font-bold text-[#E11D74] font-['Orbitron',sans-serif]">
                                         ${(itemPrice * itemQuantity).toFixed(2)}
                                       </div>
                                     </div>
@@ -299,7 +317,7 @@ const OrderDetailModal = ({ orderId, isOpen, onClose }) => {
                               );
                             })
                           ) : (
-                            <div className="text-gray-500 text-center py-8">
+                            <div className="text-[#CFCFCF] text-center py-8 font-['Rajdhani',sans-serif]">
                               <p>No hay productos disponibles en este pedido</p>
                             </div>
                           );
@@ -310,23 +328,27 @@ const OrderDetailModal = ({ orderId, isOpen, onClose }) => {
                     {/* Resumen y detalles */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       {/* Resumen del pedido */}
-                      <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6">
-                        <h3 className="text-lg font-bold text-gray-900 mb-4 font-orbitron">Resumen del Pedido</h3>
+                      <div className="backdrop-blur-sm rounded-xl shadow-md border border-white/10 p-6"
+                        style={{
+                          background: "linear-gradient(135deg, rgba(26, 26, 27, 0.9) 0%, rgba(15, 15, 16, 0.95) 50%, rgba(30, 10, 25, 0.9) 100%)"
+                        }}
+                      >
+                        <h3 className="text-lg font-bold text-[#E11D74] mb-4 font-['Orbitron',sans-serif] uppercase tracking-wide">Resumen del Pedido</h3>
                         <div className="space-y-3">
-                          <div className="flex justify-between text-gray-600">
+                          <div className="flex justify-between text-[#CFCFCF] font-['Rajdhani',sans-serif]">
                             <span>Subtotal:</span>
                             <span>${(order.subtotal || order.subTotal || 0).toFixed(2)}</span>
                           </div>
-                          <div className="flex justify-between text-gray-600">
+                          <div className="flex justify-between text-[#CFCFCF] font-['Rajdhani',sans-serif]">
                             <span>Envío:</span>
                             <span>${(order.shipping || order.shippingCost || order.shippingFee || 0).toFixed(2)}</span>
                           </div>
-                          <div className="flex justify-between text-gray-600">
+                          <div className="flex justify-between text-[#CFCFCF] font-['Rajdhani',sans-serif]">
                             <span>Impuestos:</span>
                             <span>${(order.tax || order.taxes || 0).toFixed(2)}</span>
                           </div>
-                          <div className="border-t border-gray-200 pt-3">
-                            <div className="flex justify-between text-lg font-bold text-gray-900">
+                          <div className="border-t border-white/10 pt-3">
+                            <div className="flex justify-between text-lg font-bold text-[#E11D74] font-['Orbitron',sans-serif]">
                               <span>Total:</span>
                               <span>${(order.total || order.totalAmount || order.amount || 0).toFixed(2)}</span>
                             </div>
@@ -338,9 +360,13 @@ const OrderDetailModal = ({ orderId, isOpen, onClose }) => {
                       <div className="space-y-6">
                         {/* Dirección de envío */}
                         {order.shippingAddress && (
-                          <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6">
-                            <h3 className="text-lg font-bold text-gray-900 mb-4 font-orbitron">Dirección de Envío</h3>
-                            <div className="space-y-2 text-gray-700 text-sm">
+                          <div className="backdrop-blur-sm rounded-xl shadow-md border border-white/10 p-6"
+                            style={{
+                              background: "linear-gradient(135deg, rgba(26, 26, 27, 0.9) 0%, rgba(15, 15, 16, 0.95) 50%, rgba(30, 10, 25, 0.9) 100%)"
+                            }}
+                          >
+                            <h3 className="text-lg font-bold text-[#E11D74] mb-4 font-['Orbitron',sans-serif] uppercase tracking-wide">Dirección de Envío</h3>
+                            <div className="space-y-2 text-[#CFCFCF] text-sm font-['Rajdhani',sans-serif]">
                               <p className="font-semibold">{order.shippingAddress.recipientName}</p>
                               <p>{order.shippingAddress.street}</p>
                               <p>{order.shippingAddress.city}, {order.shippingAddress.state} {order.shippingAddress.zipCode}</p>
@@ -350,10 +376,14 @@ const OrderDetailModal = ({ orderId, isOpen, onClose }) => {
                         )}
 
                         {/* Método de pago */}
-                        <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6">
-                          <h3 className="text-lg font-bold text-gray-900 mb-4 font-orbitron">Método de Pago</h3>
+                        <div className="backdrop-blur-sm rounded-xl shadow-md border border-white/10 p-6"
+                          style={{
+                            background: "linear-gradient(135deg, rgba(26, 26, 27, 0.9) 0%, rgba(15, 15, 16, 0.95) 50%, rgba(30, 10, 25, 0.9) 100%)"
+                          }}
+                        >
+                          <h3 className="text-lg font-bold text-[#E11D74] mb-4 font-['Orbitron',sans-serif] uppercase tracking-wide">Método de Pago</h3>
                           <div className="flex items-center space-x-3">
-                            <div className="w-8 h-8 bg-gradient-to-br from-green-500 to-blue-600 rounded-lg flex items-center justify-center">
+                            <div className="w-8 h-8 bg-gradient-to-br from-[#E11D74] to-[#6D28D9] rounded-lg flex items-center justify-center">
                               <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
                               </svg>
@@ -361,17 +391,17 @@ const OrderDetailModal = ({ orderId, isOpen, onClose }) => {
                             <div>
                               {order.paymentMethod && typeof order.paymentMethod === 'object' ? (
                                 <>
-                                  <p className="font-semibold text-gray-900">
+                                  <p className="font-semibold text-[#E11D74] font-['Quantico',sans-serif]">
                                     {order.paymentMethod.type || order.paymentMethod.method || 'Método de pago'}
                                   </p>
                                   {order.paymentMethod.brand && order.paymentMethod.last4 && (
-                                    <p className="text-sm text-gray-600">
+                                    <p className="text-sm text-[#CFCFCF] font-['Rajdhani',sans-serif]">
                                       {order.paymentMethod.brand} terminada en {order.paymentMethod.last4}
                                     </p>
                                   )}
                                 </>
                               ) : (
-                                <p className="font-semibold text-gray-900">
+                                <p className="font-semibold text-[#E11D74] font-['Quantico',sans-serif]">
                                   {order.paymentMethod || order.payment?.method || order.paymentMethodName || 'No especificado'}
                                 </p>
                               )}
@@ -385,13 +415,17 @@ const OrderDetailModal = ({ orderId, isOpen, onClose }) => {
               </div>
 
               {/* Footer */}
-              <div className="px-6 py-4 border-t border-gray-200 bg-gray-50">
+              <div className="px-6 py-4 border-t border-white/10"
+                style={{
+                  background: "linear-gradient(135deg, rgba(15, 15, 16, 0.9) 0%, rgba(26, 26, 27, 0.95) 50%, rgba(15, 15, 16, 0.9) 100%)"
+                }}
+              >
                 <div className="flex justify-end">
                   <motion.button
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     onClick={onClose}
-                    className="px-6 py-2 bg-gradient-to-r from-gray-600 to-gray-700 text-white rounded-lg hover:from-gray-700 hover:to-gray-800 transition-all duration-300 font-semibold shadow-md hover:shadow-lg"
+                    className="px-6 py-2 bg-gradient-to-r from-[#E11D74] to-[#6D28D9] text-white rounded-lg hover:from-[#6D28D9] hover:to-[#8B5CF6] transition-all duration-300 font-semibold shadow-md hover:shadow-lg font-['Quantico',sans-serif] uppercase"
                   >
                     Cerrar
                   </motion.button>

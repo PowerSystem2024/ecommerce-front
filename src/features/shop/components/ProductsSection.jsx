@@ -324,19 +324,19 @@ export default function ProductsSection({ initialSearch = "", initialCategory = 
         {/* Información de resultados */}
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-4">
-            <span className="text-[#2A2A2A] font-['Rajdhani',_sans-serif]">
+            <span className="text-[#CFCFCF] font-['Rajdhani',_sans-serif]">
               Mostrando {startIndex + 1}-{Math.min(endIndex, filteredProducts.length)} de {filteredProducts.length} productos
             </span>
             {cartCount > 0 && (
-              <span className="bg-[#6D28D9] text-white px-3 py-1 rounded-full text-sm font-semibold font-['Quantico',_sans-serif]">
+              <span className="bg-gradient-to-r from-[#E11D74] to-[#6D28D9] text-white px-3 py-1 rounded-full text-sm font-semibold font-['Quantico',_sans-serif] shadow-lg">
                 {cartCount} en carrito
               </span>
             )}
           </div>
           
           <div className="flex items-center gap-2">
-            <span className="text-[#2A2A2A] font-['Rajdhani',_sans-serif] text-sm">Ordenar por:</span>
-            <select className="px-3 py-2 border border-[#2A2A2A]/20 rounded-lg focus:ring-2 focus:ring-[#6D28D9] focus:border-transparent text-sm font-['Rajdhani',_sans-serif]">
+            <span className="text-[#CFCFCF] font-['Rajdhani',_sans-serif] text-sm">Ordenar por:</span>
+            <select className="px-3 py-2 border border-white/20 rounded-lg focus:ring-2 focus:ring-[#E11D74] focus:border-[#E11D74] text-sm font-['Rajdhani',_sans-serif] bg-[#0F0F10]/80 text-[#CFCFCF]">
               <option value="relevance">Relevancia</option>
               <option value="price-low">Precio: Menor a Mayor</option>
               <option value="price-high">Precio: Mayor a Menor</option>
@@ -372,10 +372,10 @@ export default function ProductsSection({ initialSearch = "", initialCategory = 
             <button 
               onClick={goToPreviousPage}
               disabled={currentPage === 1}
-              className={`px-4 py-2 border border-[#2A2A2A]/20 text-[#2A2A2A] rounded-lg transition-all duration-300 font-['Rajdhani',_sans-serif] ${
+              className={`px-4 py-2 border border-white/20 text-[#CFCFCF] rounded-lg transition-all duration-300 font-['Rajdhani',_sans-serif] bg-[#0F0F10]/80 ${
                 currentPage === 1 
                   ? 'opacity-50 cursor-not-allowed' 
-                  : 'hover:bg-[#6D28D9] hover:text-white hover:border-[#6D28D9]'
+                  : 'hover:bg-gradient-to-r hover:from-[#E11D74] hover:to-[#6D28D9] hover:text-white hover:border-transparent'
               }`}
             >
               Anterior
@@ -395,8 +395,8 @@ export default function ProductsSection({ initialSearch = "", initialCategory = 
                       onClick={() => goToPage(page)}
                       className={`px-4 py-2 rounded-lg font-semibold font-['Quantico',_sans-serif] transition-all duration-300 ${
                         currentPage === page
-                          ? 'bg-[#6D28D9] text-white'
-                          : 'border border-[#2A2A2A]/20 text-[#2A2A2A] hover:bg-[#6D28D9] hover:text-white hover:border-[#6D28D9]'
+                          ? 'bg-gradient-to-r from-[#E11D74] to-[#6D28D9] text-white shadow-lg'
+                          : 'border border-white/20 text-[#CFCFCF] bg-[#0F0F10]/80 hover:bg-gradient-to-r hover:from-[#E11D74] hover:to-[#6D28D9] hover:text-white hover:border-transparent'
                       }`}
                     >
                       {page}
@@ -407,7 +407,7 @@ export default function ProductsSection({ initialSearch = "", initialCategory = 
                   page === currentPage + 2
                 ) {
                   return (
-                    <span key={page} className="px-2 text-[#2A2A2A] font-['Rajdhani',_sans-serif]">
+                    <span key={page} className="px-2 text-[#CFCFCF] font-['Rajdhani',_sans-serif]">
                       ...
                     </span>
                   );
@@ -419,10 +419,10 @@ export default function ProductsSection({ initialSearch = "", initialCategory = 
             <button 
               onClick={goToNextPage}
               disabled={currentPage === totalPages}
-              className={`px-4 py-2 border border-[#2A2A2A]/20 text-[#2A2A2A] rounded-lg transition-all duration-300 font-['Rajdhani',_sans-serif] ${
+              className={`px-4 py-2 border border-white/20 text-[#CFCFCF] rounded-lg transition-all duration-300 font-['Rajdhani',_sans-serif] bg-[#0F0F10]/80 ${
                 currentPage === totalPages 
                   ? 'opacity-50 cursor-not-allowed' 
-                  : 'hover:bg-[#6D28D9] hover:text-white hover:border-[#6D28D9]'
+                  : 'hover:bg-gradient-to-r hover:from-[#E11D74] hover:to-[#6D28D9] hover:text-white hover:border-transparent'
               }`}
             >
               Siguiente
