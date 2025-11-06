@@ -7,10 +7,6 @@ class AuthService {
   // Método privado para hacer requests
   async makeRequest(endpoint, options = {}) {
     const url = `${API_BASE_URL}${endpoint}`;
-    
-    // Debug: mostrar la URL que se está llamando
-    devLog('AuthService - URL:', url);
-    
     const token = this.getToken();
     const requestConfig = {
       headers: {
@@ -18,41 +14,27 @@ class AuthService {
         ...(token ? { Authorization: `Bearer ${token}` } : {}),
         ...options.headers,
       },
-      // Si el backend usa cookies httpOnly, habilitar credenciales
       ...(options.credentials ? { credentials: options.credentials } : {}),
       ...options,
     };
 
     try {
-      devLog('AuthService - Enviando request:', { url, method: requestConfig.method || 'GET' });
-      
       const response = await fetch(url, requestConfig);
       const text = await response.text();
-      
-      devLog('AuthService - Respuesta recibida:', { 
-        status: response.status, 
-        statusText: response.statusText,
-        hasBody: !!text 
-      });
       
       let data;
       try {
         data = text ? JSON.parse(text) : {};
       } catch (_e) {
-        // Respuesta no-JSON (probablemente HTML)
-        devLog('AuthService - Respuesta no es JSON:', text.substring(0, 200));
         throw new Error(`Unexpected response from server (status ${response.status}). Expected JSON but got: ${text.substring(0, 100)}...`);
       }
 
       if (!response.ok) {
-        devLog('AuthService - Error en respuesta:', { status: response.status, data });
         throw new Error(data.message || `Error ${response.status}: ${response.statusText}`);
       }
 
-      devLog('AuthService - Request exitoso:', data);
       return data;
     } catch (error) {
-      devLog('AuthService - Error completo:', error);
       throw error;
     }
   }
@@ -84,9 +66,29 @@ class AuthService {
 
   // CIERRE DE SESIÓN
   async logout() {
-    return this.makeRequest('/auth/logout', {
-      method: 'GET',
-    });
+    try {
+      const token = this.getToken();
+      
+      // Limpiar el estado local primero
+      this.removeToken();
+      localStorage.removeItem('userData');
+      
+      // Hacer logout en el servidor con el token anterior
+      const response = await fetch(`${this.API_BASE_URL}/auth/logout`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': token ? `Bearer ${token}` : ''
+        },
+        credentials: 'include'
+      });
+      
+      return { success: response.ok };
+    } catch (_error) {
+      this.removeToken();
+      localStorage.removeItem('userData');
+      return { success: false, error: _error };
+    }
   }
 
   // RECUPERAR CONTRASEÑA (enviar email)
