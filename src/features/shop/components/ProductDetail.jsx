@@ -105,34 +105,39 @@ export default function ProductDetail({ product, open, onClose }) {
 
   const handleAddToCart = async (e) => {
     e.preventDefault()
-    if (!product) return
+    if (!product || isAdding) return // Prevenir doble llamada
     
     setIsAdding(true)
     
-    // Simular delay
-    await new Promise(resolve => setTimeout(resolve, 500))
-    
-    // Agregar al carrito con la información seleccionada (solo si hay valores seleccionados)
-    const cartItem = {
-      ...product,
+    try {
+      // Simular delay
+      await new Promise(resolve => setTimeout(resolve, 500))
+      
+      // Agregar al carrito con la información seleccionada (solo si hay valores seleccionados)
+      const cartItem = {
+        ...product,
+      }
+      
+      // Remover quantity si existe en el producto original
+      delete cartItem.quantity
+      
+      if (selectedColor) {
+        cartItem.selectedColor = colors.find(c => c.id === selectedColor)?.name
+      }
+      
+      if (selectedSize) {
+        cartItem.selectedSize = sizes.find(s => s.id === selectedSize)?.name
+      }
+      
+      addItem(cartItem, 1) // Asegurar que siempre agregamos cantidad 1
+      
+      // Cerrar el modal después de agregar
+      setTimeout(() => {
+        onClose()
+      }, 300)
+    } finally {
+      setIsAdding(false)
     }
-    
-    if (selectedColor) {
-      cartItem.selectedColor = colors.find(c => c.id === selectedColor)?.name
-    }
-    
-    if (selectedSize) {
-      cartItem.selectedSize = sizes.find(s => s.id === selectedSize)?.name
-    }
-    
-    addItem(cartItem)
-    
-    setIsAdding(false)
-    
-    // Cerrar el modal después de agregar
-    setTimeout(() => {
-      onClose()
-    }, 300)
   }
 
   // Si no hay producto, no renderizar nada (después de todos los hooks)

@@ -2,27 +2,65 @@ import React, { createContext, useState, useMemo } from 'react';
 
 const CartContext = createContext(null);
 
+// Función helper para generar una clave única para cada item del carrito
+// Considera ID del producto + color seleccionado + talle seleccionado
+const getCartItemKey = (item) => {
+  const productId = item._id || item.id;
+  const color = item.selectedColor || '';
+  const size = item.selectedSize || '';
+  return `${productId}_${color}_${size}`;
+};
+
 export function CartProvider({ children }) {
   const [items, setItems] = useState([]);
 
   const addItem = (product, quantity = 1) => {
     setItems((prev) => {
-      const idx = prev.findIndex((i) => i.id === product.id);
+      // Normalizar el ID del producto (puede ser _id o id)
+      const productId = product._id || product.id;
+      
+      if (!productId) {
+        console.warn('Producto sin ID válido:', product);
+        return prev;
+      }
+      
+      // Generar clave única para este item (considerando variantes)
+      const newItemKey = getCartItemKey(product);
+      
+      // Buscar el producto existente usando la clave única (ID + color + talle)
+      const idx = prev.findIndex((i) => {
+        const itemKey = getCartItemKey(i);
+        return itemKey === newItemKey;
+      });
+      
       if (idx !== -1) {
+        // Si el producto con la misma variante ya existe, incrementar la cantidad
         const copy = [...prev];
-        copy[idx].quantity += quantity;
+        const currentQuantity = Number(copy[idx].quantity) || 0;
+        const newQuantity = currentQuantity + Number(quantity);
+        copy[idx] = { ...copy[idx], quantity: newQuantity };
         return copy;
       }
-      return [...prev, { ...product, quantity }];
+      
+      // Si no existe (o es una variante diferente), agregar nuevo item
+      // Remover cualquier propiedad quantity que pueda venir del producto original
+      const { quantity: _, ...productWithoutQuantity } = product;
+      return [...prev, { ...productWithoutQuantity, quantity: Number(quantity) }];
     });
   };
 
-  const removeItem = (id) => {
-    setItems((prev) => prev.filter((i) => i.id !== id));
+  const removeItem = (itemKey) => {
+    setItems((prev) => prev.filter((i) => {
+      const currentKey = getCartItemKey(i);
+      return currentKey !== itemKey;
+    }));
   };
 
-  const updateQuantity = (id, quantity) => {
-    setItems((prev) => prev.map((i) => (i.id === id ? { ...i, quantity } : i)));
+  const updateQuantity = (itemKey, quantity) => {
+    setItems((prev) => prev.map((i) => {
+      const currentKey = getCartItemKey(i);
+      return currentKey === itemKey ? { ...i, quantity } : i;
+    }));
   };
 
   const clearCart = () => setItems([]);
