@@ -43,7 +43,7 @@ function AboutPage() {
       exit="out"
       variants={pageVariants}
       transition={pageTransition}
-      className="w-full overflow-x-hidden"
+      className="w-full overflow-x-hidden bg-[#0F0F10] text-white"
     >
       <motion.div
         initial={{ opacity: 0, y: 20 }}

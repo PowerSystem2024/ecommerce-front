@@ -1,6 +1,6 @@
 import React from 'react'
 import { motion } from 'framer-motion'
-import Contact from '../components/Contact/Contact'
+import Contact from '../components/contact/Contact'
 import Footer from '../components/home/Footer'
 import Navbar from '../components/home/Navbar'
 
@@ -24,7 +24,7 @@ function ContactPage() {
       exit="out"
       variants={pageVariants}
       transition={pageTransition}
-      className="w-full overflow-x-hidden"
+      className="w-full overflow-x-hidden bg-[#0F0F10] text-white"
     >
       <motion.div
         initial={{ opacity: 0, y: -20 }}

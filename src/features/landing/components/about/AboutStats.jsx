@@ -57,7 +57,7 @@ const itemVariants = {
 export default function AboutStats() {
   return (
     <motion.section 
-      className="bg-gradient-to-br from-white to-gray-50 py-20 sm:py-32"
+      className="bg-[#0F0F10] py-20 sm:py-32 text-white"
       initial={{ opacity: 0 }}
       whileInView={{ opacity: 1 }}
       viewport={{ once: true, margin: "-100px" }}
@@ -72,7 +72,7 @@ export default function AboutStats() {
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
           >
-            <h2 className="text-4xl font-light tracking-tight text-gray-900 sm:text-5xl mb-6">
+            <h2 className="text-4xl font-light tracking-tight text-white sm:text-5xl mb-6">
               Nuestra
               <span className="block font-bold bg-gradient-to-r from-rose-600 to-pink-600 bg-clip-text text-transparent">
                 Misión
@@ -90,7 +90,7 @@ export default function AboutStats() {
               transition={{ duration: 0.8, delay: 0.2 }}
             >
               <motion.p 
-                className="text-xl/8 text-gray-600 mb-6"
+                className="text-xl/8 text-gray-400 mb-6"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -102,7 +102,7 @@ export default function AboutStats() {
               </motion.p>
               
               <motion.p 
-                className="max-w-xl text-base/7 text-gray-700"
+                className="max-w-xl text-base/7 text-gray-300"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -124,7 +124,7 @@ export default function AboutStats() {
               viewport={{ once: true, margin: "-100px" }}
             >
               <dl className="w-64 space-y-8 xl:w-80">
-                {estadisticas.map((stat, index) => (
+                {estadisticas.map((stat) => (
                   <motion.div 
                     key={stat.label} 
                     className="flex flex-col-reverse gap-y-4 group"
@@ -143,12 +143,12 @@ export default function AboutStats() {
                     </div>
                     
                     {/* Label */}
-                    <dt className="text-base/7 text-gray-600 group-hover:text-gray-900 transition-colors duration-300">
+                    <dt className="text-base/7 text-gray-400 group-hover:text-gray-200 transition-colors duration-300">
                       {stat.label}
                     </dt>
                     
                     {/* Value */}
-                    <dd className="text-4xl font-bold tracking-tight text-gray-900 group-hover:text-rose-600 transition-colors duration-300">
+                    <dd className="text-4xl font-bold tracking-tight text-white group-hover:text-rose-400 transition-colors duration-300">
                       {stat.value}
                     </dd>
                   </motion.div>

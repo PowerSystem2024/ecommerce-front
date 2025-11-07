@@ -117,7 +117,7 @@ const itemVariants = {
 
 export default function TeamSection() {
   return (
-    <section className="bg-gradient-to-br from-gray-50 to-white py-20 sm:py-32">
+    <section className="bg-[#0F0F10] py-20 sm:py-32 text-white">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         {/* Header */}
         <motion.div 
@@ -128,7 +128,7 @@ export default function TeamSection() {
           transition={{ duration: 0.8 }}
         >
           <motion.h2 
-            className="text-4xl font-light tracking-tight text-gray-900 sm:text-5xl mb-6"
+            className="text-4xl font-light tracking-tight text-white sm:text-5xl mb-6"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -140,7 +140,7 @@ export default function TeamSection() {
             </span>
           </motion.h2>
           <motion.p 
-            className="text-lg text-gray-600 max-w-3xl mx-auto leading-relaxed"
+            className="text-lg text-gray-400 max-w-3xl mx-auto leading-relaxed"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -166,7 +166,7 @@ export default function TeamSection() {
               className="group"
             >
               <motion.div 
-                className="relative bg-white rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100"
+                className="relative bg-[#1a1a1b] rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-800"
                 whileHover={{ y: -8, scale: 1.02 }}
                 transition={{ type: "spring", stiffness: 300, damping: 20 }}
               >
@@ -179,30 +179,27 @@ export default function TeamSection() {
                     whileHover={{ scale: 1.05 }}
                     transition={{ type: "spring", stiffness: 300, damping: 20 }}
                   />
-                  
                   {/* Decorative Ring */}
-                  <div className="absolute inset-0 w-32 h-32 mx-auto rounded-full border-2 border-rose-200 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <div className="absolute inset-0 w-32 h-32 mx-auto rounded-full border-2 border-rose-500/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 </div>
 
                 {/* Content */}
                 <div className="text-center">
                   <motion.h3 
-                    className="text-xl font-semibold text-gray-900 mb-2 group-hover:text-rose-600 transition-colors duration-300"
+                    className="text-xl font-semibold text-white mb-2 group-hover:text-rose-400 transition-colors duration-300"
                     whileHover={{ x: 5 }}
                     transition={{ type: "spring", stiffness: 300, damping: 20 }}
                   >
                     {person.name}
                   </motion.h3>
-                  
                   <motion.p 
-                    className="text-rose-600 font-medium mb-3"
+                    className="text-rose-400 font-medium mb-3"
                     whileHover={{ x: 5 }}
                     transition={{ type: "spring", stiffness: 300, damping: 20 }}
                   >
                     {person.role}
                   </motion.p>
-                  
-                  <p className="text-sm text-gray-600 mb-6 leading-relaxed">
+                  <p className="text-sm text-gray-400 mb-6 leading-relaxed">
                     {person.description}
                   </p>
 
@@ -220,7 +217,7 @@ export default function TeamSection() {
                         href={person.githubUrl} 
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-gray-400 hover:text-rose-500 transition-colors duration-300 p-2 rounded-full hover:bg-rose-50"
+                        className="text-gray-400 hover:text-rose-400 transition-colors duration-300 p-2 rounded-full hover:bg-rose-500/10"
                         whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.95 }}
                       >
@@ -235,7 +232,7 @@ export default function TeamSection() {
                         href={person.linkedinUrl} 
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-gray-400 hover:text-rose-500 transition-colors duration-300 p-2 rounded-full hover:bg-rose-50"
+                        className="text-gray-400 hover:text-rose-400 transition-colors duration-300 p-2 rounded-full hover:bg-rose-500/10"
                         whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.95 }}
                       >
@@ -254,7 +251,7 @@ export default function TeamSection() {
 
                 {/* Hover Effect Background */}
                 <motion.div 
-                  className="absolute inset-0 bg-gradient-to-br from-rose-50 to-pink-50 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"
+                  className="absolute inset-0 bg-gradient-to-br from-rose-500/10 to-pink-500/10 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"
                   initial={false}
                 />
               </motion.div>
@@ -271,7 +268,7 @@ export default function TeamSection() {
           transition={{ delay: 0.8, duration: 0.8 }}
         >
           <motion.p 
-            className="text-gray-600 mb-6 text-lg"
+            className="text-gray-400 mb-6 text-lg"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
