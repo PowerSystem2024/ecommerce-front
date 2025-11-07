@@ -27,7 +27,7 @@ export default function Contact() {
 
   return (
     <motion.div 
-      className="relative isolate bg-gradient-to-br from-gray-50 to-white px-6 py-24 sm:py-32 lg:px-8"
+      className="relative isolate bg-[#0F0F10] px-6 py-24 sm:py-32 lg:px-8 text-white"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.8 }}
@@ -35,7 +35,7 @@ export default function Contact() {
       {/* Background Pattern */}
       <svg
         aria-hidden="true"
-        className="absolute inset-0 -z-10 size-full mask-[radial-gradient(100%_100%_at_top_right,white,transparent)] stroke-gray-200"
+        className="hidden"
       >
         <defs>
           <pattern
@@ -66,13 +66,13 @@ export default function Contact() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
         >
-          <h2 className="text-4xl font-light tracking-tight text-gray-900 sm:text-5xl mb-6">
+          <h2 className="text-4xl sm:text-5xl font-['Orbitron',_sans-serif] uppercase tracking-widest text-white mb-6">
             Hablemos sobre tu
             <span className="block font-bold bg-gradient-to-r from-rose-600 to-pink-600 bg-clip-text text-transparent">
               Proyecto de Moda
             </span>
           </h2>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+          <p className="text-lg text-gray-400 max-w-2xl mx-auto">
             Ayudamos a personas y empresas a desarrollar su estilo personal y crear 
             guardarrobas que reflejen su personalidad única.
           </p>
@@ -94,7 +94,7 @@ export default function Contact() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.5 }}
               >
-                <label htmlFor="firstName" className="block text-sm/6 font-semibold text-gray-900 mb-2">
+                <label htmlFor="firstName" className="block text-sm/6 font-semibold text-gray-200 mb-2">
                   Nombre
                 </label>
                 <div className="mt-2.5">
@@ -105,7 +105,7 @@ export default function Contact() {
                     value={formData.firstName}
                     onChange={handleInputChange}
                     autoComplete="given-name"
-                    className="block w-full rounded-xl bg-white px-4 py-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 backdrop-blur-sm placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-rose-600 transition-all duration-300"
+                    className="block w-full rounded-xl bg-[#1a1a1b] px-4 py-3 text-base text-gray-100 outline-1 -outline-offset-1 outline-gray-700 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-rose-600 transition-all duration-300"
                     placeholder="Tu nombre"
                     required
                   />
@@ -118,7 +118,7 @@ export default function Contact() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.6 }}
               >
-                <label htmlFor="lastName" className="block text-sm/6 font-semibold text-gray-900 mb-2">
+                <label htmlFor="lastName" className="block text-sm/6 font-semibold text-gray-200 mb-2">
                   Apellido
                 </label>
                 <div className="mt-2.5">
@@ -129,7 +129,7 @@ export default function Contact() {
                     value={formData.lastName}
                     onChange={handleInputChange}
                     autoComplete="family-name"
-                    className="block w-full rounded-xl bg-white px-4 py-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 backdrop-blur-sm placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-rose-600 transition-all duration-300"
+                    className="block w-full rounded-xl bg-[#1a1a1b] px-4 py-3 text-base text-gray-100 outline-1 -outline-offset-1 outline-gray-700 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-rose-600 transition-all duration-300"
                     placeholder="Tu apellido"
                     required
                   />
@@ -142,7 +142,7 @@ export default function Contact() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.7 }}
               >
-                <label htmlFor="email" className="block text-sm/6 font-semibold text-gray-900 mb-2">
+                <label htmlFor="email" className="block text-sm/6 font-semibold text-gray-200 mb-2">
                   Email
                 </label>
                 <div className="mt-2.5">
@@ -153,7 +153,7 @@ export default function Contact() {
                     value={formData.email}
                     onChange={handleInputChange}
                     autoComplete="email"
-                    className="block w-full rounded-xl bg-white px-4 py-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 backdrop-blur-sm placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-rose-600 transition-all duration-300"
+                    className="block w-full rounded-xl bg-[#1a1a1b] px-4 py-3 text-base text-gray-100 outline-1 -outline-offset-1 outline-gray-700 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-rose-600 transition-all duration-300"
                     placeholder="tu@email.com"
                     required
                   />
@@ -166,7 +166,7 @@ export default function Contact() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.8 }}
               >
-                <label htmlFor="phone" className="block text-sm/6 font-semibold text-gray-900 mb-2">
+                <label htmlFor="phone" className="block text-sm/6 font-semibold text-gray-200 mb-2">
                   Teléfono
                 </label>
                 <div className="mt-2.5">
@@ -177,7 +177,7 @@ export default function Contact() {
                     value={formData.phone}
                     onChange={handleInputChange}
                     autoComplete="tel"
-                    className="block w-full rounded-xl bg-white px-4 py-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 backdrop-blur-sm placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-rose-600 transition-all duration-300"
+                    className="block w-full rounded-xl bg-[#1a1a1b] px-4 py-3 text-base text-gray-100 outline-1 -outline-offset-1 outline-gray-700 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-rose-600 transition-all duration-300"
                     placeholder="+54 9 11 1234-5678"
                   />
                 </div>
@@ -190,7 +190,7 @@ export default function Contact() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.9 }}
               >
-                <label htmlFor="message" className="block text-sm/6 font-semibold text-gray-900 mb-2">
+                <label htmlFor="message" className="block text-sm/6 font-semibold text-gray-200 mb-2">
                   Mensaje
                 </label>
                 <div className="mt-2.5">
@@ -200,7 +200,7 @@ export default function Contact() {
                     rows={4}
                     value={formData.message}
                     onChange={handleInputChange}
-                    className="block w-full rounded-xl bg-white px-4 py-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 backdrop-blur-sm placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-rose-600 transition-all duration-300 resize-none"
+                    className="block w-full rounded-xl bg-[#1a1a1b] px-4 py-3 text-base text-gray-100 outline-1 -outline-offset-1 outline-gray-700 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-rose-600 transition-all duration-300 resize-none"
                     placeholder="Cuéntanos sobre tu proyecto de moda o consulta..."
                     required
                   />
@@ -225,7 +225,7 @@ export default function Contact() {
               </motion.button>
               
               <motion.p 
-                className="mt-4 text-sm/6 text-gray-500 text-center"
+                className="mt-4 text-sm/6 text-gray-400 text-center"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 1.2, duration: 0.6 }}
@@ -257,19 +257,19 @@ export default function Contact() {
                   R
                 </div>
                 <div>
-                  <div className="font-bold text-gray-900 text-xl">Ropa Moderna</div>
-                  <div className="text-sm text-gray-500">Tu estilo, nuestra pasión</div>
+                  <div className="font-bold text-white text-xl">Ropa Moderna</div>
+                  <div className="text-sm text-gray-400">Tu estilo, nuestra pasión</div>
                 </div>
               </div>
             </motion.div>
 
             {/* Testimonial */}
             <motion.figure 
-              className="bg-white rounded-2xl p-6 shadow-lg"
+              className="bg-[#1a1a1b] rounded-2xl p-6 shadow-lg"
               whileHover={{ scale: 1.02, y: -5 }}
               transition={{ type: "spring", stiffness: 300, damping: 20 }}
             >
-              <blockquote className="text-lg/8 font-medium text-gray-900 mb-4">
+              <blockquote className="text-lg/8 font-medium text-gray-100 mb-4">
                 <p>
                   "Ropa Moderna transformó completamente mi guardarropa. Su asesoramiento 
                   personalizado y la calidad de sus prendas son excepcionales. 
@@ -283,8 +283,8 @@ export default function Contact() {
                   className="size-12 flex-none rounded-full bg-gray-50 object-cover"
                 />
                 <div>
-                  <div className="text-base font-semibold text-gray-900">María González</div>
-                  <div className="text-sm/6 text-gray-600">Cliente desde 2022</div>
+                  <div className="text-base font-semibold text-gray-100">María González</div>
+                  <div className="text-sm/6 text-gray-400">Cliente desde 2022</div>
                 </div>
               </figcaption>
             </motion.figure>
@@ -296,13 +296,13 @@ export default function Contact() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.8, duration: 0.6 }}
             >
-              <div className="flex items-center gap-3 text-gray-600">
+              <div className="flex items-center gap-3 text-gray-400">
                 <svg className="w-5 h-5 text-rose-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                 </svg>
                 <span>contacto@ropamoderna.com</span>
               </div>
-              <div className="flex items-center gap-3 text-gray-600">
+              <div className="flex items-center gap-3 text-gray-400">
                 <svg className="w-5 h-5 text-rose-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                 </svg>

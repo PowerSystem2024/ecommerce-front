@@ -1,10 +1,11 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../auth/context/AuthContext';
 import userService from '../../../user-profile/services/userService';
 import { useCart } from '../../../cart/context/useCart';
+import logo from '/src/assets/logo.png';
 
-export const NavbarUser = ({ onMenuToggle }) => {
+export const NavbarUser = () => {
   const navigate = useNavigate();
   const { user, logout, updateUser } = useAuth();
   const { totalCount } = useCart();
@@ -18,19 +19,14 @@ export const NavbarUser = ({ onMenuToggle }) => {
     navigate('/');
   };
 
-  const handleProfileClick = () => {
-    setIsDropdownOpen(false);
-    navigate('/profile');
-  };
-
-  const getAvatarUrl = () => {
+  const getAvatarUrl = useCallback(() => {
     const ctx = user?.avatar || user?.photoURL || user?.image || user?.picture || user?.profileImage || user?.profilePhoto || user?.profile?.avatar || user?.profile?.image || '';
     if (ctx) return ctx;
     try {
       const saved = JSON.parse(localStorage.getItem('userData') || 'null');
       return saved?.avatar || '';
     } catch { return ''; }
-  };
+  }, [user]);
   const getInitial = () => (user?.name || user?.email || 'U').trim().charAt(0).toUpperCase();
 
   useEffect(() => {
@@ -54,11 +50,15 @@ export const NavbarUser = ({ onMenuToggle }) => {
         const profile = res?.data || res;
         if (profile?.avatar) {
           if (updateUser) updateUser({ avatar: profile.avatar });
-          try { localStorage.setItem('userData', JSON.stringify({ ...(user || {}), avatar: profile.avatar })); } catch {}
+          try {
+            localStorage.setItem('userData', JSON.stringify({ avatar: profile.avatar }));
+          } catch (e) {
+            console.warn('No se pudo persistir avatar en localStorage', e);
+          }
         }
-      }).catch(() => {});
+      }).catch(() => null);
     }
-  }, [user?.avatar]);
+  }, [getAvatarUrl, updateUser, user]);
 
   return (
     <nav className="fixed top-0 w-full z-50 bg-[#0F0F10] backdrop-blur-lg border-b border-[#2A2A2A] h-16 flex items-center justify-between px-4 lg:px-8 text-[#FFFFFF] font-['Orbitron',_sans-serif] shadow-[0_2px_20px_rgba(15,15,16,0.8)]">
@@ -67,9 +67,9 @@ export const NavbarUser = ({ onMenuToggle }) => {
             onClick={() => navigate('/shop')}
         className="hidden md:flex items-center space-x-2 hover:opacity-80 transition-opacity"
           >
-        <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-[#6D28D9] to-[#8B5CF6] flex items-center justify-center">
-          <span className="text-[#FFFFFF] font-bold text-lg">LT</span>
-            </div>
+        <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-[#6D28D9] to-[#8B5CF6] flex items-center justify-center overflow-hidden">
+          <img src={logo} alt="Logo" className="h-8 w-8 object-cover rounded-md" />
+        </div>
         <h1 className="text-lg sm:text-xl font-bold text-[#FFFFFF] tracking-[0.1em] uppercase font-['Orbitron',_sans-serif]">
               La Tiendita
             </h1>
@@ -93,8 +93,8 @@ export const NavbarUser = ({ onMenuToggle }) => {
           <div className="absolute left-0 mt-3 w-64 bg-[#0F0F10]/95 text-[#FFFFFF] rounded-2xl shadow-xl py-3 z-50 border border-[#2A2A2A] backdrop-blur-md">
             <div className="px-4 pb-3 border-b border-[#2A2A2A]/60">
               <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[#6D28D9] to-[#8B5CF6] flex items-center justify-center">
-                  <span className="text-lg text-[#FFFFFF]">LT</span>
+                <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[#6D28D9] to-[#8B5CF6] flex items-center justify-center overflow-hidden">
+                  <img src={logo} alt="Logo" className="h-9 w-9 object-cover rounded-md" />
                 </div>
                 <div>
                   <div className="text-sm font-semibold text-[#FFFFFF] font-['Orbitron',_sans-serif] tracking-[0.1em] uppercase">

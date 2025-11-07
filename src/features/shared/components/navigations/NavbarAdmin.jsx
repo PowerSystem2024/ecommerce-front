@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../auth/context/AuthContext';
 import userService from '../../../user-profile/services/userService';
+import logo from '/src/assets/logo.png';
 
 export const NavbarAdmin = ({ onMenuToggle }) => {
   const navigate = useNavigate();
@@ -42,15 +43,45 @@ export const NavbarAdmin = ({ onMenuToggle }) => {
 
   // Hidratar avatar si falta
   useEffect(() => {
-    if (!getAvatarUrl()) {
-      userService.getProfile().then((res) => {
-        const profile = res?.data || res;
-        if (profile?.avatar) {
-          try { localStorage.setItem('userData', JSON.stringify({ ...(user || {}), avatar: profile.avatar })); } catch {}
+    const hasAvatar =
+      (user?.avatar ||
+        user?.photoURL ||
+        user?.image ||
+        user?.picture ||
+        user?.profileImage ||
+        user?.profilePhoto ||
+        user?.profile?.avatar ||
+        user?.profile?.image) ||
+      (() => {
+        try {
+          const saved = JSON.parse(localStorage.getItem('userData') || 'null');
+          return saved?.avatar || '';
+        } catch {
+          return '';
         }
-      }).catch(() => {});
+      })();
+
+    if (!hasAvatar) {
+      userService
+        .getProfile()
+        .then((res) => {
+          const profile = res?.data || res;
+          if (profile?.avatar) {
+            try {
+              localStorage.setItem(
+                'userData',
+                JSON.stringify({ ...(user || {}), avatar: profile.avatar })
+              );
+            } catch (err) {
+              console.warn(err);
+            }
+          }
+        })
+        .catch((err) => {
+          console.warn(err);
+        });
     }
-  }, [user?.avatar]);
+  }, [user]);
 
   return (
     <nav className="bg-white shadow-sm border-b border-gray-200 h-16 flex items-center justify-between px-4 lg:px-6">
@@ -68,6 +99,9 @@ export const NavbarAdmin = ({ onMenuToggle }) => {
 
         {/* Logo */}
         <div className="flex items-center space-x-3">
+          <div className="h-12 w-12 rounded-md bg-gradient-to-r from-[#6D28D9] to-[#8B5CF6] flex items-center justify-center shadow-md overflow-hidden">
+            <img src={logo} alt="Logo" className="h-11 w-11 object-cover rounded-md" />
+          </div>
           <h1 className="text-xl font-bold text-gray-900">La Tiendita</h1>
           {/* Badge de Administrador */}
           <div className="flex items-center space-x-2 px-3 py-1 bg-red-100 text-red-700 rounded-full text-xs font-medium">

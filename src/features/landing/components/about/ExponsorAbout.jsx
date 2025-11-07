@@ -55,7 +55,7 @@ const itemVariants = {
 export default function ExponsorAbout() {
   return (
     <motion.section 
-      className="bg-gradient-to-br from-gray-50 to-white py-16 sm:py-24"
+      className="bg-[#0F0F10] py-16 sm:py-24 text-white"
       initial={{ opacity: 0 }}
       whileInView={{ opacity: 1 }}
       viewport={{ once: true, margin: "-100px" }}
@@ -70,13 +70,13 @@ export default function ExponsorAbout() {
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
         >
-          <h2 className="text-3xl font-light tracking-tight text-gray-900 sm:text-4xl mb-4">
+          <h2 className="text-3xl font-light tracking-tight text-white sm:text-4xl mb-4">
             Marcas que
             <span className="block font-bold bg-gradient-to-r from-rose-600 to-pink-600 bg-clip-text text-transparent">
               Confían en Nosotros
             </span>
           </h2>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+          <p className="text-lg text-gray-400 max-w-2xl mx-auto">
             Trabajamos con las mejores marcas de moda para ofrecerte una experiencia de compra única
           </p>
         </motion.div>
@@ -89,7 +89,7 @@ export default function ExponsorAbout() {
           whileInView="visible"
           viewport={{ once: true, margin: "-100px" }}
         >
-          {sponsors.map((sponsor, index) => (
+          {sponsors.map((sponsor) => (
             <motion.div
               key={sponsor.name}
               className="group relative"
@@ -97,7 +97,7 @@ export default function ExponsorAbout() {
               whileHover={{ scale: 1.05, y: -5 }}
               transition={{ type: "spring", stiffness: 300, damping: 20 }}
             >
-              <div className="flex flex-col items-center p-6 bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100">
+              <div className="flex flex-col items-center p-6 bg-[#1a1a1b] rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-800">
                 {/* Logo Container */}
                 <motion.div 
                   className="relative w-20 h-20 mb-4 overflow-hidden rounded-xl"
@@ -119,7 +119,7 @@ export default function ExponsorAbout() {
 
                 {/* Brand Name */}
                 <motion.h3 
-                  className="text-lg font-semibold text-gray-900 mb-2 group-hover:text-rose-600 transition-colors duration-300"
+                  className="text-lg font-semibold text-white mb-2 group-hover:text-rose-400 transition-colors duration-300"
                   whileHover={{ x: 5 }}
                   transition={{ type: "spring", stiffness: 300, damping: 20 }}
                 >
@@ -127,13 +127,13 @@ export default function ExponsorAbout() {
                 </motion.h3>
 
                 {/* Description */}
-                <p className="text-sm text-gray-500 text-center group-hover:text-gray-700 transition-colors duration-300">
+                <p className="text-sm text-gray-400 text-center group-hover:text-gray-300 transition-colors duration-300">
                   {sponsor.description}
                 </p>
 
                 {/* Decorative Element */}
                 <motion.div 
-                  className="absolute inset-0 bg-gradient-to-br from-rose-50 to-pink-50 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"
+                  className="absolute inset-0 bg-gradient-to-br from-rose-500/10 to-pink-500/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"
                   initial={false}
                 />
               </div>
@@ -150,14 +150,14 @@ export default function ExponsorAbout() {
           transition={{ delay: 0.6, duration: 0.8 }}
         >
           <motion.div 
-            className="inline-flex items-center gap-4 bg-white rounded-full px-6 py-3 shadow-lg"
+            className="inline-flex items-center gap-4 bg-[#1a1a1b] rounded-full px-6 py-3 shadow-lg border border-gray-800"
             whileHover={{ scale: 1.02 }}
             transition={{ type: "spring", stiffness: 300, damping: 20 }}
           >
-            <span className="text-gray-600">¿Querés ser nuestro socio?</span>
+            <span className="text-gray-300">¿Querés ser nuestro socio?</span>
             <motion.a
               href="/contact"
-              className="text-rose-600 hover:text-rose-700 font-semibold transition-colors duration-300"
+              className="text-rose-400 hover:text-rose-300 font-semibold transition-colors duration-300"
               whileHover={{ x: 5 }}
               transition={{ type: "spring", stiffness: 300, damping: 20 }}
             >
