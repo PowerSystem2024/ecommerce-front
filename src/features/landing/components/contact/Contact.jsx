@@ -66,7 +66,7 @@ export default function Contact() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
         >
-          <h2 className="text-4xl font-light tracking-tight text-white sm:text-5xl mb-6">
+          <h2 className="text-4xl sm:text-5xl font-['Orbitron',_sans-serif] uppercase tracking-widest text-white mb-6">
             Hablemos sobre tu
             <span className="block font-bold bg-gradient-to-r from-rose-600 to-pink-600 bg-clip-text text-transparent">
               Proyecto de Moda

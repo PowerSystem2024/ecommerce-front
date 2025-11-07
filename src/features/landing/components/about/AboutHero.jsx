@@ -67,7 +67,7 @@ export default function AboutHero() {
                   transition={{ duration: 0.8, delay: 0.2 }}
                 >
                   <Motion.h1 
-                    className="text-5xl font-light tracking-tight text-white sm:text-7xl"
+                    className="text-5xl sm:text-7xl font-['Orbitron',_sans-serif] uppercase tracking-widest text-white"
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.8, delay: 0.4 }}
