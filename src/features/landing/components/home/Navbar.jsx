@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import logo from '../../../../assets/logo.png';
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -21,6 +22,12 @@ export default function Navbar() {
   }, []);
 
   const handleScrollTo = (id) => {
+    // Si el objetivo es contacto, siempre navegar a /contact
+    if (id === '#contact') {
+      navigate('/contact');
+      setMenuOpen(false);
+      return;
+    }
     // Si estamos en la landing page, navegar a /about (sin hash para comenzar desde arriba)
     if (location.pathname === '/') {
       navigate('/about');
@@ -50,8 +57,8 @@ export default function Navbar() {
       <nav className="flex items-center justify-between h-16 w-full px-6 md:px-12">
         {/* LOGO */}
         <a href="/" className="flex items-center gap-2 transform transition-transform duration-300 hover:scale-105">
-          <div className="h-10 w-10 rounded-md bg-gradient-to-r from-[#6D28D9] to-[#8B5CF6] flex items-center justify-center text-white font-orbitron font-bold shadow-md">
-            FS
+          <div className="h-12 w-12 rounded-md bg-gradient-to-r from-[#6D28D9] to-[#8B5CF6] flex items-center justify-center shadow-md overflow-hidden">
+            <img src={logo} alt="Logo" className="h-11 w-11 object-cover rounded-md" />
           </div>
           <span className="font-orbitron text-white text-lg tracking-wider uppercase">
             Fatal Store
@@ -74,7 +81,7 @@ export default function Navbar() {
           </button>
           <a
             href="/login"
-            className="bg-[#2A2A2A] hover:bg-white hover:text-[#2A2A2A] transition duration-300 rounded-md px-4 py-2 font-quantico text-white font-semibold shadow hover:shadow-lg transform hover:scale-105"
+            className="bg-[#2A2A2A] hover:bg:white hover:text-[#2A2A2A] transition duration-300 rounded-md px-4 py-2 font-quantico text-white font-semibold shadow hover:shadow-lg transform hover:scale-105"
           >
             INICIAR SESIÓN
           </a>
@@ -120,7 +127,7 @@ export default function Navbar() {
 
       {/* MENÚ MÓVIL */}
       {menuOpen && (
-        <div className="md:hidden bg-black/95 backdrop-blur-md px-6 py-4 space-y-3 shadow-lg animate-fadeIn">
+        <div className="md:hidden bg:black/95 backdrop-blur-md px-6 py-4 space-y-3 shadow-lg animate-fadeIn">
           <button
             onClick={() => handleScrollTo("#about")}
             className="block w-full text-left text-white hover:text-[#E11D74] font-rajdhani transition duration-300 transform hover:scale-105"
@@ -135,7 +142,7 @@ export default function Navbar() {
           </button>
           <a
             href="/login"
-            className="block w-full text-center bg-[#2A2A2A] hover:bg-white hover:text-[#2A2A2A] font-quantico text-white py-2 rounded-md transition duration-300 shadow hover:shadow-lg transform hover:scale-105"
+            className="block w-full text-center bg-[#2A2A2A] hover:bg:white hover:text-[#2A2A2A] font-quantico text-white py-2 rounded-md transition duration-300 shadow hover:shadow-lg transform hover:scale-105"
             onClick={() => setMenuOpen(false)}
           >
             INICIAR SESIÓN
