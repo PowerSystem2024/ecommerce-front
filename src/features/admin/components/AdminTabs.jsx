@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Tab } from '@headlessui/react';
 import ProductAdminTable from './Products/ProductAdminTable';
+import AdminUsersPage from '../pages/AdminUsersPage';
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
@@ -61,21 +62,7 @@ function EmptyState({ title, description, cta }) {
 }
 
 function UsuariosTab() {
-  return (
-    <div>
-      <div className="flex items-center justify-between mb-4">
-        <h4 className="text-lg text-[#0F0F10] font-['Orbitron',_sans-serif]">Gestión de usuarios</h4>
-        <button className="px-3 py-2 bg-[#0F0F10] text-white rounded-md text-sm hover:bg-[#E11D74] transition shadow-sm font-['Quantico',_sans-serif]">
-          Crear usuario
-        </button>
-      </div>
-      <EmptyState
-        title="Sin usuarios cargados"
-        description="Cuando agregues usuarios aparecerán aquí."
-        cta={<button className="text-sm text-[#E11D74] hover:underline font-['Quantico',_sans-serif]">Importar usuarios</button>}
-      />
-    </div>
-  );
+  return <AdminUsersPage />;
 }
 
 function ProductosTab({ onCreate, openCreate, onCloseCreate }) {
