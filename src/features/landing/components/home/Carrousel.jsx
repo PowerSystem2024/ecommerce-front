@@ -222,4 +222,4 @@ export default function Carrousel() {
       </div>
     </motion.section>
   );
-}
+}  

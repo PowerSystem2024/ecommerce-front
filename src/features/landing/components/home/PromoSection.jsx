@@ -2,23 +2,13 @@ import { motion } from "framer-motion"
 
 const colecciones = [
   {
-    name: "Mujer",
-    href: '/categoria/mujer',
     imageSrc: 'https://i.pinimg.com/1200x/b6/4e/3a/b64e3aacc165b7b041e5fd5309245e0f.jpg',
-    imageAlt: 'Mujer con estilo elegante y moderno',
   },
   {
-    name: "Hombre",
-    href: '/categoria/hombre',
     imageSrc: 'https://i.pinimg.com/736x/04/0f/20/040f2051d3493a9416cc2ee04948b413.jpg',
-    imageAlt: 'Hombre con look urbano y casual',
-
   },
   {
-    name: 'Accesorios',
-    href: '/categoria/accesorios',
     imageSrc: 'https://i.pinimg.com/736x/a6/ee/bc/a6eebccbe86b8c55185618a1092a7b94.jpg',
-    imageAlt: 'Accesorios de moda y complementos',
   },
 ]
 
@@ -134,13 +124,13 @@ export default function PromoSection() {
         >
           {colecciones.map((coleccion, index) => (
             <motion.div
-              key={coleccion.name}
+              key={index}
               variants={itemVariants}
               className="group relative"
             >
-              <motion.a
-                href={coleccion.href}
-                className="block relative h-96 rounded-3xl bg-[#1A1A1A] shadow-2xl overflow-hidden sm:aspect-4/5 sm:h-auto border border-[#333333]"
+              {/* Cambiado de motion.a a div para eliminar redirección */}
+              <motion.div
+                className="block relative h-96 rounded-3xl bg-[#1A1A1A] shadow-2xl overflow-hidden sm:aspect-4/5 sm:h-auto border border-[#333333] cursor-default"
                 whileHover={{ y: -8, scale: 1.02 }}
                 transition={{ type: "spring", stiffness: 300, damping: 20 }}
               >
@@ -168,60 +158,11 @@ export default function PromoSection() {
                   />
                 </div>
 
-                {/* Content */}
-                <div className="absolute inset-0 flex items-end rounded-3xl p-8">
-                  <div className="w-full text-center flex flex-col items-center justify-end">
-                    <motion.p 
-                      className="text-base text-[#E11D74] mb-3 font-medium w-full tracking-wide"
-                      initial={{ opacity: 0, y: 10 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.2 }}
-                    >
-                      {coleccion.description}
-                    </motion.p>
-                    
-                    <motion.h3 
-                      className="text-3xl font-['Orbitron'] font-bold text-white mb-6 group-hover:text-[#E11D74] transition-colors duration-300 w-full uppercase tracking-wider"
-                      initial={{ opacity: 0, y: 10 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.3 }}
-                    >
-                      {coleccion.name}
-                    </motion.h3>
-
-                    {/* CTA Button */}
-                    <motion.div 
-                      className="flex items-center justify-center gap-4 w-full"
-                      initial={{ opacity: 0, y: 10 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.4 }}
-                    >
-                      <span className="text-white/90 font-medium text-lg group-hover:text-[#E11D74] transition-colors duration-300 tracking-wide">
-                        Explorar colección
-                      </span>
-                      <motion.div
-                        className="w-10 h-10 rounded-full bg-[#E11D74]/80 backdrop-blur-sm flex items-center justify-center group-hover:bg-[#E11D74] transition-colors duration-300 border border-white/20"
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.95 }}
-                      >
-                        <svg 
-                          className="w-5 h-5 text-white transform group-hover:translate-x-0.5 transition-transform duration-300" 
-                          fill="none" 
-                          stroke="currentColor" 
-                          viewBox="0 0 24 24"
-                        >
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                        </svg>
-                      </motion.div>
-                    </motion.div>
-                  </div>
-                </div>
-
                 {/* Efecto de borde luminoso en hover */}
                 <div className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500">
                   <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-[#E11D74] to-[#8B5CF6] opacity-20 blur-sm"></div>
                 </div>
-              </motion.a>
+              </motion.div>
             </motion.div>
           ))}
         </motion.div>
@@ -235,15 +176,15 @@ export default function PromoSection() {
           transition={{ delay: 0.8, duration: 0.8 }}
         >
           <p className="text-[#CFCFCF] mb-8 text-xl w-full">
-            ¿No encontrás lo que buscás?
+            
           </p>
           <motion.a
-            href="/catalogo"
+            href="/login"
             className="inline-flex items-center gap-3 text-[#E11D74] hover:text-[#8B5CF6] font-semibold text-xl transition-colors duration-300 justify-center group"
             whileHover={{ x: 5 }}
             transition={{ type: "spring", stiffness: 300, damping: 20 }}
           >
-            Ver catálogo completo
+            Comenzar a comprar
             <motion.div
               className="w-6 h-6 rounded-full bg-[#E11D74]/20 flex items-center justify-center group-hover:bg-[#E11D74]/30 transition-colors duration-300"
               whileHover={{ scale: 1.1 }}
