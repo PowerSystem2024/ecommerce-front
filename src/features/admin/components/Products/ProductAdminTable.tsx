@@ -3,6 +3,8 @@ import { dashboardService } from '../../services';
 import { Product, Category, ProductsResponse } from '../../types/product.types';
 import ProductEdit from './ProductEdit';
 import ProductCreate from './ProductCreate';
+import { successToast, errorToast, loadingToast } from '../../../../utils/customToast';
+import { confirmDialog } from '../../../../utils/confirmDialog.jsx';
 
 // Define prop types
 interface ProductAdminTableProps {
@@ -176,7 +178,16 @@ const ProductAdminTable: React.FC<ProductAdminTableProps> = ({ openCreate = fals
   const [createOpen, setCreateOpen] = useState(false);
 
   const handleDelete = async (id: string) => {
-    if (!window.confirm('¿Estás seguro de que deseas eliminar este producto?')) {
+    const confirmed = await confirmDialog(
+      '¿Estás seguro de que deseas eliminar este producto?',
+      {
+        confirmText: 'Eliminar',
+        cancelText: 'Cancelar',
+        confirmColor: '#EF4444'
+      }
+    );
+    
+    if (!confirmed) {
       return;
     }
 
@@ -184,6 +195,7 @@ const ProductAdminTable: React.FC<ProductAdminTableProps> = ({ openCreate = fals
     setError('');
     
     try {
+      const toastId = loadingToast('Eliminando producto...');
       // Intentar eliminar el producto
       const response = await dashboardService.deleteProduct(id);
       
@@ -192,7 +204,7 @@ const ProductAdminTable: React.FC<ProductAdminTableProps> = ({ openCreate = fals
         // Actualizar la lista de productos
         setRefreshTrigger(prev => prev + 1);
         // Mostrar mensaje de éxito
-        alert('✅ Producto eliminado correctamente');
+        successToast('Producto eliminado correctamente');
       } else {
         throw new Error('La eliminación no fue exitosa');
       }
@@ -211,8 +223,7 @@ const ProductAdminTable: React.FC<ProductAdminTableProps> = ({ openCreate = fals
       }
       
       setError(errorMessage);
-      // Mostrar el error también en un alert para asegurarnos de que el usuario lo vea
-      alert(`❌ ${errorMessage}`);
+      errorToast(errorMessage);
     } finally {
       setLoading(false);
     }

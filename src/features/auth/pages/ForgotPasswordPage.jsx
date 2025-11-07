@@ -247,22 +247,19 @@ export default function ForgotPasswordPage() {
               style={{
                 width: '100%',
                 padding: '0.875rem 1.5rem',
-                background: 'linear-gradient(90deg, #dc143c 0%, #c71585 30%, #8b008b 70%, #4b0082 100%)',
+                background: 'linear-gradient(135deg, rgba(220, 20, 60, 0.35) 0%, rgba(139, 0, 139, 0.45) 50%, rgba(75, 0, 130, 0.35) 100%)',
                 color: '#ffffff',
                 fontWeight: '600',
                 fontSize: '1rem',
-                border: '1px solid rgba(255, 255, 255, 0.1)',
+                border: '1px solid rgba(220, 20, 60, 0.4)',
                 borderRadius: '0.75rem',
                 cursor: 'pointer',
-                transition: 'opacity 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease, filter 0.3s ease',
+                transition: 'opacity 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease, border-color 0.3s ease',
                 outline: 'none',
-                background: 'linear-gradient(135deg, rgba(220, 20, 60, 0.35) 0%, rgba(139, 0, 139, 0.45) 50%, rgba(75, 0, 130, 0.35) 100%)',
-                border: '1px solid rgba(220, 20, 60, 0.4)',
                 boxShadow: '0 4px 12px rgba(0, 0, 0, 0.6), 0 0 20px rgba(220, 20, 60, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.03)',
                 fontFamily: "'Rajdhani', sans-serif",
                 letterSpacing: '0.08em',
-                textTransform: 'uppercase',
-                transition: 'opacity 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease, border-color 0.3s ease'
+                textTransform: 'uppercase'
               }}
               onMouseEnter={(e) => {
                 e.target.style.background = 'linear-gradient(135deg, rgba(220, 20, 60, 0.5) 0%, rgba(139, 0, 139, 0.6) 50%, rgba(75, 0, 130, 0.5) 100%)';

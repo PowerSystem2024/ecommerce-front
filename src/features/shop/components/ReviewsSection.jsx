@@ -47,15 +47,20 @@ export default function ReviewsSection({
     setLoading(true);
     setError('');
     try {
+      // Agregar timestamp para evitar caché
+      const timestamp = new Date().getTime();
       const response = await productService.getReviews(productId, {
         page,
         limit: reviewsPerPage,
-        sort
+        sort,
+        _: timestamp // Evitar caché
       });
 
       // Normalizar respuesta según estructura del backend
       const data = response?.data || response;
-      const reviewsData = data.reviews || data || [];
+      
+      // Filtrar solo reseñas activas (doble verificación en el frontend)
+      const reviewsData = (data.reviews || data || []).filter(review => review.isActive !== false);
       const meta = data.meta || {};
       
       setReviews(reviewsData);
@@ -69,9 +74,10 @@ export default function ReviewsSection({
       } else if (meta.averageRating !== undefined) {
         setAverageRating(meta.averageRating);
       } else {
-        // Calcular promedio si no viene del backend
-        const totalRating = reviewsData.reduce((sum, review) => sum + (review.rating || 0), 0);
-        setAverageRating(reviewsData.length > 0 ? totalRating / reviewsData.length : 0);
+        // Calcular promedio solo con reseñas activas
+        const activeReviews = reviewsData.filter(review => review.isActive !== false);
+        const totalRating = activeReviews.reduce((sum, review) => sum + (review.rating || 0), 0);
+        setAverageRating(activeReviews.length > 0 ? totalRating / activeReviews.length : 0);
       }
     } catch (err) {
       setError(err.message || 'Error al cargar las reseñas');

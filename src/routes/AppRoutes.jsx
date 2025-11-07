@@ -6,6 +6,7 @@ import LandingPage from '../features/landing/page/LandingPage';
 import ShopPage from '../features/shop/page/shopPage';
 import { DashboardAdmin, AdminProfilePage } from '../features/admin';
 import { DashboardContent } from '../features/admin/components';
+import AdminUsersPage from '../features/admin/pages/AdminUsersPage';
 import CartPage from '../features/cart/pages/cartpage';
 
 // Importar nuevas páginas
@@ -109,6 +110,7 @@ export default function AppRoutes() {
         <Route index element={<Navigate to="dashboard" replace />} />
         <Route path="dashboard" element={<DashboardContent />} />
         <Route path="profile" element={<AdminProfilePage />} />
+        <Route path="users" element={<AdminUsersPage />} />
       </Route>
       
       {/* Rutas de autenticación */}
