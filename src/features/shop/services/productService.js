@@ -87,13 +87,14 @@ class ProductService {
 
   // Obtener reseñas de un producto con paginación y ordenamiento
   // GET /products/{productId}/reviews
-  async getReviews(productId, { page = 1, limit = 10, sort = 'newest' } = {}) {
+  async getReviews(productId, { page = 1, limit = 10, sort = 'newest', isActive = true } = {}) {
     if (!productId) throw new Error('productId es requerido');
     
     const queryParams = new URLSearchParams();
     if (page) queryParams.append('page', page);
     if (limit) queryParams.append('limit', limit);
     if (sort) queryParams.append('sort', sort);
+    queryParams.append('isActive', isActive); // Siempre filtrar por isActive=true para usuarios normales
     
     const queryString = queryParams.toString();
     const endpoint = `/products/${productId}/reviews${queryString ? `?${queryString}` : ''}`;
