@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import logo from '../../../../assets/logo.png';
+import logo from '/src/assets/logo.png';
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
