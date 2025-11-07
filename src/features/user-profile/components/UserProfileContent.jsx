@@ -269,13 +269,16 @@ const UserProfileContent = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/50 p-12 text-center"
+          className="backdrop-blur-sm rounded-2xl shadow-xl border border-white/10 p-12 text-center"
+          style={{
+            background: "linear-gradient(135deg, rgba(26, 26, 27, 0.95) 0%, rgba(15, 15, 16, 0.98) 50%, rgba(30, 10, 25, 0.95) 100%)"
+          }}
         >
           <motion.div 
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ delay: 0.2, duration: 0.5 }}
-            className="w-20 h-20 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg"
+            className="w-20 h-20 bg-gradient-to-br from-[#E11D74] to-[#6D28D9] rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg"
           >
             <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
@@ -285,7 +288,7 @@ const UserProfileContent = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.4 }}
-            className="text-2xl font-bold text-gray-900 mb-3 font-orbitron"
+            className="text-2xl font-bold text-[#E11D74] mb-3 font-['Orbitron',sans-serif] uppercase tracking-wide"
           >
             Acceso requerido
           </motion.h3>
@@ -293,7 +296,7 @@ const UserProfileContent = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.6 }}
-            className="text-gray-600 mb-6 text-lg"
+            className="text-[#CFCFCF] mb-6 text-lg font-['Rajdhani',sans-serif]"
           >
             Debes iniciar sesión para acceder a tu perfil
           </motion.p>
@@ -308,17 +311,20 @@ const UserProfileContent = () => {
         <motion.div 
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg border border-gray-200/50 p-12 text-center"
+          className="backdrop-blur-sm rounded-2xl shadow-lg border border-white/10 p-12 text-center"
+          style={{
+            background: "linear-gradient(135deg, rgba(26, 26, 27, 0.95) 0%, rgba(15, 15, 16, 0.98) 50%, rgba(30, 10, 25, 0.95) 100%)"
+          }}
         >
-          <div className="animate-spin w-12 h-12 border-4 border-purple-500 border-t-transparent rounded-full mx-auto mb-4"></div>
-          <p className="text-gray-600 text-lg">Cargando perfil...</p>
+          <div className="animate-spin w-12 h-12 border-4 border-[#E11D74] border-t-transparent rounded-full mx-auto mb-4"></div>
+          <p className="text-[#CFCFCF] text-lg font-['Rajdhani',sans-serif]">Cargando perfil...</p>
         </motion.div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-purple-50/30">
+    <div className="min-h-screen">
       <div className="max-w-5xl mx-auto p-6">
       {/* Header */}
       <motion.div 
@@ -336,7 +342,7 @@ const UserProfileContent = () => {
               transition={{ delay: 0.1 }}
               className="relative group"
             >
-              <div className="w-20 h-20 rounded-full overflow-hidden border-4 border-white shadow-lg bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
+              <div className="w-20 h-20 rounded-full overflow-hidden border-4 border-white/20 shadow-lg bg-gradient-to-br from-[#E11D74] to-[#6D28D9] flex items-center justify-center">
                 {avatar ? (
                   <img 
                     src={avatar} 
@@ -354,7 +360,7 @@ const UserProfileContent = () => {
               <motion.label
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="absolute -bottom-2 -right-2 w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center cursor-pointer shadow-lg hover:shadow-xl transition-all duration-300"
+                className="absolute -bottom-2 -right-2 w-8 h-8 bg-gradient-to-r from-[#E11D74] to-[#6D28D9] rounded-full flex items-center justify-center cursor-pointer shadow-lg hover:shadow-xl transition-all duration-300"
                 title="Cambiar avatar"
               >
                 <input
@@ -381,7 +387,7 @@ const UserProfileContent = () => {
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.2 }}
-                className="text-4xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-3 font-orbitron"
+                className="text-4xl font-bold text-[#E11D74] mb-3 font-['Orbitron',sans-serif] uppercase tracking-wide"
               >
                 Mi Perfil
               </motion.h1>
@@ -389,7 +395,7 @@ const UserProfileContent = () => {
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.3 }}
-                className="text-gray-600 text-lg mb-4"
+                className="text-[#CFCFCF] text-lg mb-4 font-['Rajdhani',sans-serif]"
               >
                 Gestiona tu información personal y preferencias
               </motion.p>
@@ -404,7 +410,7 @@ const UserProfileContent = () => {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={handleChangePassword}
-                className="px-6 py-3 bg-gradient-to-r from-red-600 to-pink-600 text-white rounded-xl hover:from-red-700 hover:to-pink-700 transition-all duration-300 flex items-center space-x-2 shadow-lg hover:shadow-xl"
+                className="px-6 py-3 bg-gradient-to-r from-[#E11D74] to-[#6D28D9] text-white rounded-xl hover:from-[#6D28D9] hover:to-[#8B5CF6] transition-all duration-300 flex items-center space-x-2 shadow-lg hover:shadow-xl font-['Quantico',sans-serif] uppercase"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
@@ -418,7 +424,7 @@ const UserProfileContent = () => {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => setIsEditing(true)}
-                className="px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl hover:from-purple-700 hover:to-pink-700 transition-all duration-300 flex items-center space-x-2 shadow-lg hover:shadow-xl"
+                className="px-6 py-3 bg-gradient-to-r from-[#E11D74] to-[#6D28D9] text-white rounded-xl hover:from-[#6D28D9] hover:to-[#8B5CF6] transition-all duration-300 flex items-center space-x-2 shadow-lg hover:shadow-xl font-['Quantico',sans-serif] uppercase"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -436,10 +442,10 @@ const UserProfileContent = () => {
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -10 }}
-          className={`mb-6 p-4 rounded-xl shadow-lg ${
+          className={`mb-6 p-4 rounded-xl shadow-lg border ${
             message.type === 'success' 
-              ? 'bg-gradient-to-r from-green-50 to-emerald-50 text-green-800 border border-green-200' 
-              : 'bg-gradient-to-r from-red-50 to-rose-50 text-red-800 border border-red-200'
+              ? 'bg-green-900/30 text-green-200 border-green-500' 
+              : 'bg-red-900/30 text-red-200 border-red-500'
           }`}
         >
           <div className="flex items-center space-x-2">
@@ -465,20 +471,23 @@ const UserProfileContent = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
           whileHover={{ y: -2 }}
-          className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg border border-gray-200/50 p-8 hover:shadow-xl transition-all duration-300 hover:border-purple-200/50"
+          className="backdrop-blur-sm rounded-2xl shadow-lg border border-white/10 p-8 hover:shadow-xl transition-all duration-300 hover:border-[#E11D74]/50"
+          style={{
+            background: "linear-gradient(135deg, rgba(26, 26, 27, 0.9) 0%, rgba(15, 15, 16, 0.95) 50%, rgba(30, 10, 25, 0.9) 100%)"
+          }}
         >
           <motion.h2 
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.2 }}
-            className="text-2xl font-bold text-gray-900 mb-8 flex items-center space-x-3"
+            className="text-2xl font-bold text-[#E11D74] mb-8 flex items-center space-x-3 font-['Orbitron',sans-serif] uppercase tracking-wide"
           >
-            <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
+            <div className="w-10 h-10 bg-gradient-to-br from-[#E11D74] to-[#6D28D9] rounded-xl flex items-center justify-center shadow-lg">
               <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
               </svg>
             </div>
-            <span className="font-orbitron">Información Personal</span>
+            <span>Información Personal</span>
           </motion.h2>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -490,7 +499,7 @@ const UserProfileContent = () => {
             >
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <svg className="w-4 h-4 text-gray-300 group-focus-within:text-purple-500 transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4 text-[#CFCFCF]/50 group-focus-within:text-[#E11D74] transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                   </svg>
                 </div>
@@ -500,7 +509,7 @@ const UserProfileContent = () => {
                   value={formData.name}
                   onChange={handleInputChange}
                   disabled={!isEditing}
-                  className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 disabled:bg-gray-50 disabled:text-gray-500 transition-all duration-300 hover:border-gray-300 hover:shadow-md focus:shadow-lg bg-white/90 backdrop-blur-sm"
+                  className="w-full pl-10 pr-4 py-3 border border-white/20 rounded-xl focus:ring-2 focus:ring-[#E11D74]/30 focus:border-[#E11D74] disabled:bg-[#0F0F10]/50 disabled:text-[#CFCFCF]/50 transition-all duration-300 hover:border-[#E11D74]/50 hover:shadow-md focus:shadow-lg bg-[#0F0F10]/90 backdrop-blur-sm text-[#CFCFCF] placeholder:text-[#CFCFCF]/50 font-['Rajdhani',sans-serif]"
                   placeholder="Nombre completo"
                   required
                 />
@@ -515,7 +524,7 @@ const UserProfileContent = () => {
             >
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <svg className="w-4 h-4 text-gray-300 group-focus-within:text-purple-500 transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4 text-[#CFCFCF]/50 group-focus-within:text-[#E11D74] transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                   </svg>
                 </div>
@@ -525,7 +534,7 @@ const UserProfileContent = () => {
                   value={formData.email}
                   onChange={handleInputChange}
                   disabled={!isEditing}
-                  className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 disabled:bg-gray-50 disabled:text-gray-500 transition-all duration-300 hover:border-gray-300 hover:shadow-md focus:shadow-lg bg-white/90 backdrop-blur-sm"
+                  className="w-full pl-10 pr-4 py-3 border border-white/20 rounded-xl focus:ring-2 focus:ring-[#E11D74]/30 focus:border-[#E11D74] disabled:bg-[#0F0F10]/50 disabled:text-[#CFCFCF]/50 transition-all duration-300 hover:border-[#E11D74]/50 hover:shadow-md focus:shadow-lg bg-[#0F0F10]/90 backdrop-blur-sm text-[#CFCFCF] placeholder:text-[#CFCFCF]/50 font-['Rajdhani',sans-serif]"
                   placeholder="Correo electrónico"
                   required
                 />
@@ -540,7 +549,7 @@ const UserProfileContent = () => {
             >
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <svg className="w-4 h-4 text-gray-300 group-focus-within:text-purple-500 transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4 text-[#CFCFCF]/50 group-focus-within:text-[#E11D74] transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                   </svg>
                 </div>
@@ -550,7 +559,7 @@ const UserProfileContent = () => {
                   value={formData.phone}
                   onChange={handleInputChange}
                   disabled={!isEditing}
-                  className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 disabled:bg-gray-50 disabled:text-gray-500 transition-all duration-300 hover:border-gray-300 hover:shadow-md focus:shadow-lg bg-white/90 backdrop-blur-sm"
+                  className="w-full pl-10 pr-4 py-3 border border-white/20 rounded-xl focus:ring-2 focus:ring-[#E11D74]/30 focus:border-[#E11D74] disabled:bg-[#0F0F10]/50 disabled:text-[#CFCFCF]/50 transition-all duration-300 hover:border-[#E11D74]/50 hover:shadow-md focus:shadow-lg bg-[#0F0F10]/90 backdrop-blur-sm text-[#CFCFCF] placeholder:text-[#CFCFCF]/50 font-['Rajdhani',sans-serif]"
                   placeholder="Teléfono"
                 />
               </div>
@@ -564,7 +573,7 @@ const UserProfileContent = () => {
             >
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <svg className="w-4 h-4 text-gray-300 group-focus-within:text-purple-500 transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4 text-[#CFCFCF]/50 group-focus-within:text-[#E11D74] transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                   </svg>
                 </div>
@@ -574,7 +583,7 @@ const UserProfileContent = () => {
                   value={formData.birthDate}
                   onChange={handleInputChange}
                   disabled={!isEditing}
-                  className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 disabled:bg-gray-50 disabled:text-gray-500 transition-all duration-300 hover:border-gray-300 hover:shadow-md focus:shadow-lg bg-white/90 backdrop-blur-sm"
+                  className="w-full pl-10 pr-4 py-3 border border-white/20 rounded-xl focus:ring-2 focus:ring-[#E11D74]/30 focus:border-[#E11D74] disabled:bg-[#0F0F10]/50 disabled:text-[#CFCFCF]/50 transition-all duration-300 hover:border-[#E11D74]/50 hover:shadow-md focus:shadow-lg bg-[#0F0F10]/90 backdrop-blur-sm text-[#CFCFCF] placeholder:text-[#CFCFCF]/50 font-['Rajdhani',sans-serif]"
                 />
               </div>
             </motion.div>
@@ -587,21 +596,24 @@ const UserProfileContent = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
           whileHover={{ y: -2 }}
-          className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg border border-gray-200/50 p-8 hover:shadow-xl transition-all duration-300 hover:border-cyan-200/50"
+          className="backdrop-blur-sm rounded-2xl shadow-lg border border-white/10 p-8 hover:shadow-xl transition-all duration-300 hover:border-[#E11D74]/50"
+          style={{
+            background: "linear-gradient(135deg, rgba(26, 26, 27, 0.9) 0%, rgba(15, 15, 16, 0.95) 50%, rgba(30, 10, 25, 0.9) 100%)"
+          }}
         >
           <motion.h2 
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.3 }}
-            className="text-2xl font-bold text-gray-900 mb-8 flex items-center space-x-3"
+            className="text-2xl font-bold text-[#E11D74] mb-8 flex items-center space-x-3 font-['Orbitron',sans-serif] uppercase tracking-wide"
           >
-            <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg">
+            <div className="w-10 h-10 bg-gradient-to-br from-[#E11D74] to-[#6D28D9] rounded-xl flex items-center justify-center shadow-lg">
               <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a2 2 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
               </svg>
             </div>
-            <span className="font-orbitron">Dirección</span>
+            <span>Dirección</span>
           </motion.h2>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -613,7 +625,7 @@ const UserProfileContent = () => {
             >
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <svg className="w-4 h-4 text-gray-300 group-focus-within:text-cyan-500 transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4 text-[#CFCFCF]/50 group-focus-within:text-[#E11D74] transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a2 2 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                   </svg>
@@ -624,7 +636,7 @@ const UserProfileContent = () => {
                   value={formData.address.street}
                   onChange={handleInputChange}
                   disabled={!isEditing}
-                  className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 disabled:bg-gray-50 disabled:text-gray-500 transition-all duration-300 hover:border-gray-300 hover:shadow-md focus:shadow-lg bg-white/90 backdrop-blur-sm"
+                  className="w-full pl-10 pr-4 py-3 border border-white/20 rounded-xl focus:ring-2 focus:ring-[#E11D74]/30 focus:border-[#E11D74] disabled:bg-[#0F0F10]/50 disabled:text-[#CFCFCF]/50 transition-all duration-300 hover:border-[#E11D74]/50 hover:shadow-md focus:shadow-lg bg-[#0F0F10]/90 backdrop-blur-sm text-[#CFCFCF] placeholder:text-[#CFCFCF]/50 font-['Rajdhani',sans-serif]"
                   placeholder="Calle y número"
                 />
               </div>
@@ -638,7 +650,7 @@ const UserProfileContent = () => {
             >
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <svg className="w-4 h-4 text-gray-300 group-focus-within:text-cyan-500 transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4 text-[#CFCFCF]/50 group-focus-within:text-[#E11D74] transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                   </svg>
                 </div>
@@ -648,7 +660,7 @@ const UserProfileContent = () => {
                   value={formData.address.city}
                   onChange={handleInputChange}
                   disabled={!isEditing}
-                  className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 disabled:bg-gray-50 disabled:text-gray-500 transition-all duration-300 hover:border-gray-300 hover:shadow-md focus:shadow-lg bg-white/90 backdrop-blur-sm"
+                  className="w-full pl-10 pr-4 py-3 border border-white/20 rounded-xl focus:ring-2 focus:ring-[#E11D74]/30 focus:border-[#E11D74] disabled:bg-[#0F0F10]/50 disabled:text-[#CFCFCF]/50 transition-all duration-300 hover:border-[#E11D74]/50 hover:shadow-md focus:shadow-lg bg-[#0F0F10]/90 backdrop-blur-sm text-[#CFCFCF] placeholder:text-[#CFCFCF]/50 font-['Rajdhani',sans-serif]"
                   placeholder="Ciudad"
                 />
               </div>
@@ -662,7 +674,7 @@ const UserProfileContent = () => {
             >
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <svg className="w-4 h-4 text-gray-300 group-focus-within:text-cyan-500 transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4 text-[#CFCFCF]/50 group-focus-within:text-[#E11D74] transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                 </div>
@@ -672,7 +684,7 @@ const UserProfileContent = () => {
                   value={formData.address.state}
                   onChange={handleInputChange}
                   disabled={!isEditing}
-                  className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 disabled:bg-gray-50 disabled:text-gray-500 transition-all duration-300 hover:border-gray-300 hover:shadow-md focus:shadow-lg bg-white/90 backdrop-blur-sm"
+                  className="w-full pl-10 pr-4 py-3 border border-white/20 rounded-xl focus:ring-2 focus:ring-[#E11D74]/30 focus:border-[#E11D74] disabled:bg-[#0F0F10]/50 disabled:text-[#CFCFCF]/50 transition-all duration-300 hover:border-[#E11D74]/50 hover:shadow-md focus:shadow-lg bg-[#0F0F10]/90 backdrop-blur-sm text-[#CFCFCF] placeholder:text-[#CFCFCF]/50 font-['Rajdhani',sans-serif]"
                   placeholder="Estado"
                 />
               </div>
@@ -686,7 +698,7 @@ const UserProfileContent = () => {
             >
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <svg className="w-4 h-4 text-gray-300 group-focus-within:text-cyan-500 transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4 text-[#CFCFCF]/50 group-focus-within:text-[#E11D74] transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14" />
                   </svg>
                 </div>
@@ -696,7 +708,7 @@ const UserProfileContent = () => {
                   value={formData.address.zipCode}
                   onChange={handleInputChange}
                   disabled={!isEditing}
-                  className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 disabled:bg-gray-50 disabled:text-gray-500 transition-all duration-300 hover:border-gray-300 hover:shadow-md focus:shadow-lg bg-white/90 backdrop-blur-sm"
+                  className="w-full pl-10 pr-4 py-3 border border-white/20 rounded-xl focus:ring-2 focus:ring-[#E11D74]/30 focus:border-[#E11D74] disabled:bg-[#0F0F10]/50 disabled:text-[#CFCFCF]/50 transition-all duration-300 hover:border-[#E11D74]/50 hover:shadow-md focus:shadow-lg bg-[#0F0F10]/90 backdrop-blur-sm text-[#CFCFCF] placeholder:text-[#CFCFCF]/50 font-['Rajdhani',sans-serif]"
                   placeholder="Código postal"
                 />
               </div>
@@ -710,7 +722,7 @@ const UserProfileContent = () => {
             >
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <svg className="w-4 h-4 text-gray-300 group-focus-within:text-cyan-500 transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4 text-[#CFCFCF]/50 group-focus-within:text-[#E11D74] transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                 </div>
@@ -719,7 +731,7 @@ const UserProfileContent = () => {
                   value={formData.address.country}
                   onChange={handleInputChange}
                   disabled={!isEditing}
-                  className="w-full pl-10 pr-10 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 disabled:bg-gray-50 disabled:text-gray-500 transition-all duration-300 hover:border-gray-300 hover:shadow-md focus:shadow-lg bg-white/90 backdrop-blur-sm appearance-none"
+                  className="w-full pl-10 pr-10 py-3 border border-white/20 rounded-xl focus:ring-2 focus:ring-[#E11D74]/30 focus:border-[#E11D74] disabled:bg-[#0F0F10]/50 disabled:text-[#CFCFCF]/50 transition-all duration-300 hover:border-[#E11D74]/50 hover:shadow-md focus:shadow-lg bg-[#0F0F10]/90 backdrop-blur-sm appearance-none text-[#CFCFCF] font-['Rajdhani',sans-serif]"
                 >
                   <option value="México">México</option>
                   <option value="Estados Unidos">Estados Unidos</option>
@@ -728,7 +740,7 @@ const UserProfileContent = () => {
                   <option value="Argentina">Argentina</option>
                 </select>
                 <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                  <svg className="w-4 h-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4 text-[#CFCFCF]/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                   </svg>
                 </div>
@@ -751,7 +763,7 @@ const UserProfileContent = () => {
               whileTap={{ scale: 0.95 }}
               type="button"
               onClick={handleCancel}
-              className="px-8 py-3 border-2 border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 hover:border-gray-400 transition-all duration-200 font-medium"
+              className="px-8 py-3 border-2 border-white/20 text-[#CFCFCF] rounded-xl hover:bg-[#0F0F10]/80 hover:border-[#E11D74] hover:text-[#E11D74] transition-all duration-200 font-['Quantico',sans-serif] uppercase"
             >
               Cancelar
             </motion.button>
@@ -760,7 +772,7 @@ const UserProfileContent = () => {
               whileTap={{ scale: 0.95 }}
               type="submit"
               disabled={isLoading}
-              className="px-8 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl hover:from-purple-700 hover:to-pink-700 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2 shadow-lg hover:shadow-xl font-medium"
+              className="px-8 py-3 bg-gradient-to-r from-[#E11D74] to-[#6D28D9] text-white rounded-xl hover:from-[#6D28D9] hover:to-[#8B5CF6] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2 shadow-lg hover:shadow-xl font-['Quantico',sans-serif] uppercase"
             >
               {isLoading && (
                 <svg className="w-5 h-5 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">

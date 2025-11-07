@@ -118,7 +118,11 @@ export default function ReviewCard({
 
   return (
     <>
-      <div className={`bg-white rounded-lg border border-gray-200 p-4 hover:shadow-md transition-shadow duration-200 ${className}`}>
+      <div className={`backdrop-blur-sm rounded-lg border border-white/10 p-4 hover:shadow-md transition-shadow duration-200 ${className}`}
+        style={{
+          background: "linear-gradient(135deg, rgba(26, 26, 27, 0.9) 0%, rgba(15, 15, 16, 0.95) 50%, rgba(30, 10, 25, 0.9) 100%)"
+        }}
+      >
         {/* Header de la reseña */}
         <div className="flex items-start gap-3 mb-3">
           {/* Avatar del usuario */}
@@ -141,11 +145,11 @@ export default function ReviewCard({
           {/* Información del usuario y calificación */}
           <div className="flex-1 min-w-0">
             <div className="flex items-start justify-between gap-2 mb-1">
-              <h4 className="font-semibold text-[#0F0F10] font-['Quantico',_sans-serif] text-sm truncate">
+              <h4 className="font-semibold text-[#E11D74] font-['Quantico',_sans-serif] text-sm truncate uppercase tracking-wide">
                 {userName}
               </h4>
               <div className="flex items-center gap-2">
-                <span className="text-xs text-[#2A2A2A] font-['Rajdhani',_sans-serif] flex-shrink-0">
+                <span className="text-xs text-[#CFCFCF]/70 font-['Rajdhani',_sans-serif] flex-shrink-0">
                   {formatDate(date)}
                 </span>
                 
@@ -180,7 +184,7 @@ export default function ReviewCard({
                 editable={false} 
                 size="sm"
               />
-              <span className="text-xs text-[#2A2A2A] font-['Rajdhani',_sans-serif]">
+              <span className="text-xs text-[#CFCFCF]/70 font-['Rajdhani',_sans-serif]">
                 {rating.toFixed(1)}
               </span>
             </div>
@@ -189,7 +193,7 @@ export default function ReviewCard({
 
         {/* Comentario */}
         {comment && (
-          <p className="text-[#2A2A2A] text-sm font-['Rajdhani',_sans-serif] leading-relaxed">
+          <p className="text-[#CFCFCF] text-sm font-['Rajdhani',_sans-serif] leading-relaxed">
             {comment}
           </p>
         )}
@@ -199,18 +203,22 @@ export default function ReviewCard({
       <Dialog open={showDeleteDialog} onClose={() => !isDeleting && setShowDeleteDialog(false)}>
         <DialogBackdrop className="fixed inset-0 bg-black/50 backdrop-blur-sm" />
         <div className="fixed inset-0 flex items-center justify-center p-4 z-50">
-          <DialogPanel className="bg-white rounded-lg p-6 max-w-md w-full shadow-xl">
-            <h3 className="text-lg font-semibold text-[#0F0F10] font-['Quantico',_sans-serif] mb-2">
+          <DialogPanel className="backdrop-blur-md rounded-lg p-6 max-w-md w-full shadow-xl border border-white/10"
+            style={{
+              background: "linear-gradient(135deg, rgba(26, 26, 27, 0.95) 0%, rgba(15, 15, 16, 0.98) 50%, rgba(30, 10, 25, 0.95) 100%)"
+            }}
+          >
+            <h3 className="text-lg font-semibold text-[#E11D74] font-['Quantico',_sans-serif] mb-2 uppercase tracking-wide">
               ¿Eliminar reseña?
             </h3>
-            <p className="text-[#2A2A2A] font-['Rajdhani',_sans-serif] mb-6">
+            <p className="text-[#CFCFCF] font-['Rajdhani',_sans-serif] mb-6">
               Esta acción no se puede deshacer. ¿Estás seguro de que deseas eliminar tu reseña?
             </p>
             <div className="flex gap-3 justify-end">
               <button
                 onClick={() => setShowDeleteDialog(false)}
                 disabled={isDeleting}
-                className="px-4 py-2 border border-gray-300 rounded-lg text-[#2A2A2A] hover:bg-gray-50 transition font-['Rajdhani',_sans-serif] disabled:opacity-50"
+                className="px-4 py-2 border border-white/20 rounded-lg text-[#CFCFCF] bg-[#0F0F10]/80 hover:bg-gradient-to-r hover:from-[#E11D74] hover:to-[#6D28D9] hover:text-white hover:border-transparent transition font-['Rajdhani',_sans-serif] disabled:opacity-50"
               >
                 Cancelar
               </button>

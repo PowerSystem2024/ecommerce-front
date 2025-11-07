@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
@@ -18,11 +21,24 @@ export default function Navbar() {
   }, []);
 
   const handleScrollTo = (id) => {
-    const section = document.querySelector(id);
-    if (section) {
-      section.scrollIntoView({ behavior: "smooth" });
+    // Si estamos en la landing page, navegar a /about (sin hash para comenzar desde arriba)
+    if (location.pathname === '/') {
+      navigate('/about');
       setMenuOpen(false);
+      return;
     }
+    // Si estamos en /about, intentar hacer scroll si existe la sección
+    if (location.pathname === '/about') {
+      const section = document.querySelector(id);
+      if (section) {
+        section.scrollIntoView({ behavior: "smooth" });
+        setMenuOpen(false);
+        return;
+      }
+    }
+    // Si estamos en otra página, navegar a /about (sin hash para comenzar desde arriba)
+    navigate('/about');
+    setMenuOpen(false);
   };
 
   return (

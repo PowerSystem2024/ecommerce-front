@@ -72,13 +72,13 @@ export default function ShopHero({ onCategoryClick, selectedCategory = "" }) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
-          <h1 className="text-3xl lg:text-4xl font-bold text-[#0F0F10] mb-4 font-['Orbitron',_sans-serif]">
+          <h1 className="text-3xl lg:text-4xl font-bold text-[#E11D74] mb-4 font-['Orbitron',sans-serif] uppercase tracking-wider">
             Tienda Online
           </h1>
           
          
 
-          <p className="text-[#2A2A2A] font-['Rajdhani',_sans-serif]">
+          <p className="text-[#CFCFCF] font-['Rajdhani',sans-serif]">
             Encontrá lo que necesitás con nuestra amplia selección de productos
           </p>
         </motion.div>
@@ -93,11 +93,14 @@ export default function ShopHero({ onCategoryClick, selectedCategory = "" }) {
           {/* Botón "Todos" para limpiar filtro */}
           <motion.button
             onClick={() => handleCategoryClick("")}
-            className={`group rounded-2xl p-6 text-center shadow-sm border border-[#2A2A2A]/10 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer ${
+            className={`group rounded-2xl p-6 text-center shadow-sm border border-white/20 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer backdrop-blur-sm ${
               selectedCategory === "" 
-                ? "bg-gradient-to-br from-[#6D28D9] to-[#8B5CF6] text-white" 
-                : "bg-white text-[#0F0F10]"
+                ? "bg-gradient-to-br from-[#6D28D9] to-[#8B5CF6] text-white border-[#8B5CF6]/50" 
+                : "text-[#CFCFCF]"
             }`}
+            style={selectedCategory === "" ? {} : {
+              background: "linear-gradient(135deg, rgba(26, 26, 27, 0.9) 0%, rgba(15, 15, 16, 0.95) 50%, rgba(30, 10, 25, 0.9) 100%)"
+            }}
             whileHover={{ scale: 1.02 }}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -106,10 +109,10 @@ export default function ShopHero({ onCategoryClick, selectedCategory = "" }) {
             <div className="text-4xl mb-3 group-hover:scale-110 transition-transform duration-300">
               🛍️
             </div>
-            <h3 className={`font-semibold transition-colors font-['Quantico',_sans-serif] ${
+            <h3 className={`font-semibold transition-colors font-['Quantico',sans-serif] ${
               selectedCategory === "" 
                 ? "text-white group-hover:text-[#E11D74]" 
-                : "text-[#0F0F10] group-hover:text-[#E11D74]"
+                : "text-[#CFCFCF] group-hover:text-[#E11D74]"
             }`}>
               Todos
             </h3>
@@ -118,9 +121,13 @@ export default function ShopHero({ onCategoryClick, selectedCategory = "" }) {
           {loading ? (
             // Skeletons mientras carga (3 más para completar 4 arriba)
             Array.from({ length: 3 }).map((_, i) => (
-              <div key={i} className="bg-white rounded-2xl p-6 text-center shadow-sm border border-[#2A2A2A]/10 animate-pulse">
-                <div className="text-4xl mb-3 bg-gray-200 rounded-full w-16 h-16 mx-auto"></div>
-                <div className="h-4 bg-gray-200 rounded w-24 mx-auto"></div>
+              <div key={i} className="backdrop-blur-sm rounded-2xl p-6 text-center shadow-sm border border-white/10 animate-pulse"
+                style={{
+                  background: "linear-gradient(135deg, rgba(26, 26, 27, 0.9) 0%, rgba(15, 15, 16, 0.95) 50%, rgba(30, 10, 25, 0.9) 100%)"
+                }}
+              >
+                <div className="text-4xl mb-3 bg-[#2A2A2A] rounded-full w-16 h-16 mx-auto"></div>
+                <div className="h-4 bg-[#2A2A2A] rounded w-24 mx-auto"></div>
               </div>
             ))
           ) : categories.length > 0 ? (
@@ -130,11 +137,14 @@ export default function ShopHero({ onCategoryClick, selectedCategory = "" }) {
                 <motion.button
                   key={category._id || category.name}
                   onClick={() => handleCategoryClick(category.name)}
-                  className={`group rounded-2xl p-6 text-center shadow-sm border border-[#2A2A2A]/10 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer ${
+                  className={`group rounded-2xl p-6 text-center shadow-sm border border-white/20 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer backdrop-blur-sm ${
                     isSelected 
-                      ? "bg-gradient-to-br from-[#6D28D9] to-[#8B5CF6] text-white" 
-                      : "bg-white text-[#0F0F10]"
+                      ? "bg-gradient-to-br from-[#6D28D9] to-[#8B5CF6] text-white border-[#8B5CF6]/50" 
+                      : "text-[#CFCFCF]"
                   }`}
+                  style={isSelected ? {} : {
+                    background: "linear-gradient(135deg, rgba(26, 26, 27, 0.9) 0%, rgba(15, 15, 16, 0.95) 50%, rgba(30, 10, 25, 0.9) 100%)"
+                  }}
                   whileHover={{ scale: 1.02 }}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -143,10 +153,10 @@ export default function ShopHero({ onCategoryClick, selectedCategory = "" }) {
                   <div className="text-4xl mb-3 group-hover:scale-110 transition-transform duration-300">
                     {getCategoryIcon(category.name)}
                   </div>
-                  <h3 className={`font-semibold transition-colors font-['Quantico',_sans-serif] ${
+                  <h3 className={`font-semibold transition-colors font-['Quantico',sans-serif] ${
                     isSelected 
                       ? "text-white group-hover:text-[#E11D74]" 
-                      : "text-[#0F0F10] group-hover:text-[#E11D74]"
+                      : "text-[#CFCFCF] group-hover:text-[#E11D74]"
                   }`}>
                     {category.name}
                   </h3>
@@ -155,7 +165,7 @@ export default function ShopHero({ onCategoryClick, selectedCategory = "" }) {
             })
           ) : (
             // Si no hay categorías, mostrar mensaje
-            <div className="col-span-full text-center text-[#2A2A2A] font-['Rajdhani',_sans-serif]">
+            <div className="col-span-full text-center text-[#CFCFCF] font-['Rajdhani',sans-serif]">
               No hay categorías disponibles
             </div>
           )}

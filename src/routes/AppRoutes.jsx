@@ -4,7 +4,6 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 // Importar tus páginas existentes
 import LandingPage from '../features/landing/page/LandingPage';
 import ShopPage from '../features/shop/page/shopPage';
-import OrdersPage from '../features/orders/pages/OrdersPage';
 import { DashboardAdmin, AdminProfilePage } from '../features/admin';
 import { DashboardContent } from '../features/admin/components';
 import CartPage from '../features/cart/pages/cartpage';
@@ -14,6 +13,9 @@ import UserProfilePage from '../features/user-profile/pages/UserProfilePage';
 import OrderHistoryPage from '../features/order-history/pages/OrderHistoryPage';
 import OrderDetailPage from '../features/order-history/pages/OrderDetailPage';
 import OrderReviewPage from '../features/order-history/pages/OrderReviewPage';
+import PaymentSuccessPage from '../features/payment/pages/PaymentSuccessPage';
+import PaymentFailurePage from '../features/payment/pages/PaymentFailurePage';
+import PaymentPendingPage from '../features/payment/pages/PaymentPendingPage';
 
 // Importar páginas de autenticación
 import LoginPage from '../features/auth/pages/LoginPage';
@@ -51,9 +53,11 @@ export default function AppRoutes() {
       {/* Rutas del shop/e-commerce */}
       <Route path="/shop" element={<ShopPage />} />
       <Route path="/cart" element={<CartPage />} />
+      
+      {/* Redirigir /orders a /order-history */}
       <Route path="/orders" element={
         <ProtectedRoute>
-          <OrdersPage />
+          <Navigate to="/order-history" replace />
         </ProtectedRoute>
       } />
       
@@ -76,6 +80,23 @@ export default function AppRoutes() {
       <Route path="/orders/:orderId/review" element={
         <ProtectedRoute>
           <OrderReviewPage />
+        </ProtectedRoute>
+      } />
+      
+      {/* Rutas de pago de Mercado Pago */}
+      <Route path="/payment/success" element={
+        <ProtectedRoute>
+          <PaymentSuccessPage />
+        </ProtectedRoute>
+      } />
+      <Route path="/payment/failure" element={
+        <ProtectedRoute>
+          <PaymentFailurePage />
+        </ProtectedRoute>
+      } />
+      <Route path="/payment/pending" element={
+        <ProtectedRoute>
+          <PaymentPendingPage />
         </ProtectedRoute>
       } />
       

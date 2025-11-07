@@ -71,7 +71,16 @@ export default function ProductFilters({ filters, onFiltersChange, onSearch }) {
   };
 
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-[#2A2A2A]/10 p-6 mb-8">
+    <div className="backdrop-blur-sm rounded-2xl shadow-sm border border-white/10 p-6 mb-8"
+      style={{
+        background: "linear-gradient(135deg, rgba(26, 26, 27, 0.9) 0%, rgba(15, 15, 16, 0.95) 50%, rgba(30, 10, 25, 0.9) 100%)"
+      }}
+    >
+      {/* Título */}
+      <h2 className="text-2xl lg:text-3xl font-bold text-[#E11D74] mb-6 font-['Orbitron',sans-serif] uppercase tracking-wider">
+        Buscar y Filtrar
+      </h2>
+      
       {/* Header con búsqueda */}
       <div className="flex flex-col lg:flex-row lg:items-center gap-4 mb-6">
         <div className="flex-1">
@@ -81,10 +90,10 @@ export default function ProductFilters({ filters, onFiltersChange, onSearch }) {
               value={searchQuery}
               onChange={handleSearchChange}
               placeholder="Buscar productos..."
-              className="w-full px-4 py-3 pl-12 pr-4 bg-[#2A2A2A]/5 border border-[#2A2A2A]/20 rounded-full focus:ring-2 focus:ring-[#6D28D9] focus:border-transparent transition-all duration-200 font-['Rajdhani',_sans-serif]"
+              className="w-full px-4 py-3 pl-12 pr-4 bg-[#0F0F10]/80 border border-white/20 rounded-full focus:ring-2 focus:ring-[#E11D74] focus:border-[#E11D74] transition-all duration-200 font-['Rajdhani',sans-serif] text-[#CFCFCF] placeholder:text-[#CFCFCF]/50"
             />
             <svg 
-              className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-[#2A2A2A]" 
+              className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-[#CFCFCF]" 
               fill="none" 
               stroke="currentColor" 
               viewBox="0 0 24 24"
@@ -98,7 +107,7 @@ export default function ProductFilters({ filters, onFiltersChange, onSearch }) {
                   setSearchQuery("");
                   onSearch("");
                 }}
-                className="absolute right-4 top-1/2 transform -translate-y-1/2 text-[#2A2A2A] hover:text-[#E11D74] transition-colors"
+                className="absolute right-4 top-1/2 transform -translate-y-1/2 text-[#CFCFCF] hover:text-[#E11D74] transition-colors"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
@@ -111,7 +120,7 @@ export default function ProductFilters({ filters, onFiltersChange, onSearch }) {
         <div className="flex items-center gap-3">
           <button
             onClick={() => setIsExpanded(!isExpanded)}
-            className="flex items-center gap-2 px-4 py-2 bg-[#0F0F10] text-white rounded-full hover:bg-[#E11D74] transition-all duration-300 font-['Quantico',_sans-serif] text-sm"
+            className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#E11D74] to-[#6D28D9] text-white rounded-full hover:from-[#6D28D9] hover:to-[#8B5CF6] transition-all duration-300 font-['Quantico',sans-serif] text-sm shadow-lg"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
@@ -124,7 +133,7 @@ export default function ProductFilters({ filters, onFiltersChange, onSearch }) {
           
           <button
             onClick={clearFilters}
-            className="px-4 py-2 border border-[#2A2A2A] text-[#2A2A2A] rounded-full hover:border-[#E11D74] hover:text-[#E11D74] transition-all duration-300 font-['Quantico',_sans-serif] text-sm"
+            className="px-4 py-2 border border-white/20 text-[#CFCFCF] rounded-full hover:border-[#E11D74] hover:text-[#E11D74] hover:bg-[#E11D74]/10 transition-all duration-300 font-['Quantico',sans-serif] text-sm bg-[#0F0F10]/50"
           >
             Limpiar
           </button>
@@ -138,10 +147,10 @@ export default function ProductFilters({ filters, onFiltersChange, onSearch }) {
         transition={{ duration: 0.3 }}
         className="overflow-hidden"
       >
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4 border-t border-[#2A2A2A]/10">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4 border-t border-white/10">
           {/* Filtro por talle */}
           <div>
-            <label className="block text-sm font-semibold text-[#0F0F10] mb-3 font-['Quantico',_sans-serif]">
+            <label className="block text-sm font-semibold text-[#E11D74] mb-3 font-['Quantico',sans-serif] uppercase tracking-wide">
               Talle
             </label>
             <div className="grid grid-cols-3 gap-2">
@@ -149,10 +158,10 @@ export default function ProductFilters({ filters, onFiltersChange, onSearch }) {
                 <button
                   key={size}
                   onClick={() => handleFilterChange("size", filters.size === size ? "" : size)}
-                  className={`px-3 py-2 text-sm rounded-full border transition-all duration-200 font-['Rajdhani',_sans-serif] ${
+                  className={`px-3 py-2 text-sm rounded-full border transition-all duration-200 font-['Rajdhani',sans-serif] ${
                     filters.size === size
-                      ? 'bg-[#6D28D9] text-white border-[#6D28D9]'
-                      : 'bg-white text-[#2A2A2A] border-[#2A2A2A] hover:border-[#E11D74] hover:text-[#E11D74]'
+                      ? 'bg-gradient-to-r from-[#E11D74] to-[#6D28D9] text-white border-transparent'
+                      : 'bg-[#0F0F10]/80 text-[#CFCFCF] border-white/20 hover:border-[#E11D74] hover:text-[#E11D74]'
                   }`}
                 >
                   {size}
@@ -163,7 +172,7 @@ export default function ProductFilters({ filters, onFiltersChange, onSearch }) {
 
           {/* Filtro por color */}
           <div>
-            <label className="block text-sm font-semibold text-[#0F0F10] mb-3 font-['Quantico',_sans-serif]">
+            <label className="block text-sm font-semibold text-[#E11D74] mb-3 font-['Quantico',sans-serif] uppercase tracking-wide">
               Color
             </label>
             <div className="grid grid-cols-4 gap-2">
@@ -173,8 +182,8 @@ export default function ProductFilters({ filters, onFiltersChange, onSearch }) {
                   onClick={() => handleFilterChange("color", filters.color === color.value ? "" : color.value)}
                   className={`w-10 h-10 rounded-full border-2 transition-all duration-200 ${
                     filters.color === color.value
-                      ? 'border-[#6D28D9] scale-110 ring-2 ring-[#6D28D9] ring-offset-2'
-                      : 'border-[#2A2A2A] hover:scale-110'
+                      ? 'border-[#E11D74] scale-110 ring-2 ring-[#E11D74] ring-offset-2'
+                      : 'border-white/40 hover:scale-110 hover:border-[#E11D74]'
                   }`}
                   style={{ backgroundColor: getColorHex(color.value) }}
                   title={color.name}
@@ -185,7 +194,7 @@ export default function ProductFilters({ filters, onFiltersChange, onSearch }) {
 
           {/* Filtro por precio */}
           <div>
-            <label className="block text-sm font-semibold text-[#0F0F10] mb-3 font-['Quantico',_sans-serif]">
+            <label className="block text-sm font-semibold text-[#E11D74] mb-3 font-['Quantico',sans-serif] uppercase tracking-wide">
               Precio
             </label>
             <div className="space-y-3">
@@ -195,18 +204,18 @@ export default function ProductFilters({ filters, onFiltersChange, onSearch }) {
                   placeholder="Mín"
                   value={filters.minPrice}
                   onChange={(e) => handleFilterChange("minPrice", e.target.value)}
-                  className="w-full px-3 py-2 border border-[#2A2A2A]/20 rounded-lg focus:ring-2 focus:ring-[#6D28D9] focus:border-transparent text-sm font-['Rajdhani',_sans-serif]"
+                  className="w-full px-3 py-2 border border-white/20 rounded-lg focus:ring-2 focus:ring-[#E11D74] focus:border-[#E11D74] text-sm font-['Rajdhani',sans-serif] bg-[#0F0F10]/80 text-[#CFCFCF] placeholder:text-[#CFCFCF]/50"
                 />
-                <span className="text-[#2A2A2A] font-['Rajdhani',_sans-serif]">-</span>
+                <span className="text-[#CFCFCF] font-['Rajdhani',sans-serif]">-</span>
                 <input
                   type="number"
                   placeholder="Máx"
                   value={filters.maxPrice}
                   onChange={(e) => handleFilterChange("maxPrice", e.target.value)}
-                  className="w-full px-3 py-2 border border-[#2A2A2A]/20 rounded-lg focus:ring-2 focus:ring-[#6D28D9] focus:border-transparent text-sm font-['Rajdhani',_sans-serif]"
+                  className="w-full px-3 py-2 border border-white/20 rounded-lg focus:ring-2 focus:ring-[#E11D74] focus:border-[#E11D74] text-sm font-['Rajdhani',sans-serif] bg-[#0F0F10]/80 text-[#CFCFCF] placeholder:text-[#CFCFCF]/50"
                 />
               </div>
-              <div className="text-xs text-[#2A2A2A] font-['Rajdhani',_sans-serif]">
+              <div className="text-xs text-[#CFCFCF]/70 font-['Rajdhani',sans-serif]">
                 Rango: $0 - $100.000
               </div>
             </div>

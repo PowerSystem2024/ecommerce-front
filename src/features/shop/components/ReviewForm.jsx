@@ -105,14 +105,18 @@ export default function ReviewForm({
 
   return (
     <form onSubmit={handleSubmit} className={className}>
-      <div className="bg-white rounded-lg border border-gray-200 p-6">
-        <h3 className="text-lg font-semibold text-[#0F0F10] font-['Quantico',_sans-serif] mb-4">
+      <div className="backdrop-blur-sm rounded-lg border border-white/10 p-6"
+        style={{
+          background: "linear-gradient(135deg, rgba(26, 26, 27, 0.9) 0%, rgba(15, 15, 16, 0.95) 50%, rgba(30, 10, 25, 0.9) 100%)"
+        }}
+      >
+        <h3 className="text-lg font-semibold text-[#E11D74] font-['Quantico',_sans-serif] mb-4 uppercase tracking-wide">
           {isEditing ? 'Editar tu reseña' : 'Escribir una reseña'}
         </h3>
 
         {/* Campo de calificación */}
         <div className="mb-4">
-          <label className="block text-sm font-medium text-[#0F0F10] mb-2 font-['Rajdhani',_sans-serif]">
+          <label className="block text-sm font-medium text-[#E11D74] mb-2 font-['Rajdhani',_sans-serif] uppercase tracking-wide">
             Calificación <span className="text-red-500">*</span>
           </label>
           <div className="flex items-center gap-3">
@@ -123,7 +127,7 @@ export default function ReviewForm({
               onChange={setRating}
             />
             {rating > 0 && (
-              <span className="text-sm text-[#2A2A2A] font-['Rajdhani',_sans-serif]">
+              <span className="text-sm text-[#CFCFCF] font-['Rajdhani',_sans-serif]">
                 {rating.toFixed(1)} estrellas
               </span>
             )}
@@ -153,11 +157,11 @@ export default function ReviewForm({
             rows={4}
             disabled={disabled || isSubmitting}
             placeholder="Compartí tu experiencia con este producto..."
-            className={`w-full border rounded-lg p-3 focus:ring-2 focus:ring-[#E11D74]/30 focus:border-[#E11D74] font-['Rajdhani',_sans-serif] transition-colors ${
+            className={`w-full border rounded-lg p-3 focus:ring-2 focus:ring-[#E11D74]/30 focus:border-[#E11D74] font-['Rajdhani',_sans-serif] transition-colors text-[#CFCFCF] placeholder:text-[#CFCFCF]/50 ${
               errors.comment
                 ? 'border-red-300 focus:border-red-500 focus:ring-red-200'
-                : 'border-gray-300'
-            } ${disabled || isSubmitting ? 'bg-gray-100 cursor-not-allowed' : 'bg-white'}`}
+                : 'border-white/20'
+            } ${disabled || isSubmitting ? 'bg-[#0F0F10]/50 cursor-not-allowed' : 'bg-[#0F0F10]/90 backdrop-blur-sm'}`}
             maxLength={1000}
           />
           <div className="flex items-center justify-between mt-1">
@@ -167,7 +171,7 @@ export default function ReviewForm({
               </p>
             )}
             <span className={`text-xs ml-auto font-['Rajdhani',_sans-serif] ${
-              comment.length > 1000 ? 'text-red-600' : 'text-gray-500'
+              comment.length > 1000 ? 'text-red-600' : 'text-[#CFCFCF]/60'
             }`}>
               {comment.length}/1000
             </span>
@@ -181,7 +185,7 @@ export default function ReviewForm({
               type="button"
               onClick={onCancel}
               disabled={isSubmitting || disabled}
-              className="px-4 py-2 border border-gray-300 rounded-lg text-[#2A2A2A] hover:bg-gray-50 transition font-['Rajdhani',_sans-serif] disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-4 py-2 border border-white/20 rounded-lg text-[#CFCFCF] bg-[#0F0F10]/80 hover:bg-gradient-to-r hover:from-[#E11D74] hover:to-[#6D28D9] hover:text-white hover:border-transparent transition font-['Rajdhani',_sans-serif] disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Cancelar
             </button>
@@ -189,10 +193,10 @@ export default function ReviewForm({
           <button
             type="submit"
             disabled={isSubmitting || disabled || rating === 0 || !comment.trim()}
-            className={`px-6 py-2 rounded-lg text-white font-['Quantico',_sans-serif] transition flex items-center gap-2 ${
+            className={`px-6 py-2 rounded-lg text-white font-['Quantico',_sans-serif] transition flex items-center gap-2 uppercase tracking-wide shadow-lg ${
               isSubmitting || disabled || rating === 0 || !comment.trim()
-                ? 'bg-gray-400 cursor-not-allowed'
-                : 'bg-[#0F0F10] hover:bg-[#E11D74]'
+                ? 'bg-[#0F0F10]/30 cursor-not-allowed'
+                : 'bg-gradient-to-r from-[#E11D74] to-[#6D28D9] hover:from-[#6D28D9] hover:to-[#8B5CF6]'
             }`}
           >
             {isSubmitting ? (
