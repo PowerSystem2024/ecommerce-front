@@ -312,57 +312,6 @@ export default function RegisterPage() {
               <p style={{ fontSize: '0.75rem', color: '#ff1493', marginTop: '0.5rem', fontFamily: "'Rajdhani', sans-serif", fontWeight: '400', letterSpacing: '0.02em' }}>
                 🔄 Serás redirigido automáticamente al login en unos segundos...
               </p>
-            </div>
-
-            <div style={{ marginTop: '1.5rem', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-              <Link
-                to="/login"
-                style={{
-                  width: '100%',
-                  padding: '0.875rem 1.5rem',
-                  background: 'linear-gradient(90deg, #dc143c 0%, #c71585 30%, #8b008b 70%, #4b0082 100%)',
-                  color: '#ffffff',
-                  fontWeight: '600',
-                  fontSize: '1rem',
-                  border: '1px solid rgba(255, 255, 255, 0.1)',
-                  borderRadius: '0.75rem',
-                  cursor: 'pointer',
-                  textDecoration: 'none',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  transition: 'opacity 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease, border-color 0.3s ease',
-                  background: 'linear-gradient(135deg, rgba(220, 20, 60, 0.35) 0%, rgba(139, 0, 139, 0.45) 50%, rgba(75, 0, 130, 0.35) 100%)',
-                  border: '1px solid rgba(220, 20, 60, 0.4)',
-                  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.6), 0 0 20px rgba(220, 20, 60, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.03)',
-                  fontFamily: "'Rajdhani', sans-serif",
-                  letterSpacing: '0.08em',
-                  textTransform: 'uppercase'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.background = 'linear-gradient(135deg, rgba(220, 20, 60, 0.5) 0%, rgba(139, 0, 139, 0.6) 50%, rgba(75, 0, 130, 0.5) 100%)';
-                  e.currentTarget.style.borderColor = 'rgba(220, 20, 60, 0.6)';
-                  e.currentTarget.style.boxShadow = '0 6px 18px rgba(0, 0, 0, 0.7), 0 0 30px rgba(220, 20, 60, 0.25), 0 0 40px rgba(139, 0, 139, 0.15)';
-                  e.currentTarget.style.transform = 'translateY(-1px)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.background = 'linear-gradient(135deg, rgba(220, 20, 60, 0.35) 0%, rgba(139, 0, 139, 0.45) 50%, rgba(75, 0, 130, 0.35) 100%)';
-                  e.currentTarget.style.borderColor = 'rgba(220, 20, 60, 0.4)';
-                  e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.6), 0 0 20px rgba(220, 20, 60, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.03)';
-                  e.currentTarget.style.transform = 'translateY(0)';
-                }}
-                onMouseDown={(e) => {
-                  e.currentTarget.style.transform = 'translateY(0)';
-                  e.currentTarget.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.7), 0 0 15px rgba(220, 20, 60, 0.2)';
-                }}
-                onMouseUp={(e) => {
-                  e.currentTarget.style.transform = 'translateY(-1px)';
-                  e.currentTarget.style.boxShadow = '0 6px 18px rgba(0, 0, 0, 0.7), 0 0 30px rgba(220, 20, 60, 0.25), 0 0 40px rgba(139, 0, 139, 0.15)';
-                }}
-              >
-                Ir al Login
-              </Link>
-
               <button
                 onClick={() => window.location.reload()}
                 style={{
