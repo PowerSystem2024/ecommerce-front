@@ -2,6 +2,14 @@ import React from 'react';
 import CartItem from './CartItem';
 import { useCart } from '../context/useCart';
 
+// Función helper para generar clave única (debe coincidir con CartContext)
+const getCartItemKey = (item) => {
+  const productId = item._id || item.id;
+  const color = item.selectedColor || '';
+  const size = item.selectedSize || '';
+  return `${productId}_${color}_${size}`;
+};
+
 export default function CartList() {
   const { items } = useCart();
 
@@ -11,9 +19,10 @@ export default function CartList() {
 
   return (
     <div className="divide-y">
-      {items.map((it) => (
-        <CartItem key={it.id} item={it} />
-      ))}
+      {items.map((it) => {
+        const itemKey = getCartItemKey(it);
+        return <CartItem key={itemKey} item={it} />;
+      })}
     </div>
   );
 }
