@@ -25,9 +25,43 @@ class AdminReviewService extends BaseService {
     return this.get(`/reviews/recent?limit=${limit}`);
   }
 
-  // Activar/Desactivar reseña (moderación)
+  // Activar/Desactivar reseña (moderación) - Admin endpoint
   async updateReviewStatus(reviewId, isActive) {
-    return this.put(`/reviews/${reviewId}/status`, { isActive });
+    try {
+      console.log('🔄 Actualizando estado de reseña:', { reviewId, isStatus: isActive });
+      
+      // Primero obtenemos la reseña para asegurarnos de que existe
+      const { data: review } = await this.getReviewById(reviewId);
+      
+      if (!review) {
+        throw new Error('No se encontró la reseña');
+      }
+      
+      // Usamos el order de la reseña o 0 si no existe
+      const order = review.order || 0;
+      
+      // Incluimos un timestamp para evitar caché
+      const timestamp = new Date().getTime();
+      const response = await this.put(`/reviews/${reviewId}/status?t=${timestamp}`, { 
+        isActive,
+        order
+      });
+      
+      console.log('✅ Estado actualizado:', response);
+      
+      // Forzar actualización del caché en el navegador
+      if (window && window.caches) {
+        const cacheNames = await caches.keys();
+        await Promise.all(
+          cacheNames.map(cacheName => caches.delete(cacheName))
+        );
+      }
+      
+      return response;
+    } catch (error) {
+      console.error('❌ Error al actualizar estado:', error);
+      throw error;
+    }
   }
 
   // Eliminar reseña

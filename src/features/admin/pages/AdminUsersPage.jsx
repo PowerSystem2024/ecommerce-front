@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { adminUserService } from '../services/adminUserService';
+import { successToast, errorToast, loadingToast, infoToast } from '../../../utils/customToast';
+import { confirmDialog } from '../../../utils/confirmDialog.jsx';
 
 const AdminUsersPage = () => {
   const [users, setUsers] = useState([]);
@@ -103,37 +105,47 @@ const AdminUsersPage = () => {
 
   const handleRoleChange = async (userId, newRole) => {
     try {
+      const toastId = loadingToast('Actualizando rol...');
       await adminUserService.updateUserRole(userId, newRole);
+      successToast('Rol actualizado exitosamente');
       fetchUsers();
     } catch (error) {
-      alert('Error al actualizar el rol: ' + error.message);
+      errorToast('Error al actualizar el rol: ' + error.message);
     }
   };
 
   const handleStatusChange = async (userId, isActive) => {
     try {
+      const toastId = loadingToast('Actualizando estado...');
       await adminUserService.updateUserStatus(userId, isActive);
       const statusText = isActive ? 'activado' : 'desactivado';
-      alert(`Usuario ${statusText} exitosamente`);
+      successToast(`Usuario ${statusText} exitosamente`);
       fetchUsers();
     } catch (error) {
       console.error('Error al actualizar estado:', error);
-      alert('Error al actualizar el estado: ' + (error.message || 'Error desconocido'));
+      errorToast('Error al actualizar el estado: ' + (error.message || 'Error desconocido'));
     }
   };
 
   const handleDelete = async (userId, userName) => {
-    if (window.confirm(`¿Estás seguro de que quieres eliminar al usuario ${userName}?\n\nEsta acción se puede deshacer posteriormente.`)) {
+    const confirmed = await confirmDialog(
+      `¿Estás seguro de que quieres eliminar al usuario ${userName}?\n\nEsta acción se puede deshacer posteriormente.`,
+      {
+        confirmText: 'Eliminar',
+        cancelText: 'Cancelar',
+        confirmColor: '#EF4444'
+      }
+    );
+    
+    if (confirmed) {
       try {
-        setLoading(true);
+        const toastId = loadingToast('Eliminando usuario...');
         await adminUserService.deleteUser(userId);
-        alert(`Usuario ${userName} eliminado exitosamente`);
+        successToast(`Usuario ${userName} eliminado exitosamente`);
         fetchUsers();
       } catch (error) {
         console.error('Error al eliminar usuario:', error);
-        alert('Error al eliminar el usuario: ' + (error.message || 'Error desconocido'));
-      } finally {
-        setLoading(false);
+        errorToast('Error al eliminar el usuario: ' + (error.message || 'Error desconocido'));
       }
     }
   };
@@ -156,7 +168,7 @@ const AdminUsersPage = () => {
       }
     } catch (error) {
       console.error('Error al cargar usuario:', error);
-      alert('Error al cargar los datos del usuario: ' + (error.message || 'Error desconocido'));
+      errorToast('Error al cargar los datos del usuario: ' + (error.message || 'Error desconocido'));
     }
   };
 
@@ -198,16 +210,16 @@ const AdminUsersPage = () => {
         // Forzar recarga de datos
         await fetchUsers();
         
-        alert('Usuario actualizado exitosamente');
+        successToast('Usuario actualizado exitosamente');
       } else {
-        alert('No se detectaron cambios');
+        infoToast('No se detectaron cambios');
       }
       
       setShowEditModal(false);
       setEditingUser(null);
     } catch (error) {
       console.error('Error al actualizar usuario:', error);
-      alert('Error al actualizar el usuario: ' + (error.message || 'Error desconocido'));
+      errorToast('Error al actualizar el usuario: ' + (error.message || 'Error desconocido'));
     } finally {
       setLoading(false);
     }

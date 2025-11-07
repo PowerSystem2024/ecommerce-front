@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { adminReviewService } from '../services/adminReviewService';
+import { successToast, errorToast, loadingToast } from '../../../utils/customToast';
+import { confirmDialog } from '../../../utils/confirmDialog.jsx';
 
 const AdminReviewsPage = () => {
   const [reviews, setReviews] = useState([]);
@@ -83,33 +85,75 @@ const AdminReviewsPage = () => {
       }
     } catch (err) {
       console.error('Error al cargar estadísticas:', err);
+      errorToast('Error al cargar estadísticas');
     }
   };
 
-  const handleStatusChange = async (reviewId, isActive) => {
+  const handleStatusChange = async (reviewId, currentStatus) => {
+    const newStatus = !currentStatus;
+    const statusText = newStatus ? 'activada' : 'desactivada';
+    
+    // Mostrar notificación de carga
+    const toastId = loadingToast('Actualizando estado...');
+    
     try {
-      await adminReviewService.updateReviewStatus(reviewId, isActive);
-      const statusText = isActive ? 'activada' : 'desactivada';
-      alert(`Reseña ${statusText} exitosamente`);
-      fetchReviews();
+      console.log('🔄 Cambiando estado de la reseña:', { reviewId, currentStatus, newStatus });
+      
+      // Actualizar el estado en la interfaz de inmediato para mejor experiencia de usuario
+      setReviews(prevReviews => 
+        prevReviews.map(review => 
+          review._id === reviewId 
+            ? { ...review, isActive: newStatus, isUpdating: true } 
+            : review
+        )
+      );
+      
+      // Hacer la llamada al servidor
+      await adminReviewService.updateReviewStatus(reviewId, newStatus);
+      
+      // Actualizar la lista completa
+      await fetchReviews();
+      
+      // Notificación de éxito
+      successToast(`Reseña ${statusText} con éxito`);
+      
     } catch (error) {
-      console.error('Error al actualizar estado:', error);
-      alert('Error al actualizar el estado: ' + (error.message || 'Error desconocido'));
+      console.error('❌ Error al cambiar estado:', error);
+      
+      // Revertir el cambio en la interfaz
+      setReviews(prevReviews => 
+        prevReviews.map(review => 
+          review._id === reviewId 
+            ? { ...review, isActive: currentStatus, isUpdating: false } 
+            : review
+        )
+      );
+      
+      // Mostrar error
+      errorToast('Error al actualizar la reseña');
     }
   };
 
   const handleDelete = async (reviewId, productName) => {
-    if (window.confirm(`¿Estás seguro de que quieres eliminar esta reseña de "${productName}"?\n\nEsta acción no se puede deshacer.`)) {
+    const confirmed = await confirmDialog(
+      `¿Estás seguro de que quieres eliminar esta reseña de "${productName}"?\n\nEsta acción no se puede deshacer.`,
+      {
+        confirmText: 'Eliminar',
+        cancelText: 'Cancelar',
+        confirmColor: '#EF4444'
+      }
+    );
+    
+    if (confirmed) {
       try {
-        setLoading(true);
+        const toastId = loadingToast('Eliminando reseña...');
         await adminReviewService.deleteReview(reviewId);
-        alert('Reseña eliminada exitosamente');
+        successToast('Reseña eliminada exitosamente');
         fetchReviews();
+        fetchStats();
       } catch (error) {
-        console.error('Error al eliminar reseña:', error);
-        alert('Error al eliminar la reseña: ' + (error.message || 'Error desconocido'));
-      } finally {
-        setLoading(false);
+        console.error('Error al eliminar:', error);
+        errorToast('Error: ' + (error.message || 'Error desconocido'));
       }
     }
   };

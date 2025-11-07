@@ -3,6 +3,7 @@ import { Tab } from '@headlessui/react';
 import ProductAdminTable from './Products/ProductAdminTable';
 import AdminUsersPage from '../pages/AdminUsersPage';
 import AdminReviewsPage from '../pages/AdminReviewsPage';
+import AdminOrdersPage from '../pages/AdminOrdersPage';
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
@@ -13,6 +14,7 @@ export default function AdminTabs() {
   const tabs = [
     { key: 'users', title: 'Usuarios', content: <UsuariosTab /> },
     { key: 'products', title: 'Productos', content: <ProductosTab onCreate={() => setOpenCreateProduct(true)} openCreate={openCreateProduct} onCloseCreate={() => setOpenCreateProduct(false)} /> },
+    { key: 'orders', title: 'Pedidos', content: <PedidosTab /> },
     { key: 'reviews', title: 'Reseñas', content: <ResenasTab /> },
   ];
 
@@ -80,6 +82,10 @@ function ProductosTab({ onCreate, openCreate, onCloseCreate }) {
       <ProductAdminTable openCreate={openCreate} onCloseCreate={onCloseCreate} />
     </div>
   );
+}
+
+function PedidosTab() {
+  return <AdminOrdersPage />;
 }
 
 function ResenasTab() {
