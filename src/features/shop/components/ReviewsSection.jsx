@@ -112,23 +112,6 @@ export default function ReviewsSection({
     return reviews.slice(startIndex, endIndex);
   }, [reviews, currentPage, reviewsPerPage, productId, initialReviews]);
 
-  // Calcular distribución de calificaciones desde ratingSummary o reviews
-  const ratingDistribution = useMemo(() => {
-    if (ratingSummary) {
-      return ratingSummary.distribution || {};
-    }
-    
-    // Calcular desde las reseñas actuales
-    const distribution = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
-    reviews.forEach(review => {
-      const rating = Math.round(review.rating || 0);
-      if (rating >= 1 && rating <= 5) {
-        distribution[rating]++;
-      }
-    });
-    return distribution;
-  }, [ratingSummary, reviews]);
-
   // Handlers para editar/eliminar reseñas (solo el autor puede)
   const handleUpdateReview = async (reviewId, reviewData) => {
     if (!reviewId) return;
@@ -202,36 +185,6 @@ export default function ReviewsSection({
     );
   }
 
-  // Si no hay reseñas, mostrar mensaje
-  if (!loading && reviews.length === 0) {
-    return (
-      <section className={`mt-8 ${className}`}>
-        <div className="backdrop-blur-sm rounded-lg border border-white/10 p-8 text-center"
-          style={{
-            background: "linear-gradient(135deg, rgba(26, 26, 27, 0.9) 0%, rgba(15, 15, 16, 0.95) 50%, rgba(30, 10, 25, 0.9) 100%)"
-          }}
-        >
-          <div className="flex justify-center mb-4">
-            <RatingStars rating={0} editable={false} size="lg" />
-          </div>
-          <p className="text-[#0F0F10] font-['Rajdhani',_sans-serif] text-lg">
-            Aún no hay reseñas para este producto
-          </p>
-          <p className="text-[#0F0F10]/70 font-['Rajdhani',_sans-serif] text-sm mt-2">
-            Sé el primero en dejar una reseña
-          </p>
-          {isAuthenticated && (
-            <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-              <p className="text-sm text-blue-800 font-['Rajdhani',_sans-serif] text-center">
-                💡 Para reseñar este producto, primero debes comprarlo y recibir tu pedido. Ve a "Mis Pedidos" para dejar tu reseña.
-              </p>
-            </div>
-          )}
-        </div>
-      </section>
-    );
-  }
-
   return (
     <section className={`mt-8 ${className}`} aria-labelledby="reviews-heading">
       {/* Header de la sección */}
@@ -280,38 +233,6 @@ export default function ReviewsSection({
               </div>
             </div>
 
-            {/* Separador visual */}
-            <div className="hidden md:block h-12 w-px bg-white/30"></div>
-
-            {/* Distribución de calificaciones */}
-            <div className="flex-1 min-w-[200px]">
-              <div className="text-sm font-semibold text-[#E11D74] mb-2 font-['Quantico',_sans-serif] uppercase tracking-wide">
-                Distribución de calificaciones
-              </div>
-              <div className="space-y-1">
-                {[5, 4, 3, 2, 1].map((star) => {
-                  const count = ratingDistribution[star] || 0;
-                  const percentage = totalReviews > 0 ? (count / totalReviews) * 100 : 0;
-                  
-                  return (
-                    <div key={star} className="flex items-center gap-2">
-                      <span className="text-xs text-[#0F0F10] font-['Rajdhani',_sans-serif] w-8">
-                        {star}★
-                      </span>
-                      <div className="flex-1 h-2 bg-white/30 rounded-full overflow-hidden">
-                        <div
-                          className="h-full bg-yellow-400 transition-all duration-500"
-                          style={{ width: `${percentage}%` }}
-                        />
-                      </div>
-                      <span className="text-xs text-[#0F0F10] font-['Rajdhani',_sans-serif] w-8 text-right">
-                        {count}
-                      </span>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
           </div>
         ) : (
           <div className="mb-6 p-4 bg-[#0F0F10]/50 backdrop-blur-sm rounded-lg border border-white/10">

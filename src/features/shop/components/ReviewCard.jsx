@@ -27,7 +27,7 @@ export default function ReviewCard({
   onDelete
 }) {
   const {
-    userName = 'Usuario Anónimo',
+    userName,
     userAvatar = null,
     comment = '',
     rating = 5,
@@ -36,6 +36,9 @@ export default function ReviewCard({
     user,
     _id: reviewId
   } = review;
+
+  // Obtener el nombre del usuario desde diferentes fuentes posibles
+  const displayUserName = userName || user?.name || user?.username || user?.fullName || 'Usuario Anónimo';
 
   // Verificar si el usuario actual es el autor de la reseña
   const reviewUserId = userId || user?._id || user?.id;
@@ -130,23 +133,23 @@ export default function ReviewCard({
             {userAvatar ? (
               <img
                 src={userAvatar}
-                alt={userName}
+                alt={displayUserName}
                 className="w-10 h-10 rounded-full object-cover"
               />
             ) : (
               <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#6D28D9] to-[#8B5CF6] flex items-center justify-center">
                 <span className="text-white font-bold text-sm">
-                  {getInitials(userName)}
+                  {getInitials(displayUserName)}
                 </span>
               </div>
             )}
           </div>
 
-          {/* Información del usuario y calificación */}
+          {/* Información del usuario */}
           <div className="flex-1 min-w-0">
-            <div className="flex items-start justify-between gap-2 mb-1">
+            <div className="flex items-start justify-between gap-2 mb-2">
               <h4 className="font-semibold text-[#E11D74] font-['Quantico',_sans-serif] text-sm truncate uppercase tracking-wide">
-                {userName}
+                {displayUserName}
               </h4>
               <div className="flex items-center gap-2">
                 <span className="text-xs text-[#CFCFCF]/70 font-['Rajdhani',_sans-serif] flex-shrink-0">
@@ -177,6 +180,13 @@ export default function ReviewCard({
               </div>
             </div>
             
+            {/* Comentario */}
+            {comment && (
+              <p className="text-[#CFCFCF] text-sm font-['Rajdhani',_sans-serif] leading-relaxed mb-2">
+                {comment}
+              </p>
+            )}
+
             {/* Estrellas de calificación */}
             <div className="flex items-center gap-2">
               <RatingStars 
@@ -190,13 +200,6 @@ export default function ReviewCard({
             </div>
           </div>
         </div>
-
-        {/* Comentario */}
-        {comment && (
-          <p className="text-[#CFCFCF] text-sm font-['Rajdhani',_sans-serif] leading-relaxed">
-            {comment}
-          </p>
-        )}
       </div>
 
       {/* Diálogo de confirmación de eliminación */}

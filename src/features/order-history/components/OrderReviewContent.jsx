@@ -110,26 +110,25 @@ export default function OrderReviewContent() {
   };
 
   const handleSubmit = async (productId) => {
+    const form = formByProduct[productId];
+    if (!form || !form.rating || form.rating === 0) {
+      alert('Por favor, seleccioná una calificación con estrellas');
+      return;
+    }
+
+    const validProductId = String(productId || '').trim();
+    if (!validProductId || validProductId === 'undefined' || validProductId === 'null') {
+      console.error('❌ ProductId inválido:', {
+        productId,
+        validProductId,
+        type: typeof productId,
+        form
+      });
+      alert('Error: No se pudo identificar el producto. Por favor, recargá la página.');
+      return;
+    }
+
     try {
-      const form = formByProduct[productId];
-      if (!form || !form.rating || form.rating === 0) {
-        alert('Por favor, seleccioná una calificación con estrellas');
-        return;
-      }
-      
-      // Verificar que el productId es válido
-      const validProductId = String(productId || '').trim();
-      if (!validProductId || validProductId === 'undefined' || validProductId === 'null' || validProductId === '') {
-        console.error('❌ ProductId inválido:', {
-          productId,
-          validProductId,
-          type: typeof productId,
-          form: form
-        });
-        alert('Error: No se pudo identificar el producto. Por favor, recargá la página.');
-        return;
-      }
-      
       setSaving(prev => ({ ...prev, [validProductId]: true }));
       
       console.log('📝 Enviando reseña:', {
@@ -512,5 +511,3 @@ export default function OrderReviewContent() {
     </div>
   );
 }
-
-
