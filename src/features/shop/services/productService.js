@@ -106,13 +106,16 @@ class ProductService {
 
   // Crear/enviar una reseña para un producto (requiere compra previa)
   // POST /reviews
-  async createReview(productId, { rating, comment, orderId }) {
+  async createReview(productId, { rating, comment, orderId, order }) {
     if (!productId) throw new Error('productId es requerido');
+    // El backend espera el campo 'order', no 'orderId'
+    const orderValue = order || orderId;
+    if (!orderValue) throw new Error('order es requerido');
     const payload = {
       productId,
       rating: Number(rating),
       comment: comment?.trim?.() || '',
-      orderId,
+      order: orderValue,
     };
     return this.makeRequest(`/reviews`, {
       method: 'POST',
