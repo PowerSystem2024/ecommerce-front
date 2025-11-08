@@ -1,6 +1,8 @@
 // Servicio para comunicación con la API de autenticación
 import { config, buildApiUrl, devLog } from '../../../config/appConfig';
 
+
+
 const API_BASE_URL = config.API_BASE_URL;
 
 class AuthService {
