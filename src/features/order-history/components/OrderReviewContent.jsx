@@ -369,7 +369,7 @@ export default function OrderReviewContent() {
                 <div className="flex items-start gap-6">
                   {/* Imagen del producto */}
                   {productImage && (
-                    <div className="flex-shrink-0">
+                    <div>
                       <img
                         src={productImage}
                         alt={productName}
@@ -434,7 +434,7 @@ export default function OrderReviewContent() {
                             <button
                               onClick={() => handleCancelEdit(productId)}
                               disabled={isSaving}
-                              className="px-4 py-2 rounded-lg border border-white/20 text-[#CFCFCF] bg-[#0F0F10]/80 hover:bg-gradient-to-r hover:from-[#E11D74] hover:to-[#6D28D9] hover:text-white hover:border-transparent transition font-['Quantico',sans-serif] uppercase disabled:opacity-50"
+                              className="px-4 py-2 rounded-lg border border-white/20 text-[#CFCFCF] bg-[#0F0F10]/80 hover:from-[#E11D74] hover:to-[#6D28D9] hover:text-white hover:border-transparent transition font-['Quantico',sans-serif] uppercase disabled:opacity-50"
                             >
                               Cancelar
                             </button>
@@ -445,7 +445,7 @@ export default function OrderReviewContent() {
                             className={`px-6 py-2 rounded-lg text-white font-['Quantico',sans-serif] transition uppercase ${
                               isSaving || !form.rating || form.rating === 0
                                 ? 'bg-[#0F0F10]/30 cursor-not-allowed opacity-50'
-                                : 'bg-gradient-to-r from-[#E11D74] to-[#6D28D9] hover:from-[#6D28D9] hover:to-[#8B5CF6] hover:shadow-md'
+                                : ' from-[#E11D74] to-[#6D28D9] hover:from-[#6D28D9] hover:to-[#8B5CF6] hover:shadow-md'
                             }`}
                           >
                             {isSaving ? 'Enviando...' : (isEditing ? 'Guardar cambios' : 'Enviar reseña')}
@@ -506,7 +506,7 @@ export default function OrderReviewContent() {
       </div>
 
       <div className="mt-6">
-        <button onClick={() => navigate('/order-history')} className="px-5 py-2 rounded-lg border border-white/20 text-[#CFCFCF] bg-[#0F0F10]/80 hover:bg-gradient-to-r hover:from-[#E11D74] hover:to-[#6D28D9] hover:text-white hover:border-transparent transition font-['Quantico',sans-serif] uppercase">Volver a Mis Pedidos</button>
+        <button onClick={() => navigate('/order-history')} className="px-5 py-2 rounded-lg border border-white/20 text-[#CFCFCF] bg-[#0F0F10]/80 hover:from-[#E11D74] hover:to-[#6D28D9] hover:text-white hover:border-transparent transition font-['Quantico',sans-serif] uppercase">Volver a Mis Pedidos</button>
       </div>
     </div>
   );
