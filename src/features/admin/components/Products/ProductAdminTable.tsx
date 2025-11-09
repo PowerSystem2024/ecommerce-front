@@ -151,8 +151,8 @@ const ProductAdminTable: React.FC<ProductAdminTableProps> = ({ openCreate = fals
     inStock: false,
     sizes: [],
     colors: [],
-    sortBy: 'updatedAt',
-    sortOrder: 'desc',
+    sortBy: 'name',
+    sortOrder: 'asc',
     page: 1,
     limit: 10,
   };
