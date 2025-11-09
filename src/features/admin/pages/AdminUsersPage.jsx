@@ -272,10 +272,7 @@ const AdminUsersPage = () => {
             Total: {pagination.total} usuarios
           </p>
         </div>
-        <button className="px-4 py-2 bg-[#0F0F10] text-white rounded-md text-sm hover:bg-[#E11D74] transition shadow-sm font-['Quantico',_sans-serif]">
-          Crear usuario
-        </button>
-      </div>
+    </div>
 
       {/* Filtros */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6 p-4 bg-gray-50 rounded-lg">
@@ -473,7 +470,7 @@ const AdminUsersPage = () => {
 
       {/* Modal de edición */}
       {showEditModal && editingUser && (
-        <div className="fixed inset-0 bg-gray-900/20 flex items-center justify-center z-50">
+        <div className="fixed inset-0 bg-gray-900/10 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4 border border-gray-200 shadow-xl">
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-lg font-semibold text-gray-900">Editar Usuario</h3>
