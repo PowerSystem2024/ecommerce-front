@@ -272,10 +272,7 @@ const AdminUsersPage = () => {
             Total: {pagination.total} usuarios
           </p>
         </div>
-        <button className="px-4 py-2 bg-[#0F0F10] text-white rounded-md text-sm hover:bg-[#E11D74] transition shadow-sm font-['Quantico',_sans-serif]">
-          Crear usuario
-        </button>
-      </div>
+    </div>
 
       {/* Filtros */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6 p-4 bg-gray-50 rounded-lg">
@@ -473,9 +470,20 @@ const AdminUsersPage = () => {
 
       {/* Modal de edición */}
       {showEditModal && editingUser && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4">
-            <h3 className="text-lg font-semibold mb-4">Editar Usuario</h3>
+        <div className="fixed inset-0 bg-gray-900/10 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4 border border-gray-200 shadow-xl">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-lg font-semibold text-gray-900">Editar Usuario</h3>
+              <button
+                onClick={handleCloseEdit}
+                className="text-gray-400 hover:text-gray-600 transition-colors"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            
             <form onSubmit={(e) => {
               e.preventDefault();
               const formData = new FormData(e.target);
@@ -495,7 +503,7 @@ const AdminUsersPage = () => {
                     type="text"
                     name="name"
                     defaultValue={editingUser.name}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#E11D74]"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#E11D74] focus:border-transparent"
                     required
                   />
                 </div>
@@ -505,7 +513,7 @@ const AdminUsersPage = () => {
                     type="email"
                     name="email"
                     defaultValue={editingUser.email}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#E11D74]"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#E11D74] focus:border-transparent"
                     required
                   />
                 </div>
@@ -515,7 +523,7 @@ const AdminUsersPage = () => {
                     type="tel"
                     name="phone"
                     defaultValue={editingUser.phone || ''}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#E11D74]"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#E11D74] focus:border-transparent"
                   />
                 </div>
                 <div>
@@ -523,7 +531,7 @@ const AdminUsersPage = () => {
                   <select
                     name="role"
                     defaultValue={editingUser.role}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#E11D74]"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#E11D74] focus:border-transparent"
                   >
                     <option value="user">Usuario</option>
                     <option value="admin">Administrador</option>
@@ -534,24 +542,24 @@ const AdminUsersPage = () => {
                   <select
                     name="isActive"
                     defaultValue={editingUser.isActive.toString()}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#E11D74]"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#E11D74] focus:border-transparent"
                   >
                     <option value="true">Activo</option>
                     <option value="false">Inactivo</option>
                   </select>
                 </div>
               </div>
-              <div className="flex justify-end space-x-3 mt-6">
+              <div className="flex justify-end space-x-3 mt-6 pt-4 border-t border-gray-200">
                 <button
                   type="button"
                   onClick={handleCloseEdit}
-                  className="px-4 py-2 text-gray-600 border border-gray-300 rounded-md hover:bg-gray-50"
+                  className="px-4 py-2 text-gray-600 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
                 >
                   Cancelar
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-[#E11D74] text-white rounded-md hover:bg-[#C41E3A]"
+                  className="px-4 py-2 bg-[#E11D74] text-white rounded-md hover:bg-[#C41E3A] transition-colors"
                 >
                   Guardar cambios
                 </button>
