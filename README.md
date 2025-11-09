@@ -1,12 +1,86 @@
-# React + Vite
+# E-commerce La Tiendita
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Bienvenido al repositorio del proyecto E-commerce La Tiendita, una plataforma de comercio electrónico moderna construida con React y Vite.
 
-Currently, two official plugins are available:
+## 🚀 Características Principales
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- 🛍️ Catálogo de productos con filtros y búsqueda
+- 🛒 Carrito de compras interactivo
+- 🔐 Autenticación de usuarios (registro, inicio de sesión, recuperación de contraseña)
+- 💳 Pasarela de pago integrada
+- 📱 Diseño responsive para todos los dispositivos
+- ⚡ Optimizado para rendimiento
 
-## Expanding the ESLint configuration
+## 🛠️ Tecnologías Utilizadas
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- ⚛️ React 19
+- 🚀 Vite
+- 🎨 Tailwind CSS
+- 🔄 React Router DOM
+- 📦 Gestión de estado con Context API
+- ✨ Framer Motion para animaciones
+- 📱 Diseño responsive
+- 🔍 ESLint y Prettier para calidad de código
+
+## 🚀 Empezando
+
+### Requisitos Previos
+
+- Node.js 16+ y npm 8+
+
+### Instalación
+
+1. Clona el repositorio:
+   ```bash
+   git clone https://github.com/PowerSystem2024/ecommerce-front.git
+   cd ecommerce-front
+   ```
+
+2. Instala las dependencias:
+   ```bash
+   npm install
+   ```
+
+3. Crea un archivo `.env` en la raíz del proyecto con las variables de entorno necesarias.
+
+4. Inicia el servidor de desarrollo:
+   ```bash
+   npm run dev
+   ```
+
+5. Abre tu navegador en [http://localhost:5173](http://localhost:5173)
+
+## 📂 Estructura del Proyecto
+
+```
+src/
+├── assets/          # Recursos estáticos (imágenes, fuentes, etc.)
+├── components/      # Componentes reutilizables
+├── config/          # Configuraciones de la aplicación
+├── features/        # Características del e-commerce
+│   ├── admin/       # Panel de administración
+│   ├── auth/        # Autenticación y autorización
+│   ├── cart/        # Carrito de compras
+│   ├── orders/      # Gestión de pedidos
+│   ├── payment/     # Proceso de pago
+│   └── shop/        # Catálogo de productos
+├── hooks/           # Custom hooks
+├── services/        # Servicios API
+└── utils/           # Utilidades y helpers
+```
+
+## 🚀 Despliegue
+
+Para crear una versión optimizada para producción:
+
+```bash
+npm run build
+```
+
+## 🤝 Contribución
+
+Las contribuciones son bienvenidas. Por favor, lee nuestras pautas de contribución antes de enviar un pull request.
+
+## 📄 Licencia
+
+Este proyecto está bajo la Licencia MIT. Consulta el archivo `LICENSE` para más información.
