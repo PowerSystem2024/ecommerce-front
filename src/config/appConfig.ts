@@ -2,7 +2,7 @@
  * Función para construir URLs de la API
  */
 // URL base de la API
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
 const buildApiUrl = (endpoint: string): string => {
   // Asegurarse de que el endpoint empiece con /
   const formattedEndpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
