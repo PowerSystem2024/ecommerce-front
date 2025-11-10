@@ -9,7 +9,7 @@
     "preview": "vite preview",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx --fix",
     "preview:prod": "vite preview --port 8080",
-    "postbuild": "[ -f _redirects ] && cp _redirects dist/ || echo 'No _redirects file found, skipping'"
+    "postbuild": "shx cp public/_redirects dist/ 2>/dev/null || echo 'No _redirects file found, skipping'"
   },
   "engines": {
     "node": ">=16.0.0",
@@ -51,6 +51,7 @@
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.20",
     "globals": "^16.3.0",
+    "shx": "^0.4.0",
     "vite": "^7.1.0"
   }
 }
