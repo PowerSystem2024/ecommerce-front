@@ -1,10 +1,13 @@
 /**
  * Función para construir URLs de la API
  */
+// URL base de la API
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
+
 const buildApiUrl = (endpoint: string): string => {
-  console.log('API URL:', import.meta.env.VITE_API_URL);
-  const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
-  return `${baseUrl}${endpoint}`;
+  // Asegurarse de que el endpoint empiece con /
+  const formattedEndpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
+  return `${API_BASE_URL}${formattedEndpoint}`;
 };
 
 /**
@@ -18,7 +21,7 @@ const devLog = (message: string, data?: unknown): void => {
 
 export const config = {
   // URL base de la API
-  API_BASE_URL: import.meta.env.VITE_API_URL || 'http://localhost:3001/api',
+  API_BASE_URL,
   
   // Configuración de la aplicación
   APP_NAME: 'La Tiendita',
