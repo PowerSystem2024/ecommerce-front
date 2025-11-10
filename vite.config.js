@@ -18,45 +18,9 @@ export default defineConfig(({ mode }) => ({
   // Configuración del servidor de desarrollo
   server: {
     port: 5173,
-    open: true,
-    proxy: {
-      '/api': {
-        target: process.env.VITE_API_URL || 'http://localhost:3001',
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, '')
-      }
-    }
+    open: true
   },
-  // Configuración para producción
   build: {
-    outDir: 'dist',
-    assetsDir: 'assets',
-    emptyOutDir: true,
-    rollupOptions: {
-      input: 'index.html',
-      output: {
-        manualChunks: (id) => {
-          if (id.includes('node_modules')) {
-            if (id.includes('react') || id.includes('react-dom') || id.includes('react-router-dom')) {
-              return 'vendor-react';
-            }
-            return 'vendor';
-          }
-        },
-        entryFileNames: 'assets/[name]-[hash].js',
-        chunkFileNames: 'assets/[name]-[hash].js',
-        assetFileNames: 'assets/[name]-[hash][extname]'
-      }
-    },
-    target: 'esnext',
-    modulePreload: {
-      polyfill: false
-    },
-    minify: 'terser',
-    assetsInlineLimit: 0,
-    // Asegurarse de que las rutas sean correctas
-    manifest: true,
-    // Configuración de sourcemaps
-    sourcemap: mode === 'development' ? 'inline' : false
+    chunkSizeWarningLimit: 2000 // Aumenta el límite a 2000 kB
   }
 }))
