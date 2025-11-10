@@ -9,7 +9,7 @@
     "preview": "vite preview",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx --fix",
     "preview:prod": "vite preview --port 8080",
-    "postbuild": "cp _redirects dist/"
+    "postbuild": "if exist _redirects (copy _redirects dist\\) else (echo No _redirects file found, skipping)"
   },
   "engines": {
     "node": ">=16.0.0",
@@ -25,6 +25,7 @@
     "@tsparticles/shape-text": "^3.9.1",
     "@tsparticles/slim": "^3.9.1",
     "autoprefixer": "^10.4.21",
+    "axios": "^1.13.2",
     "dotenv": "^17.2.3",
     "framer-motion": "^12.23.12",
     "heroicons": "^2.2.0",
