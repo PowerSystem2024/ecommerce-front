@@ -32,7 +32,6 @@ export default defineConfig(({ mode }) => ({
     outDir: 'dist',
     assetsDir: 'assets',
     emptyOutDir: true,
-    sourcemap: mode !== 'production',
     rollupOptions: {
       input: 'index.html',
       output: {
@@ -57,7 +56,7 @@ export default defineConfig(({ mode }) => ({
     assetsInlineLimit: 0,
     // Asegurarse de que las rutas sean correctas
     manifest: true,
-    // Forzar la generación de sourcemaps en desarrollo
+    // Configuración de sourcemaps
     sourcemap: mode === 'development' ? 'inline' : false
   }
 }))
