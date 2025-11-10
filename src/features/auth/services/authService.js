@@ -8,7 +8,7 @@ const API_BASE_URL = config.API_BASE_URL;
 class AuthService {
   // Método privado para hacer requests
   async makeRequest(endpoint, options = {}) {
-    const url = `${API_BASE_URL}${endpoint}`;
+    const url = buildApiUrl(endpoint);
     const token = this.getToken();
     const requestConfig = {
       headers: {
