@@ -31,8 +31,10 @@ export default defineConfig(({ mode }) => ({
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
+    emptyOutDir: true,
     sourcemap: mode !== 'production',
     rollupOptions: {
+      input: 'index.html',
       output: {
         manualChunks: (id) => {
           if (id.includes('node_modules')) {
@@ -42,20 +44,20 @@ export default defineConfig(({ mode }) => ({
             return 'vendor';
           }
         },
-        // Asegurar que los módulos se carguen correctamente
         entryFileNames: 'assets/[name]-[hash].js',
         chunkFileNames: 'assets/[name]-[hash].js',
         assetFileNames: 'assets/[name]-[hash][extname]'
       }
     },
-    // Asegurarse de que los módulos se carguen correctamente
     target: 'esnext',
     modulePreload: {
       polyfill: false
     },
-    // Minificar el código
     minify: 'terser',
-    // Generar archivos estáticos con rutas relativas
-    assetsInlineLimit: 0
+    assetsInlineLimit: 0,
+    // Asegurarse de que las rutas sean correctas
+    manifest: true,
+    // Forzar la generación de sourcemaps en desarrollo
+    sourcemap: mode === 'development' ? 'inline' : false
   }
 }))
