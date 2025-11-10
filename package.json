@@ -9,7 +9,7 @@
     "preview": "vite preview",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx --fix",
     "preview:prod": "vite preview --port 8080",
-    "postbuild": "shx cp public/_redirects dist/ 2>/dev/null || echo 'No _redirects file found, skipping'"
+    "postbuild": "shx cp _redirects dist/ 2>/dev/null || echo 'No _redirects file found, skipping'"
   },
   "engines": {
     "node": ">=16.0.0",
