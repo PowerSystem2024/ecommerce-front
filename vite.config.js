@@ -41,8 +41,21 @@ export default defineConfig(({ mode }) => ({
             }
             return 'vendor';
           }
-        }
+        },
+        // Asegurar que los módulos se carguen correctamente
+        entryFileNames: 'assets/[name]-[hash].js',
+        chunkFileNames: 'assets/[name]-[hash].js',
+        assetFileNames: 'assets/[name]-[hash][extname]'
       }
-    }
+    },
+    // Asegurarse de que los módulos se carguen correctamente
+    target: 'esnext',
+    modulePreload: {
+      polyfill: false
+    },
+    // Minificar el código
+    minify: 'terser',
+    // Generar archivos estáticos con rutas relativas
+    assetsInlineLimit: 0
   }
 }))
